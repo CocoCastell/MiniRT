@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cochatel <cochatel@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,31 +12,24 @@
 
 #include "../includes/miniRT.h"
 
-
-void	ft_mlx_init(t_miniRt *minirt)
+int     my_close(t_miniRt *minirt)
 {
-	minirt->mlx = mlx_init();
-	if (minirt->mlx == NULL)
-		exit_error("Mlx init error\n", 1);
-	minirt->win = mlx_new_window(minirt->mlx, WIN_WIDTH, WIN_HEIGHT, "Mini Raytracer");
-	if (minirt->win == NULL)
-		free_error(minirt, "Win init error\n", 1);
-	minirt->img.img = mlx_new_image(minirt->mlx, WIN_WIDTH, WIN_HEIGHT);
-	if (minirt->img.img == NULL)
-		free_error(minirt, "Img init error\n", 1);
-	minirt->img.addr = mlx_get_data_addr(minirt->img.img, &minirt->img.bpp, \
-			&minirt->img.line_length, &minirt->img.endian);
-	if (minirt->img.addr == NULL)
-		free_error(minirt, "Img addr init error\n", 1);
+        free_mlx(minirt);
+        exit(0);
 }
 
-int main()
+int	key_pressed(int keycode, t_miniRt *minirt)
 {
-	t_miniRt minirt;
+	if (keycode == ESC)
+		my_close(minirt);
+	return 0;
+}
 
-	ft_mlx_init(&minirt);
-	event_manager(&minirt);
-	mlx_loop(minirt.mlx);
-
-	return (0);
+void	event_manager(t_miniRt *minirt)
+{
+	mlx_hook(minirt->win, ClientMessage, StructureNotifyMask, my_close, minirt);
+        mlx_hook(minirt->win, KeyPress, KeyPressMask, key_pressed, minirt);
+        // mlx_hook(minirt->win, ButtonPress, ButtonPressMask, mouse_pressed, minirt);
+        // mlx_hook(minirt->win, ButtonRelease, ButtonReleaseMask, mouse_released, minirt);
+        // mlx_hook(minirt->win, MotionNotify, PointerMotionMask, mouse_move, minirt);
 }

@@ -25,7 +25,10 @@ INC		=	includes/miniRT.h \
 			$(LIBFT_DIR)includes/libft.h
 
 # Files
-SRCS	=	srcs/main.c
+SRCS	=	srcs/main.c \
+		srcs/error.c \
+		srcs/events.c
+
 OBJS	=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 
 LIBFT_F	=	gnl/get_next_line_bonus.c \
