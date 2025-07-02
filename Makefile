@@ -3,7 +3,7 @@
 
 NAME	=	miniRT
 CC		=	cc
-FLAGS	=	-Wall -Werror -Wextra -MMD -MP
+FLAGS	=	-Wall -Werror -Wextra -MMD -MP -O3
 
 # Repositories
 SRCS_DIR	=	srcs/
@@ -26,8 +26,11 @@ INC		=	includes/miniRT.h \
 
 # Files
 SRCS	=	srcs/main.c \
-		srcs/error.c \
-		srcs/events.c
+			srcs/error.c \
+			srcs/events.c \
+			srcs/vector_operation.c \
+			srcs/colors \
+			srcs/init.c
 
 OBJS	=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 
@@ -88,7 +91,7 @@ LIBFT_SRCS = $(addprefix $(LIBFT_DIR), $(LIBFT_F))
 # Compilation
 all: $(NAME)
 
-$(NAME): $(MLX) $(LIBFT) $(OBJS)
+$(NAME): $(MLX) $(LIBFT) $(OBJS) $(INC) Makefile
 	$(CC) $(FLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
 $(OBJS_DIR)srcs/%.o: $(SRCS_DIR)%.c $(INC) | $(OBJS_DIR)
