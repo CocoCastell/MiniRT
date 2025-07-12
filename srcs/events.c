@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cochatel <cochatel@student.42barcelon      +#+  +:+       +#+        */
+/*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
 /*   Updated: 2025/06/23 16:29:07 by cochatel         ###   ########.fr       */
@@ -22,6 +22,8 @@ int	key_pressed(int keycode, t_miniRt *minirt)
 {
 	if (keycode == ESC)
 		my_close(minirt);
+        if (keycode == A_KEY || keycode == D_KEY)
+                camera_side_mouvement(keycode, minirt);
 	return 0;
 }
 

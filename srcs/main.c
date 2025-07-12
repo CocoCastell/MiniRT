@@ -1,4 +1,5 @@
-/* ************************************************************************** */ /*                                                                            */
+/* ************************************************************************** */
+/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -22,65 +23,82 @@ void	put_pixel(int x, int y, t_data_img *img, int color)
 	}
 }
 
-t_vec3 vec3(t_vec3 origin_point, t_vec3 dest_point)
-{
-	t_vec3 vector;
-
-	vector.x = dest_point.x - origin_point.x;
-	vector.y = dest_point.y - origin_point.y;
-	vector.z = dest_point.z - origin_point.z;
-	return (vector);
-}
-
 t_ray make_ray(int pixel_index[2], t_scene *scene)
 {
-	t_ray	ray;
+	t_ray		ray;
 	t_vec3	viewport_point;
 
-	viewport_point.x = pixel_index[0] * PIXEL_RATIO + PIXEL_RATIO / 2;
-	viewport_point.y = -(pixel_index[1] * PIXEL_RATIO + PIXEL_RATIO / 2); 
+	viewport_point = add_vector(
+		scalar_mult(scene->right_vec, pixel_index[0]), 
+		scalar_mult(scene->up_vec, -pixel_index[1])
+	);
+	viewport_point.x -= VIEWPORT_WIDTH / 2.0f;
+	viewport_point.y += scene->viewport_height / 2.0f; 
+	// viewport_point.x = (pixel_index[0] + HALF_PIX) * PIXEL_RATIO - VIEWPORT_WIDTH / 2.0f;
+	// viewport_point.y = -((pixel_index[1] + HALF_PIX) * PIXEL_RATIO - scene->viewport_height / 2.0f); 
 	viewport_point.z = VIEWPORT_DIST;
-	ray.origin = scene->camera;
-	ray.direction = normalise_vector(vec3(scene->camera, viewport_point));
+	ray.origin = scene->camera.pos;
+	ray.direction = normalise_vector(sub_vector(scene->camera.pos, viewport_point));
 	return (ray);
 }
 
 t_hit_info intersection(t_ray ray, t_scene *scene)
 {
-	t_hit_info hit_info;
+	t_hit_info	hit_info[3];
+	t_obj				*object;
 
-	
+	object = scene->objs;
+	hit_info[0].has_hit = false;
+	hit_info[0].point = vec3(100, 100, 100); 
+	while (object != NULL)
+	{
+		if (object->obj_type == SPHERE)
+			hit_info[1] = hit_sphere(ray, object->obj.sphere);
+		if (hit_info[1].has_hit == true && vector_sq_length(hit_info[1].point) < vector_sq_length(hit_info[0].point))
+			hit_info[0] = hit_info[1];
+		object = object->next;
+	}
+	return (hit_info[0]);
+}
 
+t_hit_info	trace(t_scene *scene, t_ray ray)
+{
+	t_hit_info	hit_info;
+
+	hit_info = intersection(ray, scene);
 	return (hit_info);
 }
 
-void	trace(t_scene *scene, t_data_img img, t_ray ray, int pixel_index[2])
+t_color	get_color(t_ray ray, t_hit_info hit_info)
 {
-	int			i;
-	t_color		pix_color;
-	t_hit_info	hit_info;
-	// t_hit_info	closest_hit;
+	t_color pix_color;
 
-	i = -1;
-	// while (++i < scene->nb_of_objects)
-	// {
-		// hit_info = intersection(ray, scene->object[i]);
-		// if (hit_info.point.z < closest_hit.point.z)
-		// 	closest_hit = hit_info;
-	// }
-	// pix_color = render_color(closest_hit);
-	hit_info = intersection(ray, NULL);
-	pix_color = create_color(ray.direction, 255);
-	put_pixel(pixel_index[0], pixel_index[1], &img, convert_int_color(pix_color));
-	(void)scene;
-	(void)ray;
+	if (hit_info.has_hit == false)
+	{
+		if (ray.direction.y > -0.1)
+			pix_color = create_color2(0.5f, 0.5f, 0.9f);
+		else
+			pix_color = create_color2(0.0f, 0.5f, 0.0f);
+	}
+	else
+		pix_color = hit_info.color;
+	return (pix_color);
+}
+
+void	update_positions(t_scene *scene)
+{
+	scene->right_vec =;
+	scene->up_vec = ;
 }
 
 void	raytracing(t_miniRt *minirt)
 {
 	int		pixel_index[2];
+	t_hit_info	hit_info;
+	t_color		color;
 	t_ray	ray;
 
+	update_positions(minirt);
 	pixel_index[0] = -1;
 	while (++pixel_index[0] < WIN_WIDTH)
 	{
@@ -88,7 +106,9 @@ void	raytracing(t_miniRt *minirt)
 		while (++pixel_index[1] < WIN_HEIGHT)
 		{
 			ray = make_ray(pixel_index, minirt->scene);
-			trace(minirt->scene, minirt->img, ray, pixel_index);	
+			hit_info = trace(minirt->scene, ray);
+			color = get_color(ray, hit_info);
+			put_pixel(pixel_index[0], pixel_index[1], &minirt->img, convert_int_color(color));
 		}
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->win, minirt->img.img, 0, 0);
@@ -96,14 +116,13 @@ void	raytracing(t_miniRt *minirt)
 
 int main()
 {
-	t_miniRt minirt;
+	t_miniRt	minirt;
 
 	init_minirt(&minirt);
 	event_manager(&minirt);
 	printf("Starting raytring algo...\n");
 	raytracing(&minirt);
-	printf("Finished...\n");
+	printf("Finished.\n");
 	mlx_loop(minirt.mlx);
-
 	return (0);
 }

@@ -29,8 +29,10 @@ SRCS	=	srcs/main.c \
 			srcs/error.c \
 			srcs/events.c \
 			srcs/vector_operation.c \
-			srcs/colors \
-			srcs/init.c
+			srcs/colors.c \
+			srcs/init.c \
+			srcs/camera.c \
+			srcs/sphere.c
 
 OBJS	=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 
