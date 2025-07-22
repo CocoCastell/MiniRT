@@ -12,6 +12,11 @@
 
 #include "../includes/miniRT.h"
 
+float   to_radian(float degree)
+{
+    return (degree * M_PIF / 180.0f);
+}
+
 float   dot(t_vec3 vec1, t_vec3 vec2)
 {
     return (vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z);
@@ -35,6 +40,26 @@ t_vec3  scalar_mult(t_vec3 vector, float scalar)
     scaled_vector.y = vector.y * scalar;
     scaled_vector.z = vector.z * scalar;
     return (scaled_vector);
+}
+
+bool	is_shorter_vec(t_vec3 main_vec, t_vec3 vec_to_compare, t_vec3 origin_point)
+{
+	t_vec3	sub_main_vec;
+	t_vec3	sub_comp_vec;
+
+	sub_main_vec = sub_vector(main_vec, origin_point);
+	sub_comp_vec = sub_vector(vec_to_compare, origin_point);
+	return (vector_sq_length(sub_main_vec) < vector_sq_length(sub_comp_vec));
+}
+
+t_vec3  apply_rotation(t_vec3 vector, float  R[3][3])
+{
+    t_vec3  new_vector;
+
+    new_vector.x = R[0][0] * vector.x + R[0][1] * vector.y + R[0][2] * vector.z;
+    new_vector.y = R[1][0] * vector.x + R[1][1] * vector.y + R[1][2] * vector.z;
+    new_vector.z = R[2][0] * vector.x + R[2][1] * vector.y + R[2][2] * vector.z;
+    return (new_vector);
 }
 
 t_vec3  add_vector(t_vec3 vector1, t_vec3 vector2)
@@ -102,3 +127,38 @@ t_vec3  normalise_vector(t_vec3 vector)
     normalised_vector.z = vector.z / magnitude;
     return (normalised_vector);
 }
+
+t_vec3  scale_vector(t_vec3 vector, float scale_factor)
+{
+    t_vec3  new_vector;
+
+    new_vector.x = vector.x * scale_factor;
+    new_vector.y = vector.y * scale_factor;
+    new_vector.z = vector.z * scale_factor;
+    return (new_vector);
+}
+
+// Matrice de rotation autour d'un axe arbitraire (formule de Rodrigues)
+void fill_axis_angle_matrix(float matrix[3][3], t_vec3 axis, float angle)
+{
+    float t;
+    float x;
+    float y;
+    float z;
+    
+    axis = normalise_vector(axis);
+    t = 1 - cos(angle);
+    x = axis.x;
+    y = axis.y;
+    z = axis.z;
+    matrix[0][0] = t*x*x + cos(angle);
+    matrix[0][1] = t*x*y - sin(angle)*z;
+    matrix[0][2] = t*x*z + sin(angle)*y;
+    matrix[1][0] = t*x*y + sin(angle)*z;
+    matrix[1][1] = t*y*y + cos(angle);
+    matrix[1][2] = t*y*z - sin(angle)*x;
+    matrix[2][0] = t*x*z - sin(angle)*y;
+    matrix[2][1] = t*y*z + sin(angle)*x;
+    matrix[2][2] = t*z*z + cos(angle);
+}
+

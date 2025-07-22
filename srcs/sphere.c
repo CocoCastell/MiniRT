@@ -27,6 +27,7 @@ t_sphere create_sphere(t_vec3 center, float radius, t_color color)
 	sphere.center = center;
 	sphere.radius = radius;
 	sphere.color = color;
+	sphere.is_selected = false;
 	return (sphere);
 }
 
@@ -93,6 +94,6 @@ t_hit_info hit_sphere(t_ray ray, t_sphere sph)
 			hit.front_side = true;
 		else
 			hit.front_side = false;
-    hit.color = linear_gradient(sph.color, create_color2(0.0f, 0.0f, 0.0f), 0.5 * (hit.normal.z + 1.0f));
+    hit.color = linear_gradient(create_color2(0.0f, 0.0f, 0.0f), sph.color, 0.5 * (hit.normal.z + 1.0f));
     return (hit);
 	}

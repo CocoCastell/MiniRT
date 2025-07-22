@@ -32,7 +32,10 @@ SRCS	=	srcs/main.c \
 			srcs/colors.c \
 			srcs/init.c \
 			srcs/camera.c \
-			srcs/sphere.c
+			srcs/sphere.c \
+			srcs/raytracer.c \
+			srcs/raytracer_utils.c \
+			srcs/utils.c
 
 OBJS	=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 
