@@ -20,7 +20,7 @@
  * @param	color Color of the sphere.
  * @return the sphere created.
  */
-t_sphere create_sphere(t_vec3 center, float radius, t_color color)
+/* t_sphere create_sphere(t_vec3 center, float radius, t_color color)
 {
 	t_sphere	sphere;
 
@@ -29,7 +29,7 @@ t_sphere create_sphere(t_vec3 center, float radius, t_color color)
 	sphere.color = color;
 	sphere.is_selected = false;
 	return (sphere);
-}
+} */
 
 /**
  * @brief Compute the coefficients and discriminant of the ray-sphere intersection quadratic equation.
@@ -43,15 +43,15 @@ t_sphere create_sphere(t_vec3 center, float radius, t_color color)
  * @param sph Sphere to test against.
  * @return the quadratic coefficients (a, h, c) and discriminant (delta). 
  */
-t_quad_data compute_quadratic_data(t_ray ray, t_sphere sph)
+t_quad_data compute_quadratic_data(t_ray ray, t_sphere sph, size_t i)
 {
     t_quad_data q;
     t_vec3			m;
 		
-		m = sub_vector(sph.center, ray.origin);
+		m = sub_vector(sph.center[i], ray.origin);
     q.a = dot(ray.direction, ray.direction);
     q.h = dot(m, ray.direction);
-    q.c = dot(m, m) - sph.radius * sph.radius;
+    q.c = dot(m, m) - sph.radius[i] * sph.radius[i];
     q.delta = q.h * q.h - q.a * q.c;
     return q;
 }
@@ -67,14 +67,14 @@ t_quad_data compute_quadratic_data(t_ray ray, t_sphere sph)
  * @param sph Sphere to test against.
  * @return Hit information including point, normal, and color.
  */
-t_hit_info hit_sphere(t_ray ray, t_sphere sph)
+t_hit_info hit_sphere(t_ray ray, t_sphere sph, size_t i)
 {
     t_hit_info	hit;
     t_quad_data	q;
 		float				sq_delta;
 		float				t[3];
 		
-		q = compute_quadratic_data(ray, sph);
+		q = compute_quadratic_data(ray, sph, i);
     hit.has_hit = false;
 		if (q.delta < 0) 
       return (hit);
@@ -89,11 +89,13 @@ t_hit_info hit_sphere(t_ray ray, t_sphere sph)
       return (hit);
     hit.has_hit = true;
     hit.point = add_vector(ray.origin, scalar_mult(ray.direction, t[0]));
-    hit.normal = normalise_vector(sub_vector(sph.center, hit.point));
+    hit.normal = normalise_vector(sub_vector(sph.center[i], hit.point));
+		// printf("normal z: %f, intersec : %f, %f, %f\n", hit.normal.z, hit.point.x, hit.point.y, hit.point.z);
 		if (dot(ray.direction, hit.normal) < 0)
 			hit.front_side = true;
 		else
 			hit.front_side = false;
-    hit.color = linear_gradient(create_color2(0.0f, 0.0f, 0.0f), sph.color, 0.5 * (hit.normal.z + 1.0f));
+		// hit.color = sph.color[i];
+    hit.color = linear_gradient(create_color2(0.0f, 0.0f, 0.0f), sph.color[i], 0.5 * (hit.normal.z + 1.0f));
     return (hit);
 	}

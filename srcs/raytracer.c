@@ -23,29 +23,27 @@ t_ray make_ray(int pixel_index[2], t_scene *scene)
 		scalar_mult(scene->up_vec, WIN_HEIGHT / 2.0f - pixel_index[0] ))
 	);
 	viewport_point = add_vector(scene->viewport_center, offset);
-	ray.origin = scene->camera->pos;
-	ray.direction = normalise_vector(sub_vector(scene->camera->pos, viewport_point));
+	ray.origin = scene->camera.pos;
+	ray.direction = normalise_vector(sub_vector(scene->camera.pos, viewport_point));
 	return (ray);
 }
 
 t_hit_info intersection(t_ray ray, t_scene *scene)
 {
 	t_hit_info	hit_info[2];
-	t_obj				*object;
+	t_sphere    sphere;
 
-	object = scene->objs->next;
-	init_max_depth(hit_info, scene->objs);
-	while (object != NULL)
+  sphere = scene->sphere;
+	init_max_depth(hit_info, &scene->camera);
+	size_t i = 0;
+  while (i < sphere.count)
 	{
-    if (object->obj_type == SPHERE)
-		{
-			hit_info[1] = hit_sphere(ray, *object->obj.sphere);
-      hit_info[1].obj = object;
-		}
-		if (hit_info[1].has_hit == true && is_shorter_vec(hit_info[1].point, hit_info[0].point, scene->camera->pos) == true)
+			hit_info[1] = hit_sphere(ray, sphere, i);
+      // hit_info[1].obj = object;
+		// if (hit_info[1].has_hit == true && is_shorter_vec(hit_info[1].point, hit_info[0].point, scene->camera.pos) == true)
 			hit_info[0] = hit_info[1];
-		object = object->next;
-	}
+    i++;
+  }
 	return (hit_info[0]);
 }
 
@@ -54,7 +52,8 @@ t_hit_info	trace(t_scene *scene, t_ray ray, int pixel_index[2])
 	t_hit_info	hit_info;
 
 	hit_info = intersection(ray, scene);
-	scene->selection_grid[pixel_index[0]][pixel_index[1]] = hit_info.obj;
+	// scene->selection_grid[pixel_index[0]][pixel_index[1]] = hit_info.obj;
+  (void)pixel_index;
 	return (hit_info);
 }
 
@@ -88,8 +87,7 @@ void	raytracing(t_miniRt *minirt)
 		pixel_index[1] = -1;
 		while (++pixel_index[1] < WIN_WIDTH)
 		{
-			ray = make_ray(pixel_index, minirt->scene);
-			hit_info = trace(minirt->scene, ray, pixel_index);
+			ray = make_ray(pixel_index, minirt->scene); hit_info = trace(minirt->scene, ray, pixel_index);
 			color = get_color(ray, hit_info);
 			put_pixel(pixel_index[1], pixel_index[0], &minirt->img, convert_int_color(color));
 		}

@@ -31,49 +31,34 @@ void	init_mlx(t_miniRt *minirt)
 
 void	init_camera(t_scene *scene)
 {
-	t_camera	*camera;
+	t_camera	camera;
 
-	camera = malloc(sizeof(t_camera));
-	// if (camera == NULL)
-	// 	error
-	camera->pos = vec3(0, 0, 0);
-	camera->world_up = vec3(0, 1, 0);
-	camera->forward = vec3(0, 0, -1);
-	camera->right = normalise_vector(cross(camera->forward, camera->world_up));
-	camera->up = normalise_vector(cross(camera->right, camera->forward));
-	camera->fov = 60;
+	camera.pos = vec3(0, 0, 0);
+	camera.world_up = vec3(0, 1, 0);
+	camera.forward = vec3(0, 0, -1);
+	camera.right = normalise_vector(cross(camera.forward, camera.world_up));
+	camera.up = normalise_vector(cross(camera.right, camera.forward));
+	camera.fov = 60;
 	scene->camera = camera;
 }
 
 void	init_objects(t_scene *scene)
 {
-	t_sphere		*sph1;
-	t_sphere		*sph2;
-	t_obj				*camera;
-	t_obj				*obj1;
-	t_obj				*obj2;
+	t_sphere		sphere;
 
-	camera = malloc(sizeof(t_obj));
-	sph1 = malloc(sizeof(t_sphere));
-	sph2 = malloc(sizeof(t_sphere));
-	obj1 = malloc(sizeof(t_obj));
-	obj2 = malloc(sizeof(t_obj));
-	// while ()
-	// {
-	//		créer liste
-	// }
-	*sph1 = create_sphere(vec3(0.9, -0.6, -2), 0.6, create_color2(0.9f, 0.0f, 0.0f));
-	*sph2 = create_sphere(vec3(-0.8, -0.5, -4), 0.6, create_color2(0.0f, 0.0f, 0.9f));
-	camera->obj.camera = scene->camera;
-	camera->obj_type = CAMERA;
-	obj1->obj.sphere = sph1;
-	obj1->obj_type = SPHERE;
-	obj2->obj.sphere = sph2;
-	obj2->obj_type = SPHERE;
-	obj2->next = NULL;
-	obj1->next = obj2;
-	camera->next = obj1;
-	scene->objs = camera;
+	sphere.count = 1;
+	sphere.radius = malloc(sizeof(float) * sphere.count);
+	sphere.color = malloc(sizeof(t_color) * sphere.count);
+	sphere.center = malloc(sizeof(t_vec3) * sphere.count);
+	// sphere[0] = create_sphere(vec3(0.9, -0.6, -2), 0.6, create_color2(0.9f, 0.0f, 0.0f));
+	// sphere[1] = create_sphere(vec3(-0.8, -0.5, -4), 0.6, create_color2(0.0f, 0.0f, 0.9f));a
+	sphere.radius[0] = 0.4;
+	sphere.color[0] = create_color2(210, 0, 0);
+	sphere.center[0] = vec3(1, 0, -7); 
+	// sphere.radius[1] = 0.5;
+	// sphere.color[1] = create_color2(0, 0, 210);
+	// sphere.center[1] = vec3(-0.5, 0, -2); 
+	scene->sphere = sphere;
 }
 
 void	init_minirt(t_miniRt *minirt)
@@ -86,6 +71,6 @@ void	init_minirt(t_miniRt *minirt)
 		free_error(minirt, "Error malloc in init scene\n", 1);
 	init_camera(scene);
 	init_objects(scene);
-	scene->entity_selected = scene->objs;
+	// scene->entity_selected = scene->objs;
 	minirt->scene = scene;
 }

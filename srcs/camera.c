@@ -18,17 +18,17 @@ void  update_viewport(t_scene *scene)
   float     r;
   float     u;
 
- 	camera = scene->camera;
+ 	camera = &scene->camera;
   scene->viewport_height = 2.0f * tan(to_radian(camera->fov) / 2.0f) * VIEWPORT_DIST;
   scene->viewport_width = WIN_WIDTH * scene->viewport_height / WIN_HEIGHT;
   scene->viewport_center = add_vector(camera->pos, scalar_mult(camera->forward, VIEWPORT_DIST));
   r = scene->viewport_width / WIN_WIDTH;
 	u = scene->viewport_height/ WIN_HEIGHT;
-	scene->right_vec = scalar_mult(scene->camera->right, r);
-	scene->up_vec = scalar_mult(scene->camera->up, u);
+	scene->right_vec = scalar_mult(camera->right, r);
+	scene->up_vec = scalar_mult(camera->up, u);
 }
 
-void  move_entity(t_obj *entity, t_vec3 dest, float distance)
+/* void  move_entity(t_obj *entity, t_vec3 dest, float distance)
 {
   if (entity->obj_type == CAMERA)
     entity->obj.camera->pos = add_vector(entity->obj.camera->pos, scalar_mult(dest, distance));
@@ -119,5 +119,5 @@ void    scale_entity(t_scene *scene, int button)
                 scene->entity_selected->obj.cylinder->height += ZOOM;
                 scene->entity_selected->obj.cylinder->diameter += ZOOM;
         }
-}
+} */
 

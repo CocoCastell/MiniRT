@@ -82,10 +82,10 @@ typedef enum e_obj_type
 
 typedef struct s_sphere
 {
-	float		radius;
-	t_vec3	center;
-	t_color	color;
-	bool		is_selected;
+	float		*radius;
+	t_vec3	*center;
+	t_color	*color;
+	size_t	count;
 }	t_sphere;
 
 typedef struct s_plane
@@ -121,27 +121,11 @@ typedef struct s_light
 	float		intensity;
 }	t_light;
 
-typedef union u_obj
-{
-	t_plane			*plane;
-	t_sphere		*sphere;
-	t_cylinder	*cylinder;
-	t_camera		*camera;
-}	t_obj_union;
-
-typedef struct s_obj
-{
-	t_obj_type		obj_type;
-	t_obj_union		obj;
-	struct s_obj	*next;
-}	t_obj;
-
 // Algo
 typedef struct s_hit_info
 {
 	bool		has_hit;
 	bool		front_side;
-	t_obj		*obj;
 	t_vec3	point;
 	t_vec3	normal;
 	t_color	color;
@@ -174,17 +158,16 @@ typedef struct s_viewport
 
 typedef struct s_scene
 {
-	t_camera		*camera;
-	t_light			*light;
-	t_obj				*objs;
-	t_color			color;
+	t_camera		camera;
+	t_light			light;
+	t_sphere		sphere;
 	t_vec3			up_vec;
 	t_vec3			right_vec;
 	t_vec3			viewport_center;
 	float				viewport_width;
 	float				viewport_height;
-	t_obj				*selection_grid[WIN_HEIGHT][WIN_WIDTH];
-	t_obj				*entity_selected;
+	// t_obj				*selection_grid[WIN_HEIGHT][WIN_WIDTH];
+	// t_obj				*entity_selected;
 }	t_scene;
 
 typedef struct s_miniRt
@@ -203,20 +186,20 @@ void	raytracing(t_miniRt *minirt);
 void	raytracing(t_miniRt *minirt);
 
 // Raytracer Utils
-void	init_max_depth(t_hit_info hit_info[2], t_obj *camera);
+void	init_max_depth(t_hit_info hit_info[2], t_camera *camera);
 
 // Transformations 
 void  update_viewport(t_scene *scene);
-void  side_mouvement(int keycode, t_miniRt *minirt);
-void  rotation(int keycode, t_miniRt *minirt);
-void  move_entity(t_obj *entity, t_vec3 dest, float distance);
-void  scale_entity(t_scene *scene, int button);
+// void  side_mouvement(int keycode, t_miniRt *minirt);
+// void  rotation(int keycode, t_miniRt *minirt);
+// void  move_entity(t_obj *entity, t_vec3 dest, float distance);
+// void  scale_entity(t_scene *scene, int button);
 
 // Sphere
-t_hit_info	hit_sphere(t_ray ray, t_sphere sph);
+t_hit_info	hit_sphere(t_ray ray, t_sphere sph, size_t i);
 t_sphere		create_sphere(t_vec3 center, float radius, t_color color);
-t_vec3			calculate_sphere_hit_point(float dir_scalar, t_ray ray);
-float				calculate_sphere_delta(t_ray ray, t_sphere sph);
+t_vec3			calculate_sphere_hit_point(float dir_scalar, t_ray ray, size_t i);
+// float				calculate_sphere_delta(t_ray ray, t_sphere sph);
 
 // Colors
 t_color	linear_gradient(t_color color1, t_color color2, float a);

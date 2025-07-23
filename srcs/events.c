@@ -32,15 +32,15 @@ int	key_pressed(int keycode, t_miniRt *minirt)
 {
 	if (keycode == ESC)
 		my_close(minirt);
-        else if (is_mouvement_key(keycode))
-                side_mouvement(keycode, minirt);
-        else if (is_rotation_key(keycode))
-                rotation(keycode, minirt);
-        raytracing(minirt);
+        // else if (is_mouvement_key(keycode))
+        //         side_mouvement(keycode, minirt);
+        // else if (is_rotation_key(keycode))
+        //         rotation(keycode, minirt);
+        // raytracing(minirt);
 	return (0);
 }
 
-int     mouse_pressed(int button, int x, int y, t_miniRt *minirt)
+/* int     mouse_pressed(int button, int x, int y, t_miniRt *minirt)
 {
         if (button == LEFT_CLICK)
                 minirt->scene->entity_selected = minirt->scene->selection_grid[y][x];
@@ -48,13 +48,13 @@ int     mouse_pressed(int button, int x, int y, t_miniRt *minirt)
                 scale_entity(minirt->scene, button);
         raytracing(minirt);
         return (0);
-}
+} */
 
 void	event_manager(t_miniRt *minirt)
 {
 	mlx_hook(minirt->win, ClientMessage, StructureNotifyMask, my_close, minirt);
         mlx_hook(minirt->win, KeyPress, KeyPressMask, key_pressed, minirt);
-        mlx_hook(minirt->win, ButtonPress, ButtonPressMask, mouse_pressed, minirt);
+        // mlx_hook(minirt->win, ButtonPress, ButtonPressMask, mouse_pressed, minirt);
         // mlx_hook(minirt->win, ButtonRelease, ButtonReleaseMask, mouse_released, minirt);
         // mlx_hook(minirt->win, MotionNotify, PointerMotionMask, mouse_move, minirt);
 }
