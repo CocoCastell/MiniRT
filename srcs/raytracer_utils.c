@@ -12,11 +12,12 @@
 
 #include "../includes/miniRT.h"
 
-void	init_max_depth(t_hit_info hit_info[2], t_camera *camera)
+void	init_ray(t_hit_info hit_info[2], t_camera *camera)
 {
 	hit_info[0].has_hit = false;
 	hit_info[0].point = vec3(100, 100, 100); //depth limit a mettre dans structure car const 
-	// hit_info[0].obj = camera;
+	hit_info[0].type = CAMERA;
+	hit_info[0].ent_index = 0;
 	(void)camera;
 }
 

@@ -90,12 +90,10 @@ t_hit_info hit_sphere(t_ray ray, t_sphere sph, size_t i)
     hit.has_hit = true;
     hit.point = add_vector(ray.origin, scalar_mult(ray.direction, t[0]));
     hit.normal = normalise_vector(sub_vector(sph.center[i], hit.point));
-		// printf("normal z: %f, intersec : %f, %f, %f\n", hit.normal.z, hit.point.x, hit.point.y, hit.point.z);
 		if (dot(ray.direction, hit.normal) < 0)
 			hit.front_side = true;
 		else
 			hit.front_side = false;
-		// hit.color = sph.color[i];
     hit.color = linear_gradient(create_color2(0.0f, 0.0f, 0.0f), sph.color[i], 0.5 * (hit.normal.z + 1.0f));
     return (hit);
 	}

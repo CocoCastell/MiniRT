@@ -71,14 +71,15 @@ typedef struct s_quad_data
 
 // Objects
 
-typedef enum e_obj_type
+typedef enum e_ent_type
 {
 	CAMERA,
+	LIGHT,
 	PLANE,
 	SPHERE,
 	CYLINDER,
 	TRIANGLE
-}	t_obj_type;
+}	t_ent_type;
 
 typedef struct s_sphere
 {
@@ -124,11 +125,13 @@ typedef struct s_light
 // Algo
 typedef struct s_hit_info
 {
-	bool		has_hit;
-	bool		front_side;
-	t_vec3	point;
-	t_vec3	normal;
-	t_color	color;
+	bool				has_hit;
+	bool				front_side;
+	t_ent_type	type;
+	size_t			ent_index;
+	t_vec3			point;
+	t_vec3			normal;
+	t_color			color;
 }	t_hit_info;
 
 typedef struct s_data_img
@@ -156,18 +159,25 @@ typedef struct s_viewport
 	float			viewport_height;
 }	t_viewport;
 
+typedef struct s_selection 
+{
+	t_ent_type	type;
+	size_t			index;
+} t_selection;
+
 typedef struct s_scene
 {
 	t_camera		camera;
 	t_light			light;
 	t_sphere		sphere;
+	t_cylinder	cylinder;
 	t_vec3			up_vec;
 	t_vec3			right_vec;
 	t_vec3			viewport_center;
 	float				viewport_width;
 	float				viewport_height;
-	// t_obj				*selection_grid[WIN_HEIGHT][WIN_WIDTH];
-	// t_obj				*entity_selected;
+	t_selection	selection_grid[WIN_HEIGHT][WIN_WIDTH];
+	t_selection	entity_selected;
 }	t_scene;
 
 typedef struct s_miniRt
@@ -186,14 +196,14 @@ void	raytracing(t_miniRt *minirt);
 void	raytracing(t_miniRt *minirt);
 
 // Raytracer Utils
-void	init_max_depth(t_hit_info hit_info[2], t_camera *camera);
+void	init_ray(t_hit_info hit_info[2], t_camera *camera);
 
 // Transformations 
 void  update_viewport(t_scene *scene);
-// void  side_mouvement(int keycode, t_miniRt *minirt);
-// void  rotation(int keycode, t_miniRt *minirt);
-// void  move_entity(t_obj *entity, t_vec3 dest, float distance);
-// void  scale_entity(t_scene *scene, int button);
+void  side_mouvement(int keycode, t_scene *scene);
+void  move_entity(t_scene *scene, t_vec3 dest, float step);
+void  rotation(int keycode, t_scene *scene);
+void  scale_entity(t_scene *scene, int button);
 
 // Sphere
 t_hit_info	hit_sphere(t_ray ray, t_sphere sph, size_t i);

@@ -46,24 +46,25 @@ void	init_objects(t_scene *scene)
 {
 	t_sphere		sphere;
 
-	sphere.count = 1;
+	sphere.count = 2;
 	sphere.radius = malloc(sizeof(float) * sphere.count);
 	sphere.color = malloc(sizeof(t_color) * sphere.count);
 	sphere.center = malloc(sizeof(t_vec3) * sphere.count);
 	// sphere[0] = create_sphere(vec3(0.9, -0.6, -2), 0.6, create_color2(0.9f, 0.0f, 0.0f));
 	// sphere[1] = create_sphere(vec3(-0.8, -0.5, -4), 0.6, create_color2(0.0f, 0.0f, 0.9f));a
 	sphere.radius[0] = 0.4;
-	sphere.color[0] = create_color2(210, 0, 0);
-	sphere.center[0] = vec3(1, 0, -7); 
-	// sphere.radius[1] = 0.5;
-	// sphere.color[1] = create_color2(0, 0, 210);
-	// sphere.center[1] = vec3(-0.5, 0, -2); 
+	sphere.color[0] = create_color2(0.9f, 0.0f, 0.0f);
+	sphere.center[0] = vec3(1, 0, -4); 
+	sphere.radius[1] = 0.5;
+	sphere.color[1] = create_color2(0.0f, 0.0f, 0.9f);
+	sphere.center[1] = vec3(-0.5, 0, -2); 
 	scene->sphere = sphere;
 }
 
 void	init_minirt(t_miniRt *minirt)
 {
-	t_scene *scene;
+	t_scene			*scene;
+	t_selection	entity_selected;
 
 	init_mlx(minirt);
 	scene = malloc(sizeof(t_scene));
@@ -71,6 +72,8 @@ void	init_minirt(t_miniRt *minirt)
 		free_error(minirt, "Error malloc in init scene\n", 1);
 	init_camera(scene);
 	init_objects(scene);
-	// scene->entity_selected = scene->objs;
+	entity_selected.type = CAMERA;
+	entity_selected.index= CAMERA;
+	scene->entity_selected = entity_selected;
 	minirt->scene = scene;
 }

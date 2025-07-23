@@ -34,14 +34,15 @@ t_hit_info intersection(t_ray ray, t_scene *scene)
 	t_sphere    sphere;
 
   sphere = scene->sphere;
-	init_max_depth(hit_info, &scene->camera);
+	init_ray(hit_info, &scene->camera);
 	size_t i = 0;
   while (i < sphere.count)
 	{
-			hit_info[1] = hit_sphere(ray, sphere, i);
-      // hit_info[1].obj = object;
-		// if (hit_info[1].has_hit == true && is_shorter_vec(hit_info[1].point, hit_info[0].point, scene->camera.pos) == true)
-			hit_info[0] = hit_info[1];
+    hit_info[1] = hit_sphere(ray, sphere, i);
+    hit_info[1].type = SPHERE;
+    hit_info[1].ent_index = i;
+		if (hit_info[1].has_hit == true && is_shorter_vec(hit_info[1].point, hit_info[0].point, scene->camera.pos) == true)
+		  hit_info[0] = hit_info[1];
     i++;
   }
 	return (hit_info[0]);
@@ -52,8 +53,8 @@ t_hit_info	trace(t_scene *scene, t_ray ray, int pixel_index[2])
 	t_hit_info	hit_info;
 
 	hit_info = intersection(ray, scene);
-	// scene->selection_grid[pixel_index[0]][pixel_index[1]] = hit_info.obj;
-  (void)pixel_index;
+	scene->selection_grid[pixel_index[0]][pixel_index[1]].type = hit_info.type;
+	scene->selection_grid[pixel_index[0]][pixel_index[1]].index = hit_info.ent_index;
 	return (hit_info);
 }
 
