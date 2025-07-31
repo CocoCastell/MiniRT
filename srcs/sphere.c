@@ -43,12 +43,12 @@
  * @param sph Sphere to test against.
  * @return the quadratic coefficients (a, h, c) and discriminant (delta). 
  */
-t_quad_data compute_quadratic_data(t_ray ray, t_sphere sph, size_t i)
+t_quad_eq	compute_quadratic_data(t_ray ray, t_sphere sph, int i)
 {
-    t_quad_data q;
-    t_vec3			m;
+    t_quad_eq	q;
+    t_vec3		m;
 		
-		m = sub_vector(sph.center[i], ray.origin);
+		m = vector_from_to(sph.center[i], ray.origin);
     q.a = dot(ray.direction, ray.direction);
     q.h = dot(m, ray.direction);
     q.c = dot(m, m) - sph.radius[i] * sph.radius[i];
@@ -64,36 +64,32 @@ t_quad_data compute_quadratic_data(t_ray ray, t_sphere sph, size_t i)
  * Check if the sphere is behind the camera or not (t[]).
  * 
  * @param ray Incident ray.
- * @param sph Sphere to test against.
+ * @param sphere Sphere to test against.
  * @return Hit information including point, normal, and color.
  */
-t_hit_info hit_sphere(t_ray ray, t_sphere sph, size_t i)
+t_hit_info sphere_intersect(t_ray ray, t_sphere sphere, int i)
 {
-    t_hit_info	hit;
-    t_quad_data	q;
-		float				sq_delta;
-		float				t[3];
+	t_hit_info	hit;
+	t_quad_eq		q;
+	float				sq_delta;
+	float				t[3];
 		
-		q = compute_quadratic_data(ray, sph, i);
-    hit.has_hit = false;
-		if (q.delta < 0) 
-      return (hit);
-		sq_delta = sqrt(q.delta);
-    t[1] = (-q.h - sq_delta) / q.a;
-    t[2] = (-q.h + sq_delta) / q.a;
-		if (t[1] > 0)
-			t[0] = t[1];
-		else if (t[2] > 0)
-			t[0] = t[2];
-		else
-      return (hit);
-    hit.has_hit = true;
-    hit.point = add_vector(ray.origin, scalar_mult(ray.direction, t[0]));
-    hit.normal = normalise_vector(sub_vector(sph.center[i], hit.point));
-		if (dot(ray.direction, hit.normal) < 0)
-			hit.front_side = true;
-		else
-			hit.front_side = false;
-    hit.color = linear_gradient(create_color2(0.0f, 0.0f, 0.0f), sph.color[i], 0.5 * (hit.normal.z + 1.0f));
-    return (hit);
-	}
+	q = compute_quadratic_data(ray, sphere, i);
+	hit.has_hit = false;
+	if (q.delta < 0)
+		return (hit);
+	sq_delta = sqrt(q.delta);
+	t[1] = (-q.h - sq_delta) / q.a;
+	t[2] = (-q.h + sq_delta) / q.a;
+	if (t[1] > 0)
+		t[0] = t[1];
+	else if (t[2] > 0)
+		t[0] = t[2];
+	else
+  	return (hit);
+	hit.has_hit = true;
+	hit.type = SPHERE;
+	hit.ent_index = i;
+	hit.distance = t[0];
+	return (hit);
+}

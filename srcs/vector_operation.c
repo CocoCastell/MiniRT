@@ -12,6 +12,13 @@
 
 #include "../includes/miniRT.h"
 
+float max(float a, float b)
+{
+  if (a > b)
+    return a;
+  return b;
+}
+
 float   to_radian(float degree)
 {
     return (degree * M_PIF / 180.0f);
@@ -32,7 +39,7 @@ t_vec3  cross(t_vec3 vec1, t_vec3 vec2)
     return (crossed_vector);
 }
 
-t_vec3  scalar_mult(t_vec3 vector, float scalar)
+t_vec3  scale_vec(t_vec3 vector, float scalar)
 {
     t_vec3 scaled_vector;
 
@@ -44,12 +51,12 @@ t_vec3  scalar_mult(t_vec3 vector, float scalar)
 
 bool	is_shorter_vec(t_vec3 main_vec, t_vec3 vec_to_compare, t_vec3 origin_point)
 {
-	t_vec3	sub_main_vec;
-	t_vec3	sub_comp_vec;
+	t_vec3	origin_main_vec;
+	t_vec3	origin_comp_vec;
 
-	sub_main_vec = sub_vector(main_vec, origin_point);
-	sub_comp_vec = sub_vector(vec_to_compare, origin_point);
-	return (vector_sq_length(sub_main_vec) < vector_sq_length(sub_comp_vec));
+	origin_main_vec = vector_from_to(main_vec, origin_point);
+	origin_comp_vec = vector_from_to(vec_to_compare, origin_point);
+	return (vector_sq_length(origin_main_vec) < vector_sq_length(origin_comp_vec));
 }
 
 t_vec3  apply_rotation(t_vec3 vector, float  R[3][3])
@@ -79,7 +86,7 @@ t_vec3  add_vector(t_vec3 vector1, t_vec3 vector2)
  * @param dest_point Ending point.
  * @return Vector from origin to destination.
  */
-t_vec3 sub_vector(t_vec3 origin_point, t_vec3 dest_point)
+t_vec3 vector_from_to(t_vec3 origin_point, t_vec3 dest_point)
 {
 	t_vec3 vector;
 
@@ -99,6 +106,16 @@ t_vec3  vec3(float x, float y, float z)
     return (point);
 }
 
+t_vec3  negate_vec(t_vec3 vector)
+{
+    t_vec3  inverted_vec;
+
+    inverted_vec.x = -vector.x;
+    inverted_vec.y = -vector.y;
+    inverted_vec.z = -vector.z;
+    return (inverted_vec);
+}
+
 float vector_length(t_vec3 vect)
 {
     return (sqrt(vect.x * vect.x + vect.y * vect.y + vect.z * vect.z));
@@ -109,23 +126,23 @@ float vector_sq_length(t_vec3 vect)
     return (vect.x * vect.x + vect.y * vect.y + vect.z * vect.z);
 }
 
-t_vec3  normalise_vector(t_vec3 vector)
+t_vec3  normalize(t_vec3 vector)
 {
-    t_vec3  normalised_vector;
+    t_vec3  normalized_vector;
     float   magnitude;
     
     magnitude = vector_length(vector);
     if (magnitude == 0)
     {
-        normalised_vector.x = 0;
-        normalised_vector.y = 0;
-        normalised_vector.z = 0;
-        return (normalised_vector);
+        normalized_vector.x = 0;
+        normalized_vector.y = 0;
+        normalized_vector.z = 0;
+        return (normalized_vector);
     }
-    normalised_vector.x = vector.x / magnitude;
-    normalised_vector.y = vector.y / magnitude;
-    normalised_vector.z = vector.z / magnitude;
-    return (normalised_vector);
+    normalized_vector.x = vector.x / magnitude;
+    normalized_vector.y = vector.y / magnitude;
+    normalized_vector.z = vector.z / magnitude;
+    return (normalized_vector);
 }
 
 t_vec3  scale_vector(t_vec3 vector, float scale_factor)
@@ -146,7 +163,7 @@ void fill_axis_angle_matrix(float matrix[3][3], t_vec3 axis, float angle)
     float y;
     float z;
     
-    axis = normalise_vector(axis);
+    axis = normalize(axis);
     t = 1 - cos(angle);
     x = axis.x;
     y = axis.y;

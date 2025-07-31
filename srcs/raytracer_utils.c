@@ -12,12 +12,28 @@
 
 #include "../includes/miniRT.h"
 
-void	init_ray(t_hit_info hit_info[2], t_camera *camera)
+void	init_ray(t_hit_info *hit, t_vec3 max_distance)
 {
-	hit_info[0].has_hit = false;
-	hit_info[0].point = vec3(100, 100, 100); //depth limit a mettre dans structure car const 
-	hit_info[0].type = CAMERA;
-	hit_info[0].ent_index = 0;
-	(void)camera;
+	hit->has_hit = false;
+	hit->point = max_distance; //depth limit a mettre dans structure car const 
+	hit->type = CAMERA;
+	hit->distance = 100;
+	hit->ent_index = 0;
 }
 
+t_ray	make_ray(t_vec3 origin, t_vec3 direction)
+{
+	t_ray	ray;
+
+	ray.origin = origin;
+	ray.direction = direction;
+	return (ray);
+}
+
+void	fill_hit_data(t_hit_info *hit, t_ray *ray, t_color color, int i)
+{
+  hit->point = add_vector(ray->origin, scale_vec(ray->direction, hit->distance));
+	hit->ray = ray;
+	hit->color = color;
+	hit->ent_index = i;
+}

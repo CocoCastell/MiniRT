@@ -18,22 +18,22 @@ int     my_close(t_miniRt *minirt)
         exit(0);
 }
 
-bool    is_mouvement_key(int keycode)
+bool    is_movement_key(int keycode)
 {
-        return (keycode == A || keycode == D || keycode == W || keycode == S || keycode == SPACE || keycode == SHIFT);
+        return (keycode == A_KEY || keycode == D_KEY || keycode == W_KEY || keycode == S_KEY || keycode == SPACE || keycode == SHIFT);
 }
 
 bool    is_rotation_key(int keycode)
 {
-        return (keycode == UP_K || keycode == DOWN_K || keycode == LEFT_K || keycode == RIGHT_K || keycode == Q || keycode == E);
+        return (keycode == UP_K || keycode == DOWN_K || keycode == LEFT_K || keycode == RIGHT_K || keycode == Q_KEY || keycode == E_KEY);
 }
 
 int	key_pressed(int keycode, t_miniRt *minirt)
 {
 	if (keycode == ESC)
 		my_close(minirt);
-        else if (is_mouvement_key(keycode))
-                side_mouvement(keycode, minirt->scene);
+        else if (is_movement_key(keycode))
+                side_movement(keycode, minirt->scene);
         else if (is_rotation_key(keycode))
                 rotation(keycode, minirt->scene);
         raytracing(minirt);
