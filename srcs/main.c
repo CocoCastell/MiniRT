@@ -12,11 +12,13 @@
 
 #include "../includes/miniRT.h"
 
-int main()
+int main(int argc, char *argv[])
 {
 	t_miniRt	minirt;
 
-	init_minirt(&minirt);
+	if (argc != 2)
+		return (printf("Wrong number of arguments\n"));
+	init_minirt(&minirt, argv[1]);
 	event_manager(&minirt);
 	printf("Starting raytracing ...\n");
 	raytracing(&minirt);

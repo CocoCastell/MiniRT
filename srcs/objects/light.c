@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../../includes/miniRT.h"
 
 t_color ambient_reflection(t_scene *scene, t_color color)
 {
@@ -51,8 +51,8 @@ void  specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *scene)
   spec_color = scale_color(spec_color, hit->dist_attenuation);
   hit->color = add_color(hit->color, spec_color);
 }
-
-void  idk_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
+  
+void  mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
 {
   t_ray       reflect_ray;
   t_vec3      reflect_dir;
@@ -61,33 +61,36 @@ void  idk_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
 
   if (depth == 0)
     return ;
-	bias_pos = add_vector(hit->point, scale_vec(hit->normal, 0.1f));
-  reflect_dir = normalize(get_reflected_vec(vector_from_to(scene->camera.pos, hit->point), hit->normal));
+  reflect_dir = normalize(get_reflected_vec(hit->incident_ray, hit->normal));
+	bias_pos = add_vector(hit->point, scale_vec(hit->normal, 1e-4f));
   reflect_ray = make_ray(bias_pos, reflect_dir);
-  reflect_hit = scene_intersect(reflect_ray, scene, vec3(100, 100, 100)); // const
+  reflect_hit = scene_intersect(reflect_ray, scene, vec3(100, 100, 100)); // cont
+  reflect_hit.incident_ray = reflect_ray.direction; 
+  reflect_hit.point = add_vector(reflect_ray.origin, scale_vec(reflect_ray.direction, reflect_hit.distance));
   if (reflect_hit.has_hit == false)
     return ;
   apply_reflections(scene, &reflect_hit, --depth);
-  hit->color = add_color(scale_color(hit->color, 0.6), scale_color(reflect_hit.color, 0.4));
+  hit->color = add_color(scale_color(hit->color, 1 - get_reflectivity(hit, scene)), scale_color(reflect_hit.color, get_reflectivity(hit, scene)));
 }
 
 void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
 {
   int  i;
 
-	hit->color = scene->sphere.color[hit->ent_index];
+  set_hit_color(hit, scene);
 	hit->color = ambient_reflection(scene, hit->color);
-	if (scene->light.count == 0 || depth == 0)
+	if (scene->light.count == 0)
     return ;
   i = -1;
-  fill_hit_normal(hit, scene);
+  set_hit_normal(hit, scene);
   while (++i < scene->light.count)
   {
-    fill_light_data(hit, scene, i);
+    set_light_data(hit, scene, i);
 	  if (hit->in_shadow)
       continue ;
     lambert_diffuse_reflection(hit, scene->light, i);
     specular_reflection(hit, scene->light, i, scene);
   }
-  idk_reflection(hit, scene, depth); // Execute even in shadow I think 
+  if (scene->mirror_on == true)
+    mirror_reflection(hit, scene, depth);
 }

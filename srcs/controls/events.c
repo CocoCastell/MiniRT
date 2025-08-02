@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../../includes/miniRT.h"
 
 int     my_close(t_miniRt *minirt)
 {
@@ -18,14 +18,30 @@ int     my_close(t_miniRt *minirt)
         exit(0);
 }
 
-bool    is_movement_key(int keycode)
+void    light_models(int keycode, t_scene *scene)
 {
-        return (keycode == A_KEY || keycode == D_KEY || keycode == W_KEY || keycode == S_KEY || keycode == SPACE || keycode == SHIFT);
+        if (keycode == R_KEY)
+        {
+                if (scene->mirror_on == true)
+                        scene->mirror_on = false;
+                else
+                        scene->mirror_on = true;
+        }
 }
 
-bool    is_rotation_key(int keycode)
+void    mirror_control(int keycode, t_scene *scene)
 {
-        return (keycode == UP_K || keycode == DOWN_K || keycode == LEFT_K || keycode == RIGHT_K || keycode == Q_KEY || keycode == E_KEY);
+        float   reflectivity;
+
+        reflectivity = 0.05;
+        if (keycode == MINUS_KEY)
+                reflectivity = -0.05;
+        if (scene->entity_selected.type == SPHERE)
+                scene->sphere.reflectivity[scene->entity_selected.index] += reflectivity;
+        if (scene->entity_selected.type == PLANE)
+                scene->plane.reflectivity[scene->entity_selected.index] += reflectivity;
+        if (scene->entity_selected.type == CYLINDER)
+                scene->cylinder.reflectivity[scene->entity_selected.index] += reflectivity;
 }
 
 int	key_pressed(int keycode, t_miniRt *minirt)
@@ -36,6 +52,10 @@ int	key_pressed(int keycode, t_miniRt *minirt)
                 side_movement(keycode, minirt->scene);
         else if (is_rotation_key(keycode))
                 rotation(keycode, minirt->scene);
+        else if (keycode == R_KEY)
+                light_models(keycode, minirt->scene);
+        else if (keycode == PLUS_KEY || keycode == MINUS_KEY)
+                mirror_control(keycode, minirt->scene);
         raytracing(minirt);
 	return (0);
 }

@@ -36,27 +36,26 @@ t_hit_info scene_intersect(t_ray ray, t_scene *scene, t_vec3 max_dist)
 
 	i = -1;
 	init_ray(&hit[0], max_dist);
-  while (++i < scene->sphere.count)
+ 	while (++i < scene->sphere.count)
 	{
     hit[1] = sphere_intersect(ray, scene->sphere, i);
 		if (hit[1].has_hit == true && hit[0].distance > hit[1].distance)
 			hit[0] = hit[1];
-		// if (hit[1].has_hit == true)
-		// 	fill_hit_data(&hit[1], &ray, scene->sphere.color[i], i);
-		// if (hit[1].has_hit == true && is_shorter_vec(hit[1].point, hit[0].point, scene->camera.pos) == true)
-		// 	hit[0] = hit[1];
 	}
-	// fill_hit_data(&hit[0], &ray, scene->sphere.color[i], i);
-	/* i = -1;
+	i = -1;
 	while (++i < scene->plane.count)
 	{
 		hit[1] = plane_intersect(ray, scene->plane, i);
-		if (hit[1].has_hit == true)
-			fill_hit_data(&hit[1], &ray, scene->plane.color[i], i);
-		if (hit[1].has_hit == true && is_shorter_vec(hit[1].point, hit[0].point, scene->camera.pos) == true)
+		if (hit[1].has_hit == true && hit[0].distance > hit[1].distance)
+			hit[0] = hit[1];
+	}
+	/* i = -1;
+	while (++i < scene->cylinder.count)
+	{
+		hit[1] = cylinder_intersect(ray, scene->cylinder, i);
+		if (hit[1].has_hit == true && hit[0].distance > hit[1].distance)
 			hit[0] = hit[1];
 	} */
-	// hit[0].ray = &ray;
 	return (hit[0]);
 }
 
@@ -65,12 +64,12 @@ t_color	trace(t_scene *scene, t_ray ray, int pix_index[2])
 	t_hit_info	hit;
 
 	hit = scene_intersect(ray, scene, vec3(100, 100, 100)); //const
-	scene->selection_grid[pix_index[0]][pix_index[1]].type = hit.type;
-	scene->selection_grid[pix_index[0]][pix_index[1]].index = hit.ent_index;
 	if (hit.has_hit == true)
 	{
+		scene->selection_grid[pix_index[0]][pix_index[1]].type = hit.type;
+		scene->selection_grid[pix_index[0]][pix_index[1]].index = hit.ent_index;
+  	hit.incident_ray = ray.direction; 
   	hit.point = add_vector(ray.origin, scale_vec(ray.direction, hit.distance));
-		hit.color = scene->sphere.color[hit.ent_index];
 		apply_reflections(scene, &hit, DEPTH);
 	}	
 	else
@@ -93,7 +92,7 @@ void	raytracing(t_miniRt *minirt)
 		{
 			ray = get_camera_ray(pix_index, minirt->scene);
       color = trace(minirt->scene, ray, pix_index);
-			// color = get_color(ray, hit_info, minirt->scene);
+			color = gamma_correct(color);
 			put_pixel(pix_index[1], pix_index[0], &minirt->img, float_color_to_int(color));
 		}
 	}

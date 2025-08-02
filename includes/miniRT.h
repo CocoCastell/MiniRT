@@ -13,8 +13,8 @@
 # include "../libft/includes/ft_printf_bonus.h"
 
 // Consts
-# define WIN_WIDTH			1100
-# define WIN_HEIGHT			650
+# define WIN_WIDTH			800
+# define WIN_HEIGHT			500
 # define v_port_WIDTH 2.0f
 # define v_port_DIST	1 
 # define PIXEL_RATIO		(v_port_WIDTH / WIN_WIDTH)
@@ -38,11 +38,14 @@
 # define SPACE					32
 # define SHIFT					65505	
 # define CTRL						65307
+# define PLUS_KEY				43	
+# define MINUS_KEY			45
 # define W_KEY					119
 # define S_KEY					115
 # define A_KEY					97
 # define D_KEY					100
-# define Q_KEY					113	
+# define Q_KEY					113
+# define R_KEY					114
 # define E_KEY					101
 #	define LEFT_K					65361
 # define RIGHT_K				65363
@@ -81,6 +84,16 @@ typedef struct s_quad_eq
 	float	delta;
 }	t_quad_eq;
 
+typedef struct s_obj_counter
+{
+    int sphere;
+    int plane;
+    int cylinder;
+    int light;
+    int camera;
+    int ambient;
+} t_obj_counter;
+
 // ==== ENTITIES ==== 
 typedef enum e_ent_type
 {
@@ -98,7 +111,8 @@ typedef struct s_sphere
 	t_vec3	*center;
 	t_color	*color;
 	float		*shininess;
-	float		*spec_force;	
+	float		*spec_force;
+	float		*reflectivity;	
 	int			count;
 }	t_sphere;
 
@@ -107,15 +121,22 @@ typedef struct s_plane
 	t_color	*color;
 	t_vec3	*point;
 	t_vec3	*normal;
+	float		*shininess;
+	float		*spec_force;
+	float		*reflectivity;	
 	int			count;
 }	t_plane;
 
 typedef struct s_cylinder
 {
-	float		*diameter;
+	float		*radius;
 	float		*height;
+	t_vec3	*axis;
 	t_vec3	*center;
 	t_color	*color;
+	float		*shininess;
+	float		*spec_force;
+	float		*reflectivity;	
 	int			count;
 }	t_cylinder;
 
@@ -134,7 +155,7 @@ typedef struct s_light
 	t_vec3	*pos;
 	t_color	*color;
 	float		*intensity;
-	int	count;
+	int			count;
 }	t_light;
 
 typedef struct s_ray
@@ -147,7 +168,7 @@ typedef struct s_ray
 typedef struct s_selection 
 {
 	t_ent_type	type;
-	int			index;
+	int					index;
 } t_selection;
 
 typedef struct s_hit_info
@@ -155,13 +176,14 @@ typedef struct s_hit_info
 	bool				has_hit;
 	bool				in_shadow;
 	t_ray				*ray;
-	int			ent_index;
+	int					ent_index;
 	t_ent_type	type;
 	float				distance;
 	t_vec3			point;
 	t_vec3			normal;
 	t_vec3			light_dir;
 	t_vec3			light_vec;
+	t_vec3			incident_ray;
 	t_color			color;
 	float				dist_attenuation;
 }	t_hit_info;
@@ -189,7 +211,8 @@ typedef struct s_scene
 	t_v_port		v_port;
 	t_selection	selection_grid[WIN_HEIGHT][WIN_WIDTH];
 	t_selection	entity_selected;
-	float				pixel_grid[WIN_HEIGHT][WIN_WIDTH];
+	bool				mirror_on;
+	// float				pixel_grid[WIN_HEIGHT][WIN_WIDTH];
 }	t_scene;
 
 // ==== MLX ====
@@ -213,30 +236,7 @@ typedef struct s_miniRt
 
 // ===== FUNCTIONS =====
 
-// Raytracing
-void				raytracing(t_miniRt *minirt);
-t_hit_info	scene_intersect(t_ray ray, t_scene *scene, t_vec3 max_dist);
-t_ray				get_reflect_ray(t_hit_info *hit, t_scene *scene);
-
-// Raytracing Utils
-void	init_ray(t_hit_info *hit, t_vec3 max_distance);
-void	fill_hit_data(t_hit_info *hit, t_ray *ray, t_color color, int i);
-t_ray	make_ray(t_vec3 origin, t_vec3 direction);
-
-// Light
-t_color	ambient_reflection(t_scene *scene, t_color color);
-void 		specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *scene);
-void  	lambert_diffuse_reflection(t_hit_info *hit, t_light light, int i);
-void		apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth);
-
-// Light Utils
-t_vec3  get_reflected_vec(t_vec3 incident_vec, t_vec3 normal);
-void		fill_light_data(t_hit_info *hit, t_scene *scene, int i);
-void 		fill_hit_normal(t_hit_info *hit, t_scene *scene);
-bool		is_in_shadow(t_ray ray, t_scene *scene, t_hit_info*hit, float max_dist);
-float		distance_attenuation(t_vec3 vector);
-float		get_spec_force(t_scene *scene, t_hit_info *hit);
-float		get_shininess(t_scene *scene, t_hit_info *hit);
+// == Controls ==
 
 // Transformations 
 void  update_v_port(t_scene *scene);
@@ -245,32 +245,40 @@ void  move_entity(t_scene *scene, t_vec3 dest, float step);
 void  rotation(int keycode, t_scene *scene);
 void  scale_entity(t_scene *scene, int button);
 
+// Events
+void	event_manager(t_miniRt *minirt);
+int		key_pressed(int keycode, t_miniRt *minirt);
+int   my_close(t_miniRt *minirt);
+
+// Control Utils
+bool    is_movement_key(int keycode);
+bool    is_rotation_key(int keycode);
+
+// == Objects ==
+
+// Light
+t_color	ambient_reflection(t_scene *scene, t_color color);
+void  	lambert_diffuse_reflection(t_hit_info *hit, t_light light, int i);
+void 		specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *scene);
+void		mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth);
+void		apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth);
+
+// Light Utils
+bool		is_in_shadow(t_ray ray, t_scene *scene, t_hit_info*hit, float max_dist);
+float		distance_attenuation(t_vec3 vector);
+
 // Plane
 t_hit_info	plane_intersect(t_ray ray, t_plane plane, int i);
+
+// Cylinder
+t_hit_info	cylinder_intersect(t_ray ray, t_cylinder cyl, int i);
 
 // Sphere
 t_sphere		create_sphere(t_vec3 center, float radius, t_color color);
 t_hit_info	sphere_intersect(t_ray ray, t_sphere sph, int i);
 t_vec3			calculate_sphere_hit_point(float dir_scalar, t_ray ray, int i);
 
-// Colors
-t_color	linear_gradient(t_color color1, t_color color2, float a);
-t_color	get_color(t_ray ray, t_hit_info hit_info, t_scene *scene);
-t_color create_color(float r, float g, float b);
-t_color scale_color(t_color color, float scalar);
-t_color color_mult(t_color col1, t_color col2);
-t_color	add_color(t_color color1, t_color color2);
-int			float_color_to_int(t_color color);
-
-// Init
-void	init_scene(t_miniRt *minirt);
-void	init_mlx(t_miniRt *minirt);
-void	init_minirt(t_miniRt *minirt);
-
-// Events
-void	event_manager(t_miniRt *minirt);
-int		key_pressed(int keycode, t_miniRt *minirt);
-int   my_close(t_miniRt *minirt);
+// == Maths ==
 
 // Vector operation
 float		max(float a, float b);
@@ -288,8 +296,43 @@ float   to_radian(float degree);
 t_vec3  apply_rotation(t_vec3 vector, float  R[3][3]);
 bool		is_shorter_vec(t_vec3 main_vec, t_vec3 vec_to_compare, t_vec3 origin_point);
 t_vec3  vec_mult(t_vec3 vecA, t_vec3 vecB);
-void		fill_axis_angle_matrix(float matrix[3][3], t_vec3 axis, float angle);
+void		set_axis_angle_matrix(float matrix[3][3], t_vec3 axis, float angle);
 t_vec3  negate_vec(t_vec3 vector);
+
+// Raytracing
+void				raytracing(t_miniRt *minirt);
+t_hit_info	scene_intersect(t_ray ray, t_scene *scene, t_vec3 max_dist);
+
+// Raytracing Utils
+void		init_ray(t_hit_info *hit, t_vec3 max_distance);
+t_ray		make_ray(t_vec3 origin, t_vec3 direction);
+t_color gamma_correct(t_color color);
+
+// Setters
+void		set_light_data(t_hit_info *hit, t_scene *scene, int i);
+void 		set_hit_normal(t_hit_info *hit, t_scene *scene);
+void 		set_hit_color(t_hit_info *hit, t_scene *scene);
+
+// Getters
+float		get_spec_force(t_scene *scene, t_hit_info *hit);
+float		get_shininess(t_scene *scene, t_hit_info *hit);
+float		get_reflectivity(t_hit_info *hit, t_scene *scene);
+t_vec3  get_reflected_vec(t_vec3 incident_vec, t_vec3 normal);
+
+// Colors
+t_color create_color(float r, float g, float b);
+t_color scale_color(t_color color, float scalar);
+t_color color_mult(t_color col1, t_color col2);
+t_color	add_color(t_color color1, t_color color2);
+int			float_color_to_int(t_color color);
+
+// Init
+void	init_scene(t_miniRt *minirt);
+void	init_mlx(t_miniRt *minirt);
+void	init_minirt(t_miniRt *minirt, char *file);
+
+// Parse
+int	put_object_in_structure(char *line, t_obj_lists *lists, t_scene *scene);
 
 // Error
 void	exit_error(char *msg, int error);

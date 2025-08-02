@@ -27,18 +27,22 @@ INC		=	includes/miniRT.h \
 # Files
 SRCS	=	srcs/main.c \
 			srcs/error.c \
-			srcs/events.c \
 			srcs/vector_operation.c \
 			srcs/colors.c \
 			srcs/init.c \
-			srcs/transform.c \
-			srcs/sphere.c \
-			srcs/plane.c \
 			srcs/raytracer.c \
 			srcs/raytracer_utils.c \
-			srcs/light.c \
-			srcs/light_utils.c \
-			srcs/utils.c
+			srcs/setters.c \
+			srcs/getters.c \
+			srcs/utils.c \
+			srcs/controls/events.c \
+			srcs/controls/transform.c \
+			srcs/controls/control_utils.c \
+			srcs/objects/light.c \
+			srcs/objects/light_utils.c \
+			srcs/objects/plane.c \
+			srcs/objects/sphere.c \
+			srcs/objects/cylinder.c
 
 OBJS	=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 

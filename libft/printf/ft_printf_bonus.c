@@ -33,7 +33,7 @@ static int	check_error(const char *format, int occurence[3])
 	return (0);
 }
 
-static void	fill_struct(const char *format, int occurence[3], t_parse *parsing)
+static void	set_struct(const char *format, int occurence[3], t_parse *parsing)
 {
 	if (occurence[0] > 0)
 	{
@@ -75,7 +75,7 @@ static int	struct_manager(const char *format, t_parse *parsing)
 		format++;
 	}
 	if (check_error(format, occurence) == 0)
-		return (fill_struct(format, occurence, parsing), 0);
+		return (set_struct(format, occurence, parsing), 0);
 	else
 		return (write(1, "ERROR\n", 6));
 }

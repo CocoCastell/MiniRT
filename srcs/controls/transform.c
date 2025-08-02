@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../../includes/miniRT.h"
 
 void  update_v_port(t_scene *scene)
 {
@@ -98,7 +98,7 @@ void rotation(int keycode, t_scene *scene)
       axis = scene->camera.world_up;
     else if (keycode == Q_KEY || keycode == E_KEY)
       axis = scene->camera.forward;
-    fill_axis_angle_matrix(r_matrix, axis, angle);
+    set_axis_angle_matrix(r_matrix, axis, angle);
     apply_rotation_to_all_vectors(&scene->camera, r_matrix);
 }
 

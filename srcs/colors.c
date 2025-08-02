@@ -34,20 +34,6 @@ t_color color_mult(t_color col1, t_color col2)
     return (new_color);
 }
 
-t_color linear_gradient(t_color color1, t_color color2, float a)
-{
-    t_color new_color;
-    
-    if (a < 0.0f)
-			a = 0.0f;
-    if (a > 1.0f)
-			a = 1.0f;
-    new_color.r = (1.0f - a) * color1.r + a * color2.r;
-    new_color.g = (1.0f - a) * color1.g + a * color2.g;
-    new_color.b = (1.0f - a) * color1.b + a * color2.b;
-    return new_color;
-}
-
 t_color create_color(float r, float g, float b)
 {
 	t_color color;
@@ -82,20 +68,4 @@ int float_color_to_int(t_color color)
     int b = (int)(color.b * 255.0f) & 0xFF;
 
     return ((a << 24) | (r << 16) | (g << 8) | b);
-}
-
-t_color	get_color(t_ray ray, t_hit_info hit_info, t_scene *scene)
-{
-	t_color pix_color;
-
-	if (hit_info.has_hit == false)
-	{
-		if (ray.direction.y > -0.1)
-			pix_color = ambient_reflection(scene, create_color(0.5f, 0.5f, 0.9f));
-		else
-			pix_color = ambient_reflection(scene, create_color(0.0f, 0.5f, 0.0f));
-	}
-	else
-		pix_color = hit_info.color;
-	return (pix_color);
 }

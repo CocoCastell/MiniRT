@@ -156,7 +156,7 @@ t_vec3  scale_vector(t_vec3 vector, float scale_factor)
 }
 
 // Matrice de rotation autour d'un axe arbitraire (formule de Rodrigues)
-void fill_axis_angle_matrix(float matrix[3][3], t_vec3 axis, float angle)
+void set_axis_angle_matrix(float matrix[3][3], t_vec3 axis, float angle)
 {
     float t;
     float x;

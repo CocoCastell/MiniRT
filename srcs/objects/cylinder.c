@@ -1,38 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raytracer_utils.c                                  :+:      :+:    :+:   */
+/*   cylinder.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cochatel <cochatel@student.42barcelon      +#+  +:+       +#+        */
+/*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
 /*   Updated: 2025/06/23 16:29:07 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../../includes/miniRT.h"
 
-void	init_ray(t_hit_info *hit, t_vec3 max_distance)
+/* t_hit_info cylinder_intersect(t_ray ray, t_plane plane, int i)
 {
-	hit->has_hit = false;
-	hit->point = max_distance; //depth limit a mettre dans structure car const 
-	hit->type = CAMERA;
-	hit->distance = 100;
-	hit->ent_index = 0;
-}
+  t_hit_info  hit;
+  float       t;
+  t_vec3      center;
 
-t_ray	make_ray(t_vec3 origin, t_vec3 direction)
-{
-	t_ray	ray;
+  hit->has_hit = false;
+  center = plane.center[i];
+  ||(X - center) - ((X - center) . v) . v ||^2 = r2
+  t = 
+  if ()
+    return (hit);
 
-	ray.origin = origin;
-	ray.direction = direction;
-	return (ray);
-}
-
-t_color gamma_correct(t_color color)
-{
-    return create_color(pow(color.r, 1.0 / 2.2),
-                pow(color.g, 1.0 / 2.2),
-                pow(color.b, 1.0 / 2.2));
-}
+  hit->has_hit = true;
+  hit->distance = ;
+  hit->ent_index = i;
+  hit->type = CYLINDER;
+  return (hit);
+} */

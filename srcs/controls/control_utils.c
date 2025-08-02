@@ -1,38 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raytracer_utils.c                                  :+:      :+:    :+:   */
+/*   control_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cochatel <cochatel@student.42barcelon      +#+  +:+       +#+        */
+/*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
 /*   Updated: 2025/06/23 16:29:07 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../../includes/miniRT.h"
 
-void	init_ray(t_hit_info *hit, t_vec3 max_distance)
+bool    is_movement_key(int keycode)
 {
-	hit->has_hit = false;
-	hit->point = max_distance; //depth limit a mettre dans structure car const 
-	hit->type = CAMERA;
-	hit->distance = 100;
-	hit->ent_index = 0;
+        return (keycode == A_KEY || keycode == D_KEY || keycode == W_KEY || keycode == S_KEY || keycode == SPACE || keycode == SHIFT);
 }
 
-t_ray	make_ray(t_vec3 origin, t_vec3 direction)
+bool    is_rotation_key(int keycode)
 {
-	t_ray	ray;
-
-	ray.origin = origin;
-	ray.direction = direction;
-	return (ray);
-}
-
-t_color gamma_correct(t_color color)
-{
-    return create_color(pow(color.r, 1.0 / 2.2),
-                pow(color.g, 1.0 / 2.2),
-                pow(color.b, 1.0 / 2.2));
+        return (keycode == UP_K || keycode == DOWN_K || keycode == LEFT_K || keycode == RIGHT_K || keycode == Q_KEY || keycode == E_KEY);
 }
