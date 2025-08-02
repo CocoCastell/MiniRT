@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../../includes/miniRT.h"
 
 void	init_mlx(t_miniRt *minirt)
 {
@@ -27,6 +27,7 @@ void	init_mlx(t_miniRt *minirt)
 			&minirt->img.line_length, &minirt->img.endian);
 	if (minirt->img.addr == NULL)
 		free_error(minirt, "Img addr init error\n", 1);
+	minirt->array1 = NULL;
 }
 
 void init_pixel_offsets(t_scene *scene)
@@ -39,27 +40,14 @@ void init_pixel_offsets(t_scene *scene)
         scene->v_port.y_offsets[i] = WIN_HEIGHT / 2.0f - i;
 }
 
-void	init_camera(t_scene *scene)
-{
-	t_camera	camera;
-
-	camera.pos = vec3(0, 0, 0);
-	camera.world_up = vec3(0, 1, 0);
-	camera.forward = vec3(0, 0, -1);
-	camera.right = normalize(cross(camera.forward, camera.world_up));
-	camera.up = normalize(cross(camera.right, camera.forward));
-	camera.fov = 60;
-	scene->camera = camera;
-}
-
 void	init_objects(t_scene *scene)
 {
 	t_sphere		sphere;
-	t_plane			plane;
-	t_cylinder	cylinder;
+	// t_plane			plane;
+	// t_cylinder	cylinder;
 
 	// ATTENTION convertir diam en rayon
-	sphere.count = 3;
+	sphere.count = 1;
 	sphere.radius = malloc(sizeof(float) * sphere.count);
 	sphere.color = malloc(sizeof(t_color) * sphere.count);
 	sphere.center = malloc(sizeof(t_vec3) * sphere.count);
@@ -68,13 +56,14 @@ void	init_objects(t_scene *scene)
 	sphere.reflectivity = malloc(sizeof(float) * sphere.count);
 	// sphere[0] = create_sphere(vec3(0.9, -0.6, -2), 0.6, create_color(0.9f, 0.0f, 0.0f));
 	// sphere[1] = create_sphere(vec3(-0.8, -0.5, -4), 0.6, create_color(0.0f, 0.0f, 0.9f));
-	sphere.radius[0] = 0.4;
-	sphere.color[0] = create_color(0.9f, 0.0f, 0.0f);
+	sphere.radius[0] = 1.5f;
+	sphere.color[0] = create_color(0.3f, 0.9f, 0.05f);
 	sphere.shininess[0] = 40.0f;
-	sphere.spec_force[0] = 0.5;
-	sphere.center[0] = vec3(1, 0, -5); 
-	sphere.reflectivity[0] = 0.05f; 
-	sphere.radius[1] = 0.5;
+	sphere.spec_force[0] = 0.3;
+	sphere.center[0] = vec3(-1.0f, 0.0f, 5.0f); 
+	sphere.reflectivity[0] = 0.00f; 
+	scene->sphere = sphere;
+/* 	sphere.radius[1] = 0.5;
 	sphere.color[1] = create_color(0.0f, 0.0f, 0.9f);
 	sphere.center[1] = vec3(-0.5, 0, -3); 
 	sphere.shininess[1] = 40.0f;
@@ -122,7 +111,7 @@ void	init_objects(t_scene *scene)
 	cylinder.shininess[0] = 30.0f;
 	cylinder.spec_force[0] = 0.5f;
 	cylinder.reflectivity[0] = 0.1f;
-	scene->cylinder = cylinder;
+	scene->cylinder = cylinder */;
 }
 
 void	init_lights(t_scene *scene)
@@ -142,24 +131,34 @@ void	init_lights(t_scene *scene)
 	scene->light = light;
 }
 
-int	get_fd_file(char *file)
+int	get_fd_file(char *file, t_miniRt *minirt)
 {
 	int	fd;
 
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
-		exit_error("Cannot open file\n", 1);
+		free_error(minirt, "Cannot open file\n", 1);
 	return (fd);
 }
 
-void	init_all_objects(int fd, t_miniRt *minirt)
+void	init_obj_struct(t_scene *scene, t_obj_counter counter)
+{
+	init_sphere(scene, counter.sphere);
+	init_plane(scene, counter.plane);
+	init_cylinder(scene, counter.cylinder);
+	init_light(scene, counter.light);
+}
+
+void	init_all_objects(int fd, t_miniRt *minirt, char *file)
 {
 	char					*line;
 	int						is_eof;
 	t_obj_counter	counter;
 	
 	is_eof = 0;
-  counter = count_object(fd);
+  counter = count_objects(fd, minirt);
+	init_obj_struct(minirt->scene, counter);
+	fd = get_fd_file(file, minirt);
 	while (true)
 	{
 		line = get_next_line(fd, &is_eof);
@@ -177,21 +176,20 @@ void	init_minirt(t_miniRt *minirt, char *file)
 	t_selection	entity_selected;
 	int					fd;
 
-	fd = get_fd_file(file);
+	fd = get_fd_file(file, minirt);
 	init_mlx(minirt);
 	scene = malloc(sizeof(t_scene));
 	if (scene == NULL)
 		free_error(minirt, "Error malloc in init scene\n", 1);
-	init_all_objects(fd, minirt);
-	init_camera(scene);
-	init_objects(scene);
-	init_lights(scene);
+	minirt->scene = scene;
+	init_all_objects(fd, minirt, file);
+	// init_objects(minirt->scene);
+	// init_lights(minirt->scene);
 	// init_pixel_offsets(scene);
-	scene->amb_color = create_color(1.0f, 1.0f, 1.0f);
-	scene->amb_ratio = 0.7f;
-	scene->mirror_on = false;
+	// scene->amb_color = create_color(1.0f, 1.0f, 1.0f);
+	// scene->amb_ratio = 0.7f;
 	entity_selected.type = CAMERA;
 	entity_selected.index = 0;
-	scene->entity_selected = entity_selected;
-	minirt->scene = scene;
+	minirt->scene->entity_selected = entity_selected;
+	minirt->scene->mirror_on = false;
 }

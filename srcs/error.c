@@ -15,7 +15,7 @@
 void	exit_error(char *msg, int error)
 {
 	if (msg != NULL)
-		ft_printf("Error\n%s", msg);
+		ft_printf(RED"ERROR\n"DEF "%s", msg);
 	exit(error);
 }
 
@@ -30,6 +30,8 @@ void	free_mlx(t_miniRt *minirt)
 		mlx_destroy_display(minirt->mlx);
 		free(minirt->mlx);
 	}
+	// if (minirt->array1 != NULL)
+  // 	ft_free_string_array(minirt->array1);
 }
 
 void	free_error(t_miniRt *minirt, char *msg, int error)

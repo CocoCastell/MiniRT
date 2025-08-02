@@ -13,23 +13,22 @@
 #include "../../includes/miniRT.h"
 
 /**
- * @brief Creates a sphere object.
+ * @brief Put the data of a sphere in the SoA
  * 
  * @param	center Center of the sphere.
  * @param radius Radius of the sphere.
  * @param	color Color of the sphere.
- * @return the sphere created.
+ * @return void.
  */
-/* t_sphere create_sphere(t_vec3 center, float radius, t_color color)
+void	add_sphere(t_parse_data data, t_sphere sphere, int i)
 {
-	t_sphere	sphere;
-
-	sphere.center = center;
-	sphere.radius = radius;
-	sphere.color = color;
-	sphere.is_selected = false;
-	return (sphere);
-} */
+	sphere.center[i] = data.center;
+	sphere.radius[i] = data.radius; // corriger Doxygen
+	sphere.color[i] = data.color;
+	sphere.shininess[i] = data.shininess;
+	sphere.spec_force[i] = data.spec_force;
+	sphere.reflectivity[i] = data.reflectivity;
+}
 
 /**
  * @brief Compute the coefficients and discriminant of the ray-sphere intersection quadratic equation.

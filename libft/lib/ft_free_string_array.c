@@ -27,17 +27,3 @@ int	ft_free_string_array(char **array)
 	}
 	return (free(array), 1);
 }
-/*void	ft_free_string_array(char **array)
-{
-	int	i;
-
-	i = 0;
-	if (array == NULL)
-		return ;
-	while (array[i] != NULL)
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
-}*/

@@ -27,14 +27,17 @@ INC		=	includes/miniRT.h \
 # Files
 SRCS	=	srcs/main.c \
 			srcs/error.c \
-			srcs/vector_operation.c \
 			srcs/colors.c \
-			srcs/init.c \
 			srcs/raytracer.c \
 			srcs/raytracer_utils.c \
 			srcs/setters.c \
 			srcs/getters.c \
 			srcs/utils.c \
+			srcs/math/vector_operation.c \
+			srcs/init/init.c \
+			srcs/init/parse.c \
+			srcs/init/count.c \
+			srcs/init/init_obj_struct.c \
 			srcs/controls/events.c \
 			srcs/controls/transform.c \
 			srcs/controls/control_utils.c \
@@ -53,13 +56,17 @@ LIBFT_F	=	gnl/get_next_line_bonus.c \
 			printf/ft_types_bonus.c \
 			lib/ft_free_string_array.c \
 			lib/ft_free_matrix.c \
+			lib/ft_str_array_len.c \
+			lib/ft_is_only_digit.c \
 			lib/ft_putnbr_fd.c \
 			lib/ft_strmapi.c \
 			lib/ft_putstr_fd.c \
 			lib/ft_strncmp.c \
 			lib/ft_strrev.c \
 			lib/ft_atoi.c \
+			lib/ft_atof.c \
 			lib/ft_split.c \
+			lib/ft_split_whitespace.c \
 			lib/ft_itoa.c \
 			lib/ft_strnstr.c \
 			lib/ft_bzero.c \
@@ -103,7 +110,7 @@ LIBFT_SRCS = $(addprefix $(LIBFT_DIR), $(LIBFT_F))
 # Compilation
 all: $(NAME)
 
-$(NAME): $(MLX) $(LIBFT) $(OBJS) $(INC) Makefile
+$(NAME): $(MLX) $(LIBFT) $(LIBFT_SRCS) $(OBJS) $(INC) Makefile
 	$(CC) $(FLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
 $(OBJS_DIR)srcs/%.o: $(SRCS_DIR)%.c $(INC) | $(OBJS_DIR)
@@ -121,12 +128,12 @@ $(LIBFT):
 
 clean:
 	rm -rf $(OBJS_DIR)
-	make --no-print-directory -C $(MLX_DIR) clean
-	make --no-print-directory -C $(LIBFT_DIR) clean
+	make clean --no-print-directory -C $(MLX_DIR) 
+	make clean --no-print-directory -C $(LIBFT_DIR) 
 
 fclean: clean
 	rm -rf $(NAME)
-	make --no-print-directory -C $(MLX_DIR) fclean
-	make --no-print-directory -C $(LIBFT_DIR) fclean
+	make fclean --no-print-directory -C $(MLX_DIR)
+	make fclean --no-print-directory -C $(LIBFT_DIR)
 
 re: fclean all

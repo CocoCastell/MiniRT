@@ -62,8 +62,21 @@ int	key_pressed(int keycode, t_miniRt *minirt)
 
 int     mouse_pressed(int button, int x, int y, t_miniRt *minirt)
 {
+        t_selection     s;
+        t_scene         *scene;
+
+        scene = minirt->scene;
         if (button == LEFT_CLICK)
-                minirt->scene->entity_selected = minirt->scene->selection_grid[y][x];
+        {
+                s = scene->selection_grid[y][x];
+                if (s.type != scene->entity_selected.type || s.index != scene->entity_selected.index)
+                        scene->entity_selected = s;
+                else
+                {
+                        scene->entity_selected.type = CAMERA;
+                        scene->entity_selected.index = 0;
+                }
+        }
         else if (button == SCROLL_UP || button == SCROLL_DOWN)
                 scale_entity(minirt->scene, button);
         raytracing(minirt);

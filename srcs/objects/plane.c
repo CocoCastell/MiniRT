@@ -12,6 +12,16 @@
 
 #include "../../includes/miniRT.h"
 
+void  add_plane(t_parse_data data, t_plane plane, int i)
+{
+	plane.point[i] = data.point;
+	plane.normal[i] = data.normal;
+	plane.color[i] = data.color;
+	plane.shininess[i] = data.shininess;
+	plane.spec_force[i] = data.spec_force;
+	plane.reflectivity[i] = data.reflectivity;
+}
+
 t_hit_info plane_intersect(t_ray ray, t_plane plane, int i)
 {
   t_plane_eq  var;

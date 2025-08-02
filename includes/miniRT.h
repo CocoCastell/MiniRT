@@ -13,16 +13,17 @@
 # include "../libft/includes/ft_printf_bonus.h"
 
 // Consts
-# define WIN_WIDTH			800
-# define WIN_HEIGHT			500
-# define v_port_WIDTH 2.0f
-# define v_port_DIST	1 
-# define PIXEL_RATIO		(v_port_WIDTH / WIN_WIDTH)
-# define M_PIF					3.1415927f
-# define STEP						0.3
-# define ZOOM						0.1
-# define SAMPLE_PER_PIX	1
-#	define DEPTH					2
+# define WIN_WIDTH				800
+# define WIN_HEIGHT				500
+# define v_port_WIDTH 		2.0f
+# define v_port_DIST			1 
+# define PIXEL_RATIO			(v_port_WIDTH / WIN_WIDTH)
+# define M_PIF						3.1415927f
+# define STEP							0.3
+# define ZOOM							0.1
+# define SAMPLE_PER_PIX		1
+#	define DEPTH						2
+# define MATERIAL_PROPERTIES	3
 
 // Control keys
 # define ESC						65307
@@ -51,6 +52,15 @@
 # define RIGHT_K				65363
 # define UP_K						65362
 # define DOWN_K					65364
+
+// Color
+# define RED "\033[1;31m"
+# define GREEN "\033[1;32m"
+# define YELLOW "\033[1;33m"
+# define WHITE "\033[1;37m"
+# define BLACK "\033[1;30m"
+# define BL "\033[94m"
+# define DEF "\033[0m"
 
 // ==== STRUCTURE UTILS ====
 typedef struct s_vec3
@@ -84,6 +94,7 @@ typedef struct s_quad_eq
 	float	delta;
 }	t_quad_eq;
 
+// ==== PARSING ====
 typedef struct s_obj_counter
 {
     int sphere;
@@ -93,6 +104,21 @@ typedef struct s_obj_counter
     int camera;
     int ambient;
 } t_obj_counter;
+
+typedef struct s_parse_data
+{
+	float		radius;
+	t_vec3	center;
+	t_color	color;
+	t_vec3	normal;
+	t_vec3	point;
+	t_vec3	axis;
+	float		height;
+	float		shininess;
+	float		spec_force;
+	float		reflectivity;	
+	int			count;
+}	t_parse_data;
 
 // ==== ENTITIES ==== 
 typedef enum e_ent_type
@@ -147,7 +173,7 @@ typedef struct s_camera
 	t_vec3				up;
 	t_vec3				forward;
 	t_vec3				world_up;
-	unsigned char	fov;
+	unsigned int	fov;
 }	t_camera;
 
 typedef struct s_light
@@ -199,6 +225,12 @@ typedef struct s_v_port
 	float			y_offsets[WIN_HEIGHT];
 }	t_v_port;
 
+typedef struct s_options
+{
+	bool				mirror_on;
+	bool				gamma_on;
+} t_options;
+
 typedef struct s_scene
 {
 	t_camera		camera;
@@ -232,6 +264,7 @@ typedef struct s_miniRt
 	void				*win;
 	t_data_img	img;
 	t_scene			*scene;
+	char				**array1;
 }	t_miniRt;
 
 // ===== FUNCTIONS =====
@@ -269,12 +302,14 @@ float		distance_attenuation(t_vec3 vector);
 
 // Plane
 t_hit_info	plane_intersect(t_ray ray, t_plane plane, int i);
+void				add_plane(t_parse_data data, t_plane plane, int i);
 
 // Cylinder
 t_hit_info	cylinder_intersect(t_ray ray, t_cylinder cyl, int i);
+void				add_cylinder(t_parse_data data, t_cylinder cylinder, int i);
 
 // Sphere
-t_sphere		create_sphere(t_vec3 center, float radius, t_color color);
+void				add_sphere(t_parse_data data, t_sphere sphere, int i);
 t_hit_info	sphere_intersect(t_ray ray, t_sphere sph, int i);
 t_vec3			calculate_sphere_hit_point(float dir_scalar, t_ray ray, int i);
 
@@ -331,8 +366,19 @@ void	init_scene(t_miniRt *minirt);
 void	init_mlx(t_miniRt *minirt);
 void	init_minirt(t_miniRt *minirt, char *file);
 
+// Init object structure
+void  init_light(t_scene *scene, int light_nb);
+void	init_cylinder(t_scene *scene, int cylinder_nb);
+void	init_plane(t_scene *scene, int plane_nb);
+void	init_sphere(t_scene *scene, int sphere_nb);
+
+// Count
+t_obj_counter count_objects(int fd, t_miniRt *minirt);
+void 					compute_count(char *token, t_obj_counter *counter, t_miniRt *minirt);
+void  				init_counter(t_obj_counter *counter);
+
 // Parse
-int	put_object_in_structure(char *line, t_obj_lists *lists, t_scene *scene);
+int	put_object_in_structure(char *line, t_miniRt *minirt);
 
 // Error
 void	exit_error(char *msg, int error);

@@ -64,10 +64,10 @@ t_color	trace(t_scene *scene, t_ray ray, int pix_index[2])
 	t_hit_info	hit;
 
 	hit = scene_intersect(ray, scene, vec3(100, 100, 100)); //const
+	scene->selection_grid[pix_index[0]][pix_index[1]].type = hit.type;
+	scene->selection_grid[pix_index[0]][pix_index[1]].index = hit.ent_index;
 	if (hit.has_hit == true)
 	{
-		scene->selection_grid[pix_index[0]][pix_index[1]].type = hit.type;
-		scene->selection_grid[pix_index[0]][pix_index[1]].index = hit.ent_index;
   	hit.incident_ray = ray.direction; 
   	hit.point = add_vector(ray.origin, scale_vec(ray.direction, hit.distance));
 		apply_reflections(scene, &hit, DEPTH);
