@@ -12,9 +12,20 @@
 
 #include "../../includes/miniRT.h"
 
+/**
+ * @brief Adds a cylinder at index i in a SoA structure.
+ *
+ * This function inserts the cylinder data (center, color, radius, etc.)
+ * into the corresponding arrays of the `t_cylinder` structure at the given index.
+ * 
+ * @param data Parsed cylinder data to insert (position, color, radius, etc.).
+ * @param cylinder Structure holding SoA arrays of all cylinders.
+ * @param i Index at which to insert the cylinder data in the `cylinder` structure.
+ */
 void  add_cylinder(t_parse_data data, t_cylinder cylinder, int i)
 {
 	cylinder.center[i] = data.center;
+	cylinder.radius[i] = data.radius;
 	cylinder.axis[i] = data.normal;
 	cylinder.height[i] = data.height;
 	cylinder.color[i] = data.color;

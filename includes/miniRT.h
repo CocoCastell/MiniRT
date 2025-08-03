@@ -41,6 +41,12 @@
 # define CTRL						65307
 # define PLUS_KEY				43	
 # define MINUS_KEY			45
+# define K_1						49
+# define K_2						50
+# define K_3						51
+# define K_4						52
+# define K_5						53
+# define K_6						54
 # define W_KEY					119
 # define S_KEY					115
 # define A_KEY					97
@@ -112,7 +118,6 @@ typedef struct s_parse_data
 	t_color	color;
 	t_vec3	normal;
 	t_vec3	point;
-	t_vec3	axis;
 	float		height;
 	float		shininess;
 	float		spec_force;
@@ -225,11 +230,13 @@ typedef struct s_v_port
 	float			y_offsets[WIN_HEIGHT];
 }	t_v_port;
 
-typedef struct s_options
+typedef struct s_settings
 {
 	bool				mirror_on;
 	bool				gamma_on;
-} t_options;
+	bool				plane_on;
+	bool				sphere_on;
+} t_settings;
 
 typedef struct s_scene
 {
@@ -243,7 +250,7 @@ typedef struct s_scene
 	t_v_port		v_port;
 	t_selection	selection_grid[WIN_HEIGHT][WIN_WIDTH];
 	t_selection	entity_selected;
-	bool				mirror_on;
+	t_settings	settings;
 	// float				pixel_grid[WIN_HEIGHT][WIN_WIDTH];
 }	t_scene;
 
@@ -284,8 +291,10 @@ int		key_pressed(int keycode, t_miniRt *minirt);
 int   my_close(t_miniRt *minirt);
 
 // Control Utils
+void    set_opposite_bool(bool *bool_to_set);
 bool    is_movement_key(int keycode);
 bool    is_rotation_key(int keycode);
+bool    is_setting_key(int keycode);
 
 // == Objects ==
 
@@ -361,10 +370,18 @@ t_color color_mult(t_color col1, t_color col2);
 t_color	add_color(t_color color1, t_color color2);
 int			float_color_to_int(t_color color);
 
+// == Init ==
+
 // Init
-void	init_scene(t_miniRt *minirt);
 void	init_mlx(t_miniRt *minirt);
+void	init_obj_struct(t_scene *scene, t_obj_counter counter);
+void	init_all_objects(int fd, t_miniRt *minirt, char *file);
 void	init_minirt(t_miniRt *minirt, char *file);
+
+// Init Utils
+int		get_fd_file(char *file, t_miniRt *minirt);
+bool	has_rt_extension(const char *filename);
+void	init_pixel_offsets(t_scene *scene);
 
 // Init object structure
 void  init_light(t_scene *scene, int light_nb);
@@ -372,13 +389,27 @@ void	init_cylinder(t_scene *scene, int cylinder_nb);
 void	init_plane(t_scene *scene, int plane_nb);
 void	init_sphere(t_scene *scene, int sphere_nb);
 
+// Parse
+void	parse_ambient(t_miniRt *minirt, char **data);
+void	parse_camera(t_miniRt *minirt, char **data);
+void  parse_light(t_miniRt *minirt, char **data);
+int		put_object_in_structure(char *line, t_miniRt *minirt);
+
+// Parse Objects
+void  parse_sphere(t_miniRt *minirt, char **data);
+void  parse_plane(t_miniRt *minirt, char **data);
+void  parse_cylinder(t_miniRt *minirt, char **data);
+
+// Parse Utils
+t_color parse_color(char *str, t_miniRt *minirt);
+t_vec3  parse_coordinates(char *str, t_miniRt *minirt);
+t_vec3  parse_normal_vec(char *str, t_miniRt *minirt);
+void		parse_material_properties(int nb_of_data, t_parse_data *values, char **data, t_miniRt *minirt);
+
 // Count
 t_obj_counter count_objects(int fd, t_miniRt *minirt);
 void 					compute_count(char *token, t_obj_counter *counter, t_miniRt *minirt);
 void  				init_counter(t_obj_counter *counter);
-
-// Parse
-int	put_object_in_structure(char *line, t_miniRt *minirt);
 
 // Error
 void	exit_error(char *msg, int error);
@@ -387,5 +418,8 @@ void	free_error(t_miniRt *minirt, char *msg, int error);
 
 // Utils
 void	put_pixel(int x, int y, t_data_img *img, int color);
+
+// Create scene file
+void	put_data_in_file(t_scene *scene);
 
 #endif

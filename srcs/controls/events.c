@@ -14,19 +14,21 @@
 
 int     my_close(t_miniRt *minirt)
 {
+        put_data_in_file(minirt->scene);
         free_mlx(minirt);
         exit(0);
 }
 
-void    light_models(int keycode, t_scene *scene)
+void    settings(int keycode, t_scene *scene)
 {
-        if (keycode == R_KEY)
-        {
-                if (scene->mirror_on == true)
-                        scene->mirror_on = false;
-                else
-                        scene->mirror_on = true;
-        }
+        if (keycode == K_1)
+                set_opposite_bool(&scene->settings.mirror_on);
+        if (keycode == K_2)
+                set_opposite_bool(&scene->settings.gamma_on);
+        if (keycode == K_3)
+                set_opposite_bool(&scene->settings.plane_on);
+        if (keycode == K_4)
+                set_opposite_bool(&scene->settings.sphere_on);
 }
 
 void    mirror_control(int keycode, t_scene *scene)
@@ -52,8 +54,8 @@ int	key_pressed(int keycode, t_miniRt *minirt)
                 side_movement(keycode, minirt->scene);
         else if (is_rotation_key(keycode))
                 rotation(keycode, minirt->scene);
-        else if (keycode == R_KEY)
-                light_models(keycode, minirt->scene);
+        else if (is_setting_key(keycode))
+                settings(keycode, minirt->scene);
         else if (keycode == PLUS_KEY || keycode == MINUS_KEY)
                 mirror_control(keycode, minirt->scene);
         raytracing(minirt);

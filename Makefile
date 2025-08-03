@@ -34,8 +34,11 @@ SRCS	=	srcs/main.c \
 			srcs/getters.c \
 			srcs/utils.c \
 			srcs/math/vector_operation.c \
-			srcs/init/init.c \
+			srcs/init/init_minirt.c \
+			srcs/init/init_utils.c \
 			srcs/init/parse.c \
+			srcs/init/parse_objects.c \
+			srcs/init/parse_utils.c \
 			srcs/init/count.c \
 			srcs/init/init_obj_struct.c \
 			srcs/controls/events.c \
@@ -45,7 +48,8 @@ SRCS	=	srcs/main.c \
 			srcs/objects/light_utils.c \
 			srcs/objects/plane.c \
 			srcs/objects/sphere.c \
-			srcs/objects/cylinder.c
+			srcs/objects/cylinder.c  \
+			srcs/print_scene.c
 
 OBJS	=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 
@@ -54,6 +58,7 @@ LIBFT_F	=	gnl/get_next_line_bonus.c \
 			printf/ft_manager_bonus.c \
 			printf/ft_printf_bonus.c \
 			printf/ft_types_bonus.c \
+			lib/ft_float_to_str.c \
 			lib/ft_free_string_array.c \
 			lib/ft_free_matrix.c \
 			lib/ft_str_array_len.c \

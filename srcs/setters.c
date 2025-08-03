@@ -28,8 +28,8 @@ void  set_hit_color(t_hit_info *hit, t_scene *scene)
 		hit->color = scene->sphere.color[hit->ent_index];
   if (hit->type == PLANE)
 		hit->color = scene->plane.color[hit->ent_index];
-  // if (hit->type == CYLINDER)
-		// hit->color = scene->cylinder.color[hit->ent_index];
+  if (hit->type == CYLINDER)
+		hit->color = scene->cylinder.color[hit->ent_index];
 }
 
 void	set_light_data(t_hit_info *hit, t_scene *scene, int i)

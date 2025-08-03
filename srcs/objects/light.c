@@ -12,6 +12,16 @@
 
 #include "../../includes/miniRT.h"
 
+/**
+ * @brief Computes the ambient reflection component for a given base color.
+ *
+ * Applies the global ambient light of the scene to the input color using
+ * the ambient color and ambient ratio defined in the scene.
+ *
+ * @param scene Pointer to the scene containing ambient light parameters.
+ * @param color The base surface color.
+ * @return The resulting ambient-reflected color.
+ */
 t_color ambient_reflection(t_scene *scene, t_color color)
 {
   t_color tmp_color;
@@ -22,6 +32,17 @@ t_color ambient_reflection(t_scene *scene, t_color color)
 	return (new_color);
 }
 
+/**
+ * @brief Applies Lambertian diffuse reflection to a hit point.
+ *
+ * Computes the diffuse light contribution from a single light source at index `i`,
+ * based on the surface normal, light direction, and light color. Updates the hit
+ * color in-place by adding the scaled diffuse component.
+ *
+ * @param hit Pointer to the hit information containing surface and light data.
+ * @param light Light source structure containing intensity and color arrays.
+ * @param i Index of the light source to use for the diffuse calculation.
+ */
 void  lambert_diffuse_reflection(t_hit_info *hit, t_light light, int i)
 {
   float   angle;
@@ -35,6 +56,18 @@ void  lambert_diffuse_reflection(t_hit_info *hit, t_light light, int i)
   hit->color = add_color(hit->color, scale_color(diffuse_color, angle));
 }
 
+/**
+ * @brief Computes and applies the specular reflection component to the hit color.
+ *
+ * Uses the Phong reflection model to calculate the specular highlight based on the
+ * angle between the reflected light direction and the viewer direction. Modulates
+ * by shininess, specular force, and distance attenuation.
+ *
+ * @param hit Pointer to the hit information (includes position, normal, color).
+ * @param light Light source data (position, color, intensity).
+ * @param i Index of the light source being considered.
+ * @param scene Pointer to the scene for accessing camera position and material parameters.
+ */
 void  specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *scene)
 {
   t_color spec_color;
@@ -51,7 +84,18 @@ void  specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *scene)
   spec_color = scale_color(spec_color, hit->dist_attenuation);
   hit->color = add_color(hit->color, spec_color);
 }
-  
+
+/**
+ * @brief Applies mirror-like reflection recursively to simulate reflective surfaces.
+ *
+ * Casts a secondary ray in the reflected direction based on the surface normal and
+ * incident ray. Blends the reflected color with the original hit color based on
+ * reflectivity. Stops recursion when depth reaches zero or no intersection is found.
+ *
+ * @param hit Pointer to the current hit information.
+ * @param scene Pointer to the scene for intersection testing.
+ * @param depth Remaining recursion depth for reflections.
+ */
 void  mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
 {
   t_ray       reflect_ray;
@@ -73,6 +117,17 @@ void  mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
   hit->color = add_color(scale_color(hit->color, 1 - get_reflectivity(hit, scene)), scale_color(reflect_hit.color, get_reflectivity(hit, scene)));
 }
 
+/**
+ * @brief Applies all reflection and lighting models to a surface hit.
+ *
+ * Computes ambient, diffuse, and specular reflections for each light source,
+ * applies shadow checks, and handles optional mirror reflection if enabled.
+ * Modifies the final hit color accordingly.
+ *
+ * @param scene Pointer to the scene containing lights, camera, and settings.
+ * @param hit Pointer to hit information structure (position, normal, color, etc.).
+ * @param depth Recursion depth allowed for mirror reflections.
+ */
 void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
 {
   int  i;
@@ -91,6 +146,6 @@ void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
     lambert_diffuse_reflection(hit, scene->light, i);
     specular_reflection(hit, scene->light, i, scene);
   }
-  if (scene->mirror_on == true)
+  if (scene->settings.mirror_on == true)
     mirror_reflection(hit, scene, depth);
 }

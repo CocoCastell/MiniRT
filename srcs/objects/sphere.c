@@ -13,12 +13,14 @@
 #include "../../includes/miniRT.h"
 
 /**
- * @brief Put the data of a sphere in the SoA
+ * @brief Adds a sphere at index i in a SoA structure.
+ *
+ * This function inserts the sphere data (position, color, radius, etc.)
+ * into the corresponding arrays of the `t_sphere` structure at the given index.
  * 
- * @param	center Center of the sphere.
- * @param radius Radius of the sphere.
- * @param	color Color of the sphere.
- * @return void.
+ * @param data Parsed sphere data to insert (position, color, radius, etc.).
+ * @param sphere Structure holding SoA arrays of all spheres.
+ * @param i Index at which to insert the sphere data in the `sphere` structure.
  */
 void	add_sphere(t_parse_data data, t_sphere sphere, int i)
 {
@@ -56,15 +58,15 @@ t_quad_eq	compute_quadratic_data(t_ray ray, t_sphere sph, int i)
 }
 
 /**
- * @brief Tests ray-sphere intersection and returns hit information.
- * 
- * @details Solves the quadratic equation: |P(t) - C|² = r²
- * Where P(t) = O + tD (ray equation)
- * Check if the sphere is behind the camera or not (t[]).
- * 
- * @param ray Incident ray.
- * @param sphere Sphere to test against.
- * @return Hit information including point, normal, and color.
+ * @brief Computes the intersection between a ray and a sphere.
+ *
+ * This function checks if the input ray intersects the i-th sphere and, if so,
+ * stores the intersection distance, type, and entity index in a t_hit_info structure.
+ *
+ * @param ray The incident ray.
+ * @param plane Structure containing all spheres in a SoA.
+ * @param i Index of the sphere to test against.
+ * @return A t_hit_info struct describing the hit result.
  */
 t_hit_info sphere_intersect(t_ray ray, t_sphere sphere, int i)
 {

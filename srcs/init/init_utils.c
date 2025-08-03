@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   control_utils.c                                    :+:      :+:    :+:   */
+/*   init_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,25 +12,34 @@
 
 #include "../../includes/miniRT.h"
 
-bool    is_movement_key(int keycode)
+int	get_fd_file(char *file, t_miniRt *minirt)
 {
-        return (keycode == A_KEY || keycode == D_KEY || keycode == W_KEY || keycode == S_KEY || keycode == SPACE || keycode == SHIFT);
+	int	fd;
+
+	fd = open(file, O_RDONLY);
+	if (fd == -1)
+		free_error(minirt, "Cannot open file\n", 1);
+	return (fd);
 }
 
-bool    is_rotation_key(int keycode)
+bool	has_rt_extension(const char *filename)
 {
-        return (keycode == UP_K || keycode == DOWN_K || keycode == LEFT_K || keycode == RIGHT_K || keycode == Q_KEY || keycode == E_KEY);
+  size_t	len;
+
+	len = strlen(filename);
+  if (len < 3)
+    return false;
+  return (strcmp(filename + len - 3, ".rt") == 0);
 }
 
-bool    is_setting_key(int keycode)
+void	init_pixel_offsets(t_scene *scene)
 {
-        return (keycode == K_1 || keycode == K_2 || keycode == K_3 || keycode == K_4 || keycode == K_5);
-}
+    int i;
 
-void    set_opposite_bool(bool *bool_to_set)
-{
-        if (*bool_to_set == true)
-                *bool_to_set = false;
-        else
-                *bool_to_set = true;
+		i = -1;
+		while (++i < WIN_WIDTH)
+        scene->v_port.x_offsets[i] = i - WIN_WIDTH / 2.0f;
+		i = -1;
+		while (++i < WIN_HEIGHT)
+        scene->v_port.y_offsets[i] = WIN_HEIGHT / 2.0f - i;
 }

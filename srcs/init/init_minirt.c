@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   init_minirt.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -30,15 +30,63 @@ void	init_mlx(t_miniRt *minirt)
 	minirt->array1 = NULL;
 }
 
-void init_pixel_offsets(t_scene *scene)
+void	init_obj_struct(t_scene *scene, t_obj_counter counter)
 {
-    int i;
-    
-    for (i = 0; i < WIN_WIDTH; i++)
-        scene->v_port.x_offsets[i] = i - WIN_WIDTH / 2.0f;
-    for (i = 0; i < WIN_HEIGHT; i++)
-        scene->v_port.y_offsets[i] = WIN_HEIGHT / 2.0f - i;
+	init_sphere(scene, counter.sphere);
+	init_plane(scene, counter.plane);
+	init_cylinder(scene, counter.cylinder);
+	init_light(scene, counter.light);
 }
+
+void	init_all_objects(int fd, t_miniRt *minirt, char *file)
+{
+	char					*line;
+	int						is_eof;
+	t_obj_counter	counter;
+	
+	is_eof = 0;
+  counter = count_objects(fd, minirt);
+	init_obj_struct(minirt->scene, counter);
+	fd = get_fd_file(file, minirt);
+	while (true)
+	{
+		line = get_next_line(fd, &is_eof);
+		if (line == NULL && is_eof == -1)
+        free_error(minirt, "Get_next_line error\n", 1);
+    if (line == NULL)
+        break ;
+		put_object_in_structure(line, minirt);
+	}
+}
+
+void	init_minirt(t_miniRt *minirt, char *file)
+{
+	t_selection	entity_selected;
+	t_scene			*scene;
+	int					fd;
+
+	if (has_rt_extension(file) == 0)
+		free_error(minirt, "Not an .rt file.\n", 1);
+	fd = get_fd_file(file, minirt);
+	init_mlx(minirt);
+	scene = malloc(sizeof(t_scene));
+	if (scene == NULL)
+		free_error(minirt, "Error malloc in init scene\n", 1);
+	minirt->scene = scene;
+	init_all_objects(fd, minirt, file);
+	// init_pixel_offsets(scene);
+	entity_selected.type = CAMERA;
+	entity_selected.index = 0;
+	minirt->scene->entity_selected = entity_selected;
+	minirt->scene->settings.mirror_on = false;
+	minirt->scene->settings.plane_on = true;
+	minirt->scene->settings.gamma_on = true;
+	minirt->scene->settings.sphere_on = true;
+}
+
+
+
+
 
 void	init_objects(t_scene *scene)
 {
@@ -129,67 +177,4 @@ void	init_lights(t_scene *scene)
 	light.color[1] = create_color(0.0f, 0.0f, 0.0f);
 	light.intensity[1] = 0.8f;
 	scene->light = light;
-}
-
-int	get_fd_file(char *file, t_miniRt *minirt)
-{
-	int	fd;
-
-	fd = open(file, O_RDONLY);
-	if (fd == -1)
-		free_error(minirt, "Cannot open file\n", 1);
-	return (fd);
-}
-
-void	init_obj_struct(t_scene *scene, t_obj_counter counter)
-{
-	init_sphere(scene, counter.sphere);
-	init_plane(scene, counter.plane);
-	init_cylinder(scene, counter.cylinder);
-	init_light(scene, counter.light);
-}
-
-void	init_all_objects(int fd, t_miniRt *minirt, char *file)
-{
-	char					*line;
-	int						is_eof;
-	t_obj_counter	counter;
-	
-	is_eof = 0;
-  counter = count_objects(fd, minirt);
-	init_obj_struct(minirt->scene, counter);
-	fd = get_fd_file(file, minirt);
-	while (true)
-	{
-		line = get_next_line(fd, &is_eof);
-		if (line == NULL && is_eof == -1)
-        free_error(minirt, "Get_next_line error\n", 1);
-    if (line == NULL)
-        break ;
-		put_object_in_structure(line, minirt);
-	}
-}
-
-void	init_minirt(t_miniRt *minirt, char *file)
-{
-	t_scene			*scene;
-	t_selection	entity_selected;
-	int					fd;
-
-	fd = get_fd_file(file, minirt);
-	init_mlx(minirt);
-	scene = malloc(sizeof(t_scene));
-	if (scene == NULL)
-		free_error(minirt, "Error malloc in init scene\n", 1);
-	minirt->scene = scene;
-	init_all_objects(fd, minirt, file);
-	// init_objects(minirt->scene);
-	// init_lights(minirt->scene);
-	// init_pixel_offsets(scene);
-	// scene->amb_color = create_color(1.0f, 1.0f, 1.0f);
-	// scene->amb_ratio = 0.7f;
-	entity_selected.type = CAMERA;
-	entity_selected.index = 0;
-	minirt->scene->entity_selected = entity_selected;
-	minirt->scene->mirror_on = false;
 }

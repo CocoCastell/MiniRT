@@ -12,6 +12,17 @@
 
 #include "../includes/miniRT.h"
 
+/**
+ * @brief Draw a pixel of a given color at specified coordinates in an image buffer.
+ * 
+ * Writes the color value directly into the image's pixel data at (x, y),
+ * after verifying that the coordinates are within image bounds.
+ * 
+ * @param x Horizontal pixel coordinate.
+ * @param y Vertical pixel coordinate.
+ * @param img Pointer to the image data structure.
+ * @param color Color value encoded as an integer (usually 0xAARRGGBB).
+ */
 void	put_pixel(int x, int y, t_data_img *img, int color)
 {
 	char	*dst;

@@ -62,10 +62,15 @@ t_color	add_color(t_color color1, t_color color2)
 
 int float_color_to_int(t_color color)
 {
-    int a = (int)(color.a * 255.0f) & 0xFF;
-    int r = (int)(color.r * 255.0f) & 0xFF;
-    int g = (int)(color.g * 255.0f) & 0xFF;
-    int b = (int)(color.b * 255.0f) & 0xFF;
+    int a;
+    int r;
+    int g;
+    int b;
+
+    a = (int)(color.a * 255.0f) & 0xFF;
+    r = (int)(color.r * 255.0f) & 0xFF;
+    g = (int)(color.g * 255.0f) & 0xFF;
+    b = (int)(color.b * 255.0f) & 0xFF;
 
     return ((a << 24) | (r << 16) | (g << 8) | b);
 }

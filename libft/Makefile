@@ -16,6 +16,7 @@ LIBFT_SRCS	=	lib/ft_free_matrix.c \
 				lib/ft_free_string_array.c \
 				lib/ft_str_array_len.c \
 				lib/ft_putnbr_fd.c \
+				lib/ft_float_to_str.c \
 				lib/ft_is_only_digit.c \
 				lib/ft_strmapi.c \
 				lib/ft_putstr_fd.c \

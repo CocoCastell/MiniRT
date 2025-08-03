@@ -12,6 +12,11 @@
 
 #include "../../includes/miniRT.h"
 
+/**
+ * @brief Initialize all object counters to zero.
+ * 
+ * @param counter Pointer to the object counter structure to initialize.
+ */
 void  init_counter(t_obj_counter *counter)
 {
   counter->sphere = 0;
@@ -22,6 +27,16 @@ void  init_counter(t_obj_counter *counter)
   counter->ambient = 0;
 }
 
+/**
+ * @brief Increment the counter for the given object type token.
+ * 
+ * Matches the token string to known identifiers and increments the
+ * corresponding counter. Calls error handler on unknown token.
+ * 
+ * @param token String identifier of the object type.
+ * @param counter Pointer to the object counters.
+ * @param minirt Pointer to the main program structure for error handling.
+ */
 void  compute_count(char *token, t_obj_counter *counter, t_miniRt *minirt)
 {
   if (ft_strncmp(token, "sp", 3) == 0)
@@ -40,6 +55,17 @@ void  compute_count(char *token, t_obj_counter *counter, t_miniRt *minirt)
     free_error(minirt, "Wrong identifier.\n", 1);
 }       
 
+/**
+ * @brief Count occurrences of each object type in a scene description file.
+ * 
+ * Reads the file line-by-line, splits tokens by whitespace, and updates
+ * the object counters accordingly. Checks for invalid duplicates of
+ * camera and ambient light, and closes the file at the end.
+ * 
+ * @param fd File descriptor of the open scene file.
+ * @param minirt Pointer to the main program structure for error handling.
+ * @return t_obj_counter Struct containing counts of each object type found.
+ */
 t_obj_counter count_objects(int fd, t_miniRt *minirt)
 {
     t_obj_counter counter;

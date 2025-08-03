@@ -36,14 +36,14 @@ t_hit_info scene_intersect(t_ray ray, t_scene *scene, t_vec3 max_dist)
 
 	i = -1;
 	init_ray(&hit[0], max_dist);
- 	while (++i < scene->sphere.count)
+ 	while (++i < scene->sphere.count && scene->settings.sphere_on == true)
 	{
     hit[1] = sphere_intersect(ray, scene->sphere, i);
 		if (hit[1].has_hit == true && hit[0].distance > hit[1].distance)
 			hit[0] = hit[1];
 	}
 	i = -1;
-	while (++i < scene->plane.count)
+	while (++i < scene->plane.count && scene->settings.plane_on == true)
 	{
 		hit[1] = plane_intersect(ray, scene->plane, i);
 		if (hit[1].has_hit == true && hit[0].distance > hit[1].distance)
@@ -92,7 +92,8 @@ void	raytracing(t_miniRt *minirt)
 		{
 			ray = get_camera_ray(pix_index, minirt->scene);
       color = trace(minirt->scene, ray, pix_index);
-			color = gamma_correct(color);
+			if (minirt->scene->settings.gamma_on == true)
+				color = gamma_correct(color);
 			put_pixel(pix_index[1], pix_index[0], &minirt->img, float_color_to_int(color));
 		}
 	}
