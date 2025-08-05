@@ -12,24 +12,13 @@
 
 #include "../../includes/miniRT.h"
 
-/**
- * @brief Computes the ambient reflection component for a given base color.
- *
- * Applies the global ambient light of the scene to the input color using
- * the ambient color and ambient ratio defined in the scene.
- *
- * @param scene Pointer to the scene containing ambient light parameters.
- * @param color The base surface color.
- * @return The resulting ambient-reflected color.
- */
-t_color ambient_reflection(t_scene *scene, t_color color)
+void  ambient_reflection(t_scene *scene, t_hit_info *hit)
 {
   t_color tmp_color;
-	t_color	new_color;
 
-  tmp_color = scale_color(color_mult(color, scene->amb_color), scene->amb_ratio);
-  new_color = tmp_color;
-	return (new_color);
+  tmp_color = color_mult(hit->material_color, scene->amb_color);
+  tmp_color = scale_color(tmp_color, scene->amb_ratio);
+  hit->color = add_color(hit->color, tmp_color);
 }
 
 /**
@@ -51,9 +40,11 @@ void  lambert_diffuse_reflection(t_hit_info *hit, t_light light, int i)
 
   angle = max(0, dot(hit->normal, hit->light_dir));
   intensity = light.intensity[i];
-  diffuse_color = scale_color(color_mult(hit->color, light.color[i]), intensity);
+  diffuse_color = color_mult(hit->material_color, light.color[i]);
+  diffuse_color = scale_color(diffuse_color, angle);
+  diffuse_color = scale_color(diffuse_color, intensity);
   diffuse_color = scale_color(diffuse_color, hit->dist_attenuation);
-  hit->color = add_color(hit->color, scale_color(diffuse_color, angle));
+  hit->color = add_color(hit->color, diffuse_color);
 }
 
 /**
@@ -108,12 +99,13 @@ void  mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
   reflect_dir = normalize(get_reflected_vec(hit->incident_ray, hit->normal));
 	bias_pos = add_vector(hit->point, scale_vec(hit->normal, 1e-4f));
   reflect_ray = make_ray(bias_pos, reflect_dir);
-  reflect_hit = scene_intersect(reflect_ray, scene, vec3(100, 100, 100)); // cont
+  scene_intersect(&reflect_hit, reflect_ray, scene, vec3(100, 100, 100)); // cont
   reflect_hit.incident_ray = reflect_ray.direction; 
   reflect_hit.point = add_vector(reflect_ray.origin, scale_vec(reflect_ray.direction, reflect_hit.distance));
   if (reflect_hit.has_hit == false)
-    return ;
-  apply_reflections(scene, &reflect_hit, --depth);
+    reflect_hit.color = scene->background;
+  else
+    apply_reflections(scene, &reflect_hit, --depth);
   hit->color = add_color(scale_color(hit->color, 1 - get_reflectivity(hit, scene)), scale_color(reflect_hit.color, get_reflectivity(hit, scene)));
 }
 
@@ -133,7 +125,9 @@ void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
   int  i;
 
   set_hit_color(hit, scene);
-	hit->color = ambient_reflection(scene, hit->color);
+  if (((int)hit->point.y + (int)hit->point.x) % 2 == 0 && hit->type == SPHERE)
+    hit->color = create_color(0.8f, 0.8f, 0.8f);
+	ambient_reflection(scene, hit);
 	if (scene->light.count == 0)
     return ;
   i = -1;

@@ -32,20 +32,22 @@ bool	is_in_shadow(t_ray ray, t_scene *scene, t_hit_info *hit, float max_dist)
 	int      i;
 
 	i = -1;
-  while (++i < scene->sphere.count)
+	light_hit.has_hit = false;
+	light_hit.distance = max_dist;
+  while (++i < scene->sphere.count && scene->settings.sphere_on == true)
 	{
 		if (hit->type == SPHERE && hit->ent_index == i)
 			continue ;
-    light_hit = sphere_intersect(ray, scene->sphere, i);
+    sphere_intersect(&light_hit, ray, scene->sphere, i);
 		if (light_hit.has_hit == true && light_hit.distance * light_hit.distance <= max_dist)
 			return (true);
 	}
 	i = -1;
-	while (++i < scene->plane.count)
+	while (++i < scene->plane.count && scene->settings.plane_on == true)
 	{
-		if (hit->type == SPHERE && hit->ent_index == i)
+		if (hit->type == PLANE && hit->ent_index == i)
 			continue ;
-    light_hit = plane_intersect(ray, scene->plane, i);
+    plane_intersect(&light_hit, ray, scene->plane, i);
 		if (light_hit.has_hit == true && light_hit.distance * light_hit.distance <= max_dist)
 			return (true);
 	}

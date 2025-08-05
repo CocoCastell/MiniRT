@@ -30,20 +30,22 @@ void  update_v_port(t_scene *scene)
 	viewport->up_vec = scale_vec(camera->up, vec_h);
 }
 
-void  move_entity(t_scene *scene, t_vec3 dest, float step)
+void  key_move_entity(t_scene *scene, t_vec3 dest, float step)
 {
-  t_selection selected;
-  int      i;
+  t_ent_type  sel_type;
+  int         i;
 
-  selected = scene->entity_selected;
-  i = selected.index;
-  if (selected.type == CAMERA)
-    scene->camera.pos = add_vector(scene->camera.pos, scale_vec(dest, step));
-  else if (selected.type == SPHERE)
+  sel_type = scene->selection.sel_type;
+  i = scene->selection.sel_index;
+  if (sel_type == CAMERA)
+    scene->camera.pos = add_vector(scene->camera.pos, scale_vec(dest, step + step));
+  if (sel_type == LIGHT)
+    scene->light.pos[i] = add_vector(scene->light.pos[i], scale_vec(dest, step + step));
+  else if (sel_type == SPHERE)
     scene->sphere.center[i] = add_vector(scene->sphere.center[i], scale_vec(dest, step));
-  else if (selected.type == PLANE)
+  else if (sel_type == PLANE)
     scene->plane.point[i] = add_vector(scene->plane.point[i], scale_vec(dest, step));
-  // else if (selected.type == CYLINDER)
+  // else if (sel_type == CYLINDER)
   //   scene->cylinder.center[i] = add_vector(scene->cylinder.center[i], scale_vec(dest, step));
 }
 
@@ -57,11 +59,11 @@ void  side_movement(int keycode, t_scene *scene)
   if (keycode == A_KEY || keycode == S_KEY || keycode == SHIFT)
     step = -STEP;
   if (keycode == A_KEY || keycode == D_KEY)
-    move_entity(scene, camera->right, step);
+    key_move_entity(scene, camera->right, step);
   else if (keycode == W_KEY || keycode == S_KEY)
-    move_entity(scene, camera->forward, step);
+    key_move_entity(scene, camera->forward, step);
   else if (keycode == SPACE || keycode == SHIFT)
-    move_entity(scene, camera->up, step);
+    key_move_entity(scene, camera->up, step);
 }
 
 void apply_rotation_to_all_vectors(t_camera *camera, float r_matrix[3][3])
@@ -99,28 +101,36 @@ void rotation(int keycode, t_scene *scene)
     else if (keycode == Q_KEY || keycode == E_KEY)
       axis = scene->camera.forward;
     set_axis_angle_matrix(r_matrix, axis, angle);
-    apply_rotation_to_all_vectors(&scene->camera, r_matrix);
+    if (scene->selection.sel_type == CAMERA)
+      apply_rotation_to_all_vectors(&scene->camera, r_matrix);
+    // if (scene->selection.sel_type == PLANE)
 }
 
 void    scale_entity(t_scene *scene, int button)
 {
-  int  i;
+  t_ent_type  sel_type;
+  int         i;
 
-  i = scene->entity_selected.index;
-  if (button == SCROLL_UP && scene->entity_selected.type == CAMERA)
+  sel_type = scene->selection.sel_type;
+  i = scene->selection.sel_index;
+  if (button == SCROLL_UP && sel_type == CAMERA)
     scene->camera.fov -= 3;
-  else if (button == SCROLL_DOWN && scene->entity_selected.type == CAMERA)
+  else if (button == SCROLL_DOWN && sel_type == CAMERA)
     scene->camera.fov += 3;
-  else if (button == SCROLL_UP && scene->entity_selected.type == SPHERE)
+  else if (button == SCROLL_UP && sel_type == LIGHT)
+    scene->light.intensity[i] += ZOOM;
+  else if (button == SCROLL_DOWN && sel_type == LIGHT)
+    scene->light.intensity[i] -= ZOOM;
+  else if (button == SCROLL_UP && sel_type == SPHERE)
     scene->sphere.radius[i] -= ZOOM;
-  else if (button == SCROLL_DOWN && scene->entity_selected.type == SPHERE)
+  else if (button == SCROLL_DOWN && sel_type == SPHERE)
     scene->sphere.radius[i] += ZOOM;
-   else if (button == SCROLL_UP && scene->entity_selected.type == CYLINDER)
+   else if (button == SCROLL_UP && sel_type == CYLINDER)
   {
     // scene->cylinder.height[i] -= ZOOM;
     // scene->cylinder.diameter[i] -= ZOOM;
   }
-  else if (button == SCROLL_DOWN && scene->entity_selected.type == CYLINDER)
+  else if (button == SCROLL_DOWN && sel_type == CYLINDER)
   {        
     // scene->cylinder.height[i] += ZOOM;
     // scene->cylinder.diameter[i] += ZOOM;

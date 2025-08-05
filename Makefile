@@ -46,8 +46,9 @@ SRCS	=	srcs/main.c \
 			srcs/controls/control_utils.c \
 			srcs/objects/light.c \
 			srcs/objects/light_utils.c \
-			srcs/objects/plane.c \
 			srcs/objects/sphere.c \
+			srcs/objects/plane.c \
+			srcs/objects/triangle.c \
 			srcs/objects/cylinder.c  \
 			srcs/print_scene.c
 

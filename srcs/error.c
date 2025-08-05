@@ -21,6 +21,10 @@ void	exit_error(char *msg, int error)
 
 void	free_mlx(t_miniRt *minirt)
 {
+	if (minirt->array1 != NULL)
+		ft_free_string_array(minirt->array1);
+	if (minirt->fd != -1)
+		close(minirt->fd);	
 	if (minirt->img.img != NULL)
 		mlx_destroy_image(minirt->mlx, minirt->img.img);
 	if (minirt->win != NULL)
@@ -30,8 +34,6 @@ void	free_mlx(t_miniRt *minirt)
 		mlx_destroy_display(minirt->mlx);
 		free(minirt->mlx);
 	}
-	// if (minirt->array1 != NULL)
-  // 	ft_free_string_array(minirt->array1);
 }
 
 void	free_error(t_miniRt *minirt, char *msg, int error)

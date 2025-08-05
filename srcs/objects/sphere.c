@@ -25,7 +25,7 @@
 void	add_sphere(t_parse_data data, t_sphere sphere, int i)
 {
 	sphere.center[i] = data.center;
-	sphere.radius[i] = data.radius; // corriger Doxygen
+	sphere.radius[i] = data.radius;
 	sphere.color[i] = data.color;
 	sphere.shininess[i] = data.shininess;
 	sphere.spec_force[i] = data.spec_force;
@@ -68,17 +68,15 @@ t_quad_eq	compute_quadratic_data(t_ray ray, t_sphere sph, int i)
  * @param i Index of the sphere to test against.
  * @return A t_hit_info struct describing the hit result.
  */
-t_hit_info sphere_intersect(t_ray ray, t_sphere sphere, int i)
+void	sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere sphere, int i)
 {
-	t_hit_info	hit;
 	t_quad_eq		q;
 	float				sq_delta;
 	float				t[3];
 		
 	q = compute_quadratic_data(ray, sphere, i);
-	hit.has_hit = false;
 	if (q.delta < 0)
-		return (hit);
+		return ;
 	sq_delta = sqrt(q.delta);
 	t[1] = (-q.h - sq_delta) / q.a;
 	t[2] = (-q.h + sq_delta) / q.a;
@@ -87,10 +85,11 @@ t_hit_info sphere_intersect(t_ray ray, t_sphere sphere, int i)
 	else if (t[2] > 0)
 		t[0] = t[2];
 	else
-  	return (hit);
-	hit.has_hit = true;
-	hit.type = SPHERE;
-	hit.ent_index = i;
-	hit.distance = t[0];
-	return (hit);
+  	return ;
+	if (t[0] > hit->distance)
+		return ;
+	hit->has_hit = true;
+	hit->distance = t[0];
+	hit->type = SPHERE;
+	hit->ent_index = i;
 }

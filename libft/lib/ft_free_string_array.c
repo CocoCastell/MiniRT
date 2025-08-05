@@ -25,5 +25,6 @@ int	ft_free_string_array(char **array)
 		array[i] = NULL;
 		i++;
 	}
-	return (free(array), 1);
+	free(array);
+	return (1);
 }

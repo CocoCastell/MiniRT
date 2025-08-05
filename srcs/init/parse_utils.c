@@ -86,7 +86,7 @@ void  parse_material_properties(int nb_of_data, t_parse_data *values, char **dat
   if (i >= 1)
   {
     values->shininess = ft_atof(data[nb_of_data - i + 1]);
-    if (values->shininess < 0.0f || values->shininess > 200.0f)
+    if (values->shininess < 0.0f || values->shininess > 999.99f)
        free_error(minirt, "Material: shininess out of range [0.0, 200.0].\n", 1);
   }
   if (i >= 2)

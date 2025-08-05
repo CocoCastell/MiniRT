@@ -60,6 +60,23 @@ void	init_cylinder(t_scene *scene, int cylinder_nb)
 	scene->cylinder = cylinder;
 }
 
+void	init_triangle(t_scene *scene, int triangle_nb)
+{
+	t_triangle		triangle;
+	
+	triangle.count = triangle_nb;
+	if (triangle_nb == 0)
+		return ;
+	triangle.pointA = malloc(sizeof(t_vec3) * triangle_nb);
+	triangle.pointB = malloc(sizeof(t_vec3) * triangle_nb);
+	triangle.pointC = malloc(sizeof(t_vec3) * triangle_nb);
+	triangle.color = malloc(sizeof(t_color) * triangle_nb);
+	triangle.shininess = malloc(sizeof(float) * triangle_nb);
+	triangle.spec_force = malloc(sizeof(float) * triangle_nb);
+	triangle.reflectivity = malloc(sizeof(float) * triangle_nb);
+	scene->triangle = triangle;
+}
+
 void  init_light(t_scene *scene, int light_nb)
 {
   t_light light;

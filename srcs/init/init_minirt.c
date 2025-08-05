@@ -18,6 +18,7 @@ void	init_mlx(t_miniRt *minirt)
 	if (minirt->mlx == NULL)
 		exit_error("Mlx init error\n", 1);
 	minirt->win = mlx_new_window(minirt->mlx, WIN_WIDTH, WIN_HEIGHT, "Mini Raytracer");
+	minirt->array1 = NULL;
 	if (minirt->win == NULL)
 		free_error(minirt, "Win init error\n", 1);
 	minirt->img.img = mlx_new_image(minirt->mlx, WIN_WIDTH, WIN_HEIGHT);
@@ -27,7 +28,6 @@ void	init_mlx(t_miniRt *minirt)
 			&minirt->img.line_length, &minirt->img.endian);
 	if (minirt->img.addr == NULL)
 		free_error(minirt, "Img addr init error\n", 1);
-	minirt->array1 = NULL;
 }
 
 void	init_obj_struct(t_scene *scene, t_obj_counter counter)
@@ -35,6 +35,7 @@ void	init_obj_struct(t_scene *scene, t_obj_counter counter)
 	init_sphere(scene, counter.sphere);
 	init_plane(scene, counter.plane);
 	init_cylinder(scene, counter.cylinder);
+	init_triangle(scene, counter.triangle);
 	init_light(scene, counter.light);
 }
 
@@ -48,6 +49,7 @@ void	init_all_objects(int fd, t_miniRt *minirt, char *file)
   counter = count_objects(fd, minirt);
 	init_obj_struct(minirt->scene, counter);
 	fd = get_fd_file(file, minirt);
+	minirt->fd = fd;
 	while (true)
 	{
 		line = get_next_line(fd, &is_eof);
@@ -57,30 +59,32 @@ void	init_all_objects(int fd, t_miniRt *minirt, char *file)
         break ;
 		put_object_in_structure(line, minirt);
 	}
+	close(fd);
+	minirt->fd = -1;
 }
 
 void	init_minirt(t_miniRt *minirt, char *file)
 {
-	t_selection	entity_selected;
 	t_scene			*scene;
 	int					fd;
 
 	if (has_rt_extension(file) == 0)
 		free_error(minirt, "Not an .rt file.\n", 1);
-	fd = get_fd_file(file, minirt);
 	init_mlx(minirt);
+	fd = get_fd_file(file, minirt);
+	minirt->fd = fd;
 	scene = malloc(sizeof(t_scene));
 	if (scene == NULL)
 		free_error(minirt, "Error malloc in init scene\n", 1);
 	minirt->scene = scene;
 	init_all_objects(fd, minirt, file);
 	// init_pixel_offsets(scene);
-	entity_selected.type = CAMERA;
-	entity_selected.index = 0;
-	minirt->scene->entity_selected = entity_selected;
+	scene->background = create_color(0.3f, 0.5f, 0.7f);
+	scene->selection.sel_type = CAMERA;
+	scene->selection.sel_index = 0;
 	minirt->scene->settings.mirror_on = false;
 	minirt->scene->settings.plane_on = true;
-	minirt->scene->settings.gamma_on = true;
+	minirt->scene->settings.gamma_on = false;
 	minirt->scene->settings.sphere_on = true;
 }
 

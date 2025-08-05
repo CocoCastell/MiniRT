@@ -61,7 +61,7 @@ void  parse_cylinder(t_miniRt *minirt, char **data)
   static int    cylinder_index;
 
   nb_of_data = ft_str_array_len(data) - 1;
-  if (nb_of_data < 3 || nb_of_data > 6)
+  if (nb_of_data < 5 || nb_of_data > 8)
       free_error(minirt, "Cylinder: invalid number of arguments.\n", 1);
   values.center = parse_coordinates(data[1], minirt);
   values.normal = parse_normal_vec(data[2], minirt);
@@ -76,4 +76,25 @@ void  parse_cylinder(t_miniRt *minirt, char **data)
   parse_material_properties(nb_of_data, &values, data, minirt);
   add_cylinder(values, minirt->scene->cylinder, cylinder_index);
   cylinder_index++;
+}
+
+void  parse_triangle(t_miniRt *minirt, char **data)
+{
+  int           nb_of_data;
+  t_parse_data  values;
+  static int    triangle_index;
+
+  nb_of_data = ft_str_array_len(data) - 1;
+  if (nb_of_data < 4 || nb_of_data > 7)
+      free_error(minirt, "Triangle: invalid number of arguments.\n", 1);
+  values.point = parse_coordinates(data[1], minirt);
+  values.point2 = parse_coordinates(data[1], minirt);
+  values.point3 = parse_coordinates(data[1], minirt);
+  values.color = parse_color(data[5], minirt);
+  values.shininess = 0.0f;
+  values.spec_force = 0.0f;
+  values.reflectivity = 0.0f;
+  parse_material_properties(nb_of_data, &values, data, minirt);
+  add_triangle(values, minirt->scene->triangle, triangle_index);
+  triangle_index++;
 }

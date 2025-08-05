@@ -23,13 +23,14 @@ void  set_hit_normal(t_hit_info *hit, t_scene *scene)
 }
 
 void  set_hit_color(t_hit_info *hit, t_scene *scene)
-{ 
+{
+	hit->color = create_color(0.0f, 0.0f, 0.0f);
   if (hit->type == SPHERE)
-		hit->color = scene->sphere.color[hit->ent_index];
+		hit->material_color = scene->sphere.color[hit->ent_index];
   if (hit->type == PLANE)
-		hit->color = scene->plane.color[hit->ent_index];
+		hit->material_color = scene->plane.color[hit->ent_index];
   if (hit->type == CYLINDER)
-		hit->color = scene->cylinder.color[hit->ent_index];
+		hit->material_color = scene->cylinder.color[hit->ent_index];
 }
 
 void	set_light_data(t_hit_info *hit, t_scene *scene, int i)
@@ -42,11 +43,9 @@ void	set_light_data(t_hit_info *hit, t_scene *scene, int i)
   hit->light_dir = normalize(light_vec);
 	shadow_bias_pos = add_vector(hit->point, scale_vec(hit->normal, 0.01f));
 	light_ray = make_ray(shadow_bias_pos, hit->light_dir);
-	hit->in_shadow = false;
+	hit->in_shadow = true;
   if (is_in_shadow(light_ray, scene, hit, vector_sq_length(light_vec)))
-	{
-		hit->in_shadow = true;
 		return ;
-	}
+	hit->in_shadow = false;
 	hit->dist_attenuation = distance_attenuation(light_vec);
 }

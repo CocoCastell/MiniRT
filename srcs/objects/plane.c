@@ -43,27 +43,24 @@ void  add_plane(t_parse_data data, t_plane plane, int i)
  * @param i Index of the plane to test against.
  * @return A t_hit_info struct describing the hit result.
  */
-t_hit_info plane_intersect(t_ray ray, t_plane plane, int i)
+void    plane_intersect(t_hit_info *hit, t_ray ray, t_plane plane, int i)
 {
     t_plane_eq  var;
-    t_hit_info  hit;
     float       denom;
     float       t;
     
-    hit.has_hit = false;
     var.O = ray.origin;
     var.D = ray.direction;
     var.n = plane.normal[i];
     var.d = -dot(plane.normal[i], plane.point[i]);
     denom = dot(var.n, var.D);
     if (fabs(denom) < 1e-6)
-        return (hit);
+        return ;
     t = -(dot(var.n, var.O) + var.d) / denom;
-    if (t < 1e-4)
-        return (hit);
-    hit.has_hit = true;
-    hit.type = PLANE;
-    hit.ent_index = i;
-    hit.distance = t;
-    return (hit);
+    if (t < 1e-4 || hit->distance < t)
+        return ;
+    hit->has_hit = true;
+    hit->distance = t;
+    hit->type = PLANE;
+    hit->ent_index = i;
 }

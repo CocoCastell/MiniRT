@@ -13,16 +13,16 @@
 # include "../libft/includes/ft_printf_bonus.h"
 
 // Consts
-# define WIN_WIDTH				800
-# define WIN_HEIGHT				500
+# define WIN_WIDTH				700
+# define WIN_HEIGHT				400
 # define v_port_WIDTH 		2.0f
 # define v_port_DIST			1 
 # define PIXEL_RATIO			(v_port_WIDTH / WIN_WIDTH)
 # define M_PIF						3.1415927f
-# define STEP							0.3
+# define STEP							0.2
 # define ZOOM							0.1
 # define SAMPLE_PER_PIX		1
-#	define DEPTH						2
+#	define DEPTH						3
 # define MATERIAL_PROPERTIES	3
 
 // Control keys
@@ -51,6 +51,7 @@
 # define S_KEY					115
 # define A_KEY					97
 # define D_KEY					100
+# define L_KEY					108
 # define Q_KEY					113
 # define R_KEY					114
 # define E_KEY					101
@@ -106,6 +107,7 @@ typedef struct s_obj_counter
     int sphere;
     int plane;
     int cylinder;
+		int	triangle;
     int light;
     int camera;
     int ambient;
@@ -118,6 +120,8 @@ typedef struct s_parse_data
 	t_color	color;
 	t_vec3	normal;
 	t_vec3	point;
+	t_vec3	point2;
+	t_vec3	point3;
 	float		height;
 	float		shininess;
 	float		spec_force;
@@ -138,28 +142,29 @@ typedef enum e_ent_type
 
 typedef struct s_sphere
 {
+	int			count;
 	float		*radius;
 	t_vec3	*center;
 	t_color	*color;
 	float		*shininess;
 	float		*spec_force;
 	float		*reflectivity;	
-	int			count;
 }	t_sphere;
 
 typedef struct s_plane
 {
+	int			count;
 	t_color	*color;
 	t_vec3	*point;
 	t_vec3	*normal;
 	float		*shininess;
 	float		*spec_force;
 	float		*reflectivity;	
-	int			count;
 }	t_plane;
 
 typedef struct s_cylinder
 {
+	int			count;
 	float		*radius;
 	float		*height;
 	t_vec3	*axis;
@@ -168,7 +173,6 @@ typedef struct s_cylinder
 	float		*shininess;
 	float		*spec_force;
 	float		*reflectivity;	
-	int			count;
 }	t_cylinder;
 
 typedef struct s_camera
@@ -180,6 +184,18 @@ typedef struct s_camera
 	t_vec3				world_up;
 	unsigned int	fov;
 }	t_camera;
+
+typedef struct s_triangle
+{
+	int			count;
+	t_vec3	*pointA;
+	t_vec3	*pointB;
+	t_vec3	*pointC;
+	t_color	*color;
+	float		*shininess;
+	float		*spec_force;
+	float		*reflectivity;
+} t_triangle;
 
 typedef struct s_light
 {
@@ -198,8 +214,12 @@ typedef struct s_ray
 // ==== RAYTRACING ====
 typedef struct s_selection 
 {
-	t_ent_type	type;
-	int					index;
+	t_ent_type	sel_type;
+	int					sel_index;
+	int					x_mouse;
+	int					y_mouse;
+	t_ent_type	type_grid[WIN_HEIGHT][WIN_WIDTH];
+	int					index_grid[WIN_HEIGHT][WIN_WIDTH];
 } t_selection;
 
 typedef struct s_hit_info
@@ -216,6 +236,7 @@ typedef struct s_hit_info
 	t_vec3			light_vec;
 	t_vec3			incident_ray;
 	t_color			color;
+	t_color			material_color;
 	float				dist_attenuation;
 }	t_hit_info;
 
@@ -242,14 +263,15 @@ typedef struct s_scene
 {
 	t_camera		camera;
 	t_sphere		sphere;
-	t_cylinder	cylinder;
 	t_plane			plane;
+	t_cylinder	cylinder;
+	t_triangle	triangle;
 	t_light			light;
+	t_color			background;
 	t_color			amb_color;
 	float				amb_ratio;
 	t_v_port		v_port;
-	t_selection	selection_grid[WIN_HEIGHT][WIN_WIDTH];
-	t_selection	entity_selected;
+	t_selection	selection;
 	t_settings	settings;
 	// float				pixel_grid[WIN_HEIGHT][WIN_WIDTH];
 }	t_scene;
@@ -272,6 +294,7 @@ typedef struct s_miniRt
 	t_data_img	img;
 	t_scene			*scene;
 	char				**array1;
+	int					fd;
 }	t_miniRt;
 
 // ===== FUNCTIONS =====
@@ -281,7 +304,7 @@ typedef struct s_miniRt
 // Transformations 
 void  update_v_port(t_scene *scene);
 void  side_movement(int keycode, t_scene *scene);
-void  move_entity(t_scene *scene, t_vec3 dest, float step);
+void  key_move_entity(t_scene *scene, t_vec3 dest, float step);
 void  rotation(int keycode, t_scene *scene);
 void  scale_entity(t_scene *scene, int button);
 
@@ -299,28 +322,31 @@ bool    is_setting_key(int keycode);
 // == Objects ==
 
 // Light
-t_color	ambient_reflection(t_scene *scene, t_color color);
-void  	lambert_diffuse_reflection(t_hit_info *hit, t_light light, int i);
-void 		specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *scene);
-void		mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth);
-void		apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth);
+void  ambient_reflection(t_scene *scene, t_hit_info *hit);
+void  lambert_diffuse_reflection(t_hit_info *hit, t_light light, int i);
+void 	specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *scene);
+void	mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth);
+void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth);
 
 // Light Utils
 bool		is_in_shadow(t_ray ray, t_scene *scene, t_hit_info*hit, float max_dist);
 float		distance_attenuation(t_vec3 vector);
 
+// Sphere
+void				add_sphere(t_parse_data data, t_sphere sphere, int i);
+void				sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere sph, int i);
+t_vec3			calculate_sphere_hit_point(float dir_scalar, t_ray ray, int i);
+
 // Plane
-t_hit_info	plane_intersect(t_ray ray, t_plane plane, int i);
+void				plane_intersect(t_hit_info *hit, t_ray ray, t_plane plane, int i);
 void				add_plane(t_parse_data data, t_plane plane, int i);
 
 // Cylinder
 t_hit_info	cylinder_intersect(t_ray ray, t_cylinder cyl, int i);
 void				add_cylinder(t_parse_data data, t_cylinder cylinder, int i);
 
-// Sphere
-void				add_sphere(t_parse_data data, t_sphere sphere, int i);
-t_hit_info	sphere_intersect(t_ray ray, t_sphere sph, int i);
-t_vec3			calculate_sphere_hit_point(float dir_scalar, t_ray ray, int i);
+// Triangle
+void	add_triangle(t_parse_data data, t_triangle triangle, int i);
 
 // == Maths ==
 
@@ -344,8 +370,9 @@ void		set_axis_angle_matrix(float matrix[3][3], t_vec3 axis, float angle);
 t_vec3  negate_vec(t_vec3 vector);
 
 // Raytracing
+t_ray				get_camera_ray(const int y, const int x, t_v_port *v_port, t_vec3 cam_pos);
+void				scene_intersect(t_hit_info *hit, t_ray ray, t_scene *scene, t_vec3 max_dist);
 void				raytracing(t_miniRt *minirt);
-t_hit_info	scene_intersect(t_ray ray, t_scene *scene, t_vec3 max_dist);
 
 // Raytracing Utils
 void		init_ray(t_hit_info *hit, t_vec3 max_distance);
@@ -388,6 +415,7 @@ void  init_light(t_scene *scene, int light_nb);
 void	init_cylinder(t_scene *scene, int cylinder_nb);
 void	init_plane(t_scene *scene, int plane_nb);
 void	init_sphere(t_scene *scene, int sphere_nb);
+void	init_triangle(t_scene *scene, int triangle_nb);
 
 // Parse
 void	parse_ambient(t_miniRt *minirt, char **data);

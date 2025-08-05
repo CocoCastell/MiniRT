@@ -81,18 +81,21 @@ int  put_object_in_structure(char *line, t_miniRt *minirt)
     minirt->array1 = obj_data;
     if (!obj_data || !obj_data[0])
         return (ft_free_string_array(obj_data), 1);
-    else if (obj_data[0][0] == 'C')
+    if (obj_data[0][0] == 'C')
         parse_camera(minirt, obj_data);
-		if (obj_data[0][0] == 'A')
+	else if (obj_data[0][0] == 'A')
         parse_ambient(minirt, obj_data);
-	  else if (obj_data[0][0] == 'L')
+	else if (obj_data[0][0] == 'L')
         parse_light(minirt, obj_data);
     else if (ft_strncmp(obj_data[0], "sp", 3) == 0)
         parse_sphere(minirt, obj_data);
     else if (ft_strncmp(obj_data[0], "pl", 3) == 0)
         parse_plane(minirt, obj_data);
+    // else if (ft_strncmp(obj_data[0], "tr", 3) == 0)
+    //     parse_triangle(minirt, obj_data);
     // else if (ft_strncmp(obj_data[0], "cy", 3) == 0)
     //     parse_cylinder(minirt, obj_data);
     ft_free_string_array(obj_data);
+    minirt->array1 = NULL;
     return (0);
 }

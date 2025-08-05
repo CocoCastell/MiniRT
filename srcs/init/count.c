@@ -21,6 +21,7 @@ void  init_counter(t_obj_counter *counter)
 {
   counter->sphere = 0;
   counter->plane = 0;
+  counter->triangle = 0;
   counter->cylinder = 0;
   counter->light = 0;
   counter->camera = 0;
@@ -45,6 +46,8 @@ void  compute_count(char *token, t_obj_counter *counter, t_miniRt *minirt)
     counter->plane++;
   else if (ft_strncmp(token, "cy", 3) == 0)
     counter->cylinder++;
+  else if (ft_strncmp(token, "tr", 3) == 0)
+    counter->triangle++;
   else if (ft_strncmp(token, "L", 2) == 0)
     counter->light++;
   else if (ft_strncmp(token, "C", 2) == 0)
@@ -87,10 +90,10 @@ t_obj_counter count_objects(int fd, t_miniRt *minirt)
         ft_free_string_array(tokens);
         free(line);
     }
-    close(fd);
     if (counter.camera > 1)
         free_error(minirt, "Camera is defined twice.\n", 1);
     if (counter.ambient > 1)
         free_error(minirt, "Ambient light is defined twice.\n", 1);
+    close(fd);
     return (counter);
 }
