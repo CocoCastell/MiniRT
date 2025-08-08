@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../../includes/miniRT.h"
 
 float get_shininess(t_scene *scene, t_hit_info *hit)
 {

@@ -300,12 +300,14 @@ typedef struct s_miniRt
 // ===== FUNCTIONS =====
 
 // == Controls ==
+// Rotations
+t_vec3  apply_rotation(t_vec3 vector, float  R[3][3]);
+void		rotation(int keycode, t_scene *scene);
 
-// Transformations 
-void  update_v_port(t_scene *scene);
+// Translations
+void  click_move_object(int x, int y, t_scene *scene);
 void  side_movement(int keycode, t_scene *scene);
 void  key_move_entity(t_scene *scene, t_vec3 dest, float step);
-void  rotation(int keycode, t_scene *scene);
 void  scale_entity(t_scene *scene, int button);
 
 // Events
@@ -319,65 +321,13 @@ bool    is_movement_key(int keycode);
 bool    is_rotation_key(int keycode);
 bool    is_setting_key(int keycode);
 
-// == Objects ==
-
+// == Light ==
 // Light
 void  ambient_reflection(t_scene *scene, t_hit_info *hit);
 void  lambert_diffuse_reflection(t_hit_info *hit, t_light light, int i);
 void 	specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *scene);
 void	mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth);
 void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth);
-
-// Light Utils
-bool		is_in_shadow(t_ray ray, t_scene *scene, t_hit_info*hit, float max_dist);
-float		distance_attenuation(t_vec3 vector);
-
-// Sphere
-void				add_sphere(t_parse_data data, t_sphere sphere, int i);
-void				sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere sph, int i);
-t_vec3			calculate_sphere_hit_point(float dir_scalar, t_ray ray, int i);
-
-// Plane
-void				plane_intersect(t_hit_info *hit, t_ray ray, t_plane plane, int i);
-void				add_plane(t_parse_data data, t_plane plane, int i);
-
-// Cylinder
-t_hit_info	cylinder_intersect(t_ray ray, t_cylinder cyl, int i);
-void				add_cylinder(t_parse_data data, t_cylinder cylinder, int i);
-
-// Triangle
-void	add_triangle(t_parse_data data, t_triangle triangle, int i);
-
-// == Maths ==
-
-// Vector operation
-float		max(float a, float b);
-t_vec3  cross(t_vec3 vec1, t_vec3 vec2);
-t_vec3  scale_vec(t_vec3 vector, float scalar);
-t_vec3  normalize(t_vec3 vector);
-t_vec3	vector_from_to(t_vec3 origin_point, t_vec3 dest_point);
-t_vec3  add_vector(t_vec3 vector1, t_vec3 vector2);
-t_vec3  vec3(float x, float y, float z);
-t_vec3  scale_vector(t_vec3 vector, float scale_factor);
-float   dot(t_vec3 vector1, t_vec3 vector2);
-float		vector_length(t_vec3 vect);
-float 	vector_sq_length(t_vec3 vect);
-float   to_radian(float degree);
-t_vec3  apply_rotation(t_vec3 vector, float  R[3][3]);
-bool		is_shorter_vec(t_vec3 main_vec, t_vec3 vec_to_compare, t_vec3 origin_point);
-t_vec3  vec_mult(t_vec3 vecA, t_vec3 vecB);
-void		set_axis_angle_matrix(float matrix[3][3], t_vec3 axis, float angle);
-t_vec3  negate_vec(t_vec3 vector);
-
-// Raytracing
-t_ray				get_camera_ray(const int y, const int x, t_v_port *v_port, t_vec3 cam_pos);
-void				scene_intersect(t_hit_info *hit, t_ray ray, t_scene *scene, t_vec3 max_dist);
-void				raytracing(t_miniRt *minirt);
-
-// Raytracing Utils
-void		init_ray(t_hit_info *hit, t_vec3 max_distance);
-t_ray		make_ray(t_vec3 origin, t_vec3 direction);
-t_color gamma_correct(t_color color);
 
 // Setters
 void		set_light_data(t_hit_info *hit, t_scene *scene, int i);
@@ -390,15 +340,29 @@ float		get_shininess(t_scene *scene, t_hit_info *hit);
 float		get_reflectivity(t_hit_info *hit, t_scene *scene);
 t_vec3  get_reflected_vec(t_vec3 incident_vec, t_vec3 normal);
 
-// Colors
-t_color create_color(float r, float g, float b);
-t_color scale_color(t_color color, float scalar);
-t_color color_mult(t_color col1, t_color col2);
-t_color	add_color(t_color color1, t_color color2);
-int			float_color_to_int(t_color color);
+// Light Utils
+bool		is_in_shadow(t_ray ray, t_scene *scene, float max_dist);
+bool		pre_shadow_calcul(t_hit_info *hit, t_ray ray);
+float		distance_attenuation(t_vec3 vector);
+
+// == Objects ==
+// Sphere
+void				add_sphere(t_parse_data data, t_sphere sphere, int i);
+void				sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere *sph, int i);
+t_vec3			calculate_sphere_hit_point(float dir_scalar, t_ray ray, int i);
+
+// Plane
+void				plane_intersect(t_hit_info *hit, t_ray ray, t_plane *plane, int i);
+void				add_plane(t_parse_data data, t_plane plane, int i);
+
+// Cylinder
+t_hit_info	cylinder_intersect(t_ray ray, t_cylinder cyl, int i);
+void				add_cylinder(t_parse_data data, t_cylinder cylinder, int i);
+
+// Triangle
+void	add_triangle(t_parse_data data, t_triangle triangle, int i);
 
 // == Init ==
-
 // Init
 void	init_mlx(t_miniRt *minirt);
 void	init_obj_struct(t_scene *scene, t_obj_counter counter);
@@ -438,6 +402,43 @@ void		parse_material_properties(int nb_of_data, t_parse_data *values, char **dat
 t_obj_counter count_objects(int fd, t_miniRt *minirt);
 void 					compute_count(char *token, t_obj_counter *counter, t_miniRt *minirt);
 void  				init_counter(t_obj_counter *counter);
+
+// == Maths ==
+// Vector operation
+float		max(float a, float b);
+t_vec3  cross(t_vec3 vec1, t_vec3 vec2);
+t_vec3  scale_vec(t_vec3 vector, float scalar);
+t_vec3  normalize(t_vec3 vector);
+t_vec3	vector_from_to(t_vec3 origin_point, t_vec3 dest_point);
+t_vec3  add_vector(t_vec3 vector1, t_vec3 vector2);
+t_vec3  vec3(float x, float y, float z);
+t_vec3  scale_vector(t_vec3 vector, float scale_factor);
+float   dot(t_vec3 vector1, t_vec3 vector2);
+float		vector_length(t_vec3 vect);
+float 	vector_sq_length(t_vec3 vect);
+float   to_radian(float degree);
+bool		is_shorter_vec(t_vec3 main_vec, t_vec3 vec_to_compare, t_vec3 origin_point);
+t_vec3  vec_mult(t_vec3 vecA, t_vec3 vecB);
+void		set_axis_angle_matrix(float matrix[3][3], t_vec3 axis, float angle);
+t_vec3  negate_vec(t_vec3 vector);
+
+// Raytracing
+t_ray				get_camera_ray(const int y, const int x, t_v_port *v_port, t_vec3 cam_pos);
+void				scene_intersect(t_hit_info *hit, t_ray ray, t_scene *scene, t_vec3 max_dist);
+void				raytracing(t_miniRt *minirt);
+
+// Raytracing Utils
+void		init_ray(t_hit_info *hit, t_vec3 max_distance);
+t_ray		make_ray(t_vec3 origin, t_vec3 direction);
+t_color gamma_correct(t_color color);
+void		update_v_port(t_scene *scene);
+
+// Colors
+t_color create_color(float r, float g, float b);
+t_color scale_color(t_color color, float scalar);
+t_color color_mult(t_color col1, t_color col2);
+t_color	add_color(t_color color1, t_color color2);
+int			float_color_to_int(t_color color);
 
 // Error
 void	exit_error(char *msg, int error);

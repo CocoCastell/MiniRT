@@ -125,8 +125,8 @@ void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
   int  i;
 
   set_hit_color(hit, scene);
-  if (((int)hit->point.y + (int)hit->point.x) % 2 == 0 && hit->type == SPHERE)
-    hit->color = create_color(0.8f, 0.8f, 0.8f);
+  // if (((int)hit->point.y + (int)hit->point.x) % 2 == 0 && hit->type == SPHERE)
+  //   hit->color = create_color(0.8f, 0.8f, 0.8f);
 	ambient_reflection(scene, hit);
 	if (scene->light.count == 0)
     return ;

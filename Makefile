@@ -30,8 +30,6 @@ SRCS	=	srcs/main.c \
 			srcs/colors.c \
 			srcs/raytracer.c \
 			srcs/raytracer_utils.c \
-			srcs/setters.c \
-			srcs/getters.c \
 			srcs/utils.c \
 			srcs/math/vector_operation.c \
 			srcs/init/init_minirt.c \
@@ -42,10 +40,13 @@ SRCS	=	srcs/main.c \
 			srcs/init/count.c \
 			srcs/init/init_obj_struct.c \
 			srcs/controls/events.c \
-			srcs/controls/transform.c \
+			srcs/controls/translations.c \
+			srcs/controls/rotations.c \
 			srcs/controls/control_utils.c \
-			srcs/objects/light.c \
-			srcs/objects/light_utils.c \
+			srcs/light/light.c \
+			srcs/light/setters.c \
+			srcs/light/getters.c \
+			srcs/light/light_utils.c \
 			srcs/objects/sphere.c \
 			srcs/objects/plane.c \
 			srcs/objects/triangle.c \

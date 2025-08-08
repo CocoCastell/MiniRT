@@ -1,4 +1,4 @@
-objs/srcs/controls/transform.o: srcs/controls/transform.c \
+objs/srcs/controls/translations.o: srcs/controls/translations.c \
  srcs/controls/../../includes/miniRT.h \
  srcs/controls/../../includes/../mlx_linux/mlx.h \
  srcs/controls/../../includes/../mlx_linux/mlx_int.h \

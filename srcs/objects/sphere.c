@@ -44,15 +44,15 @@ void	add_sphere(t_parse_data data, t_sphere sphere, int i)
  * @param sph Sphere to test against.
  * @return the quadratic coefficients (a, h, c) and discriminant (delta). 
  */
-t_quad_eq	compute_quadratic_data(t_ray ray, t_sphere sph, int i)
+t_quad_eq	compute_quadratic_data(t_ray ray, t_vec3 sph_center, float sph_radius)
 {
     t_quad_eq	q;
     t_vec3		m;
 		
-		m = vector_from_to(sph.center[i], ray.origin);
+		m = vector_from_to(sph_center, ray.origin);
     q.a = dot(ray.direction, ray.direction);
     q.h = dot(m, ray.direction);
-    q.c = dot(m, m) - sph.radius[i] * sph.radius[i];
+    q.c = dot(m, m) - sph_radius * sph_radius;
     q.delta = q.h * q.h - q.a * q.c;
     return q;
 }
@@ -68,13 +68,13 @@ t_quad_eq	compute_quadratic_data(t_ray ray, t_sphere sph, int i)
  * @param i Index of the sphere to test against.
  * @return A t_hit_info struct describing the hit result.
  */
-void	sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere sphere, int i)
+void	sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere *sphere, int i)
 {
 	t_quad_eq		q;
 	float				sq_delta;
 	float				t[3];
 		
-	q = compute_quadratic_data(ray, sphere, i);
+	q = compute_quadratic_data(ray, sphere->center[i], sphere->radius[i]);
 	if (q.delta < 0)
 		return ;
 	sq_delta = sqrt(q.delta);

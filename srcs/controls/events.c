@@ -120,23 +120,6 @@ int     get_viewport_coord(t_vec3 position, t_scene *scene)
         return ((int)((x / (z * to_radian(scene->camera.fov))) * (WIN_WIDTH / 2) + WIN_WIDTH / 2));
 }
 
-void    click_move_object(int x, int y, t_scene *scene)
-{
-        t_selection     sel;
-
-        sel = scene->selection;
-        if (sel.sel_type == SPHERE)
-        {
-                t_ray ray = get_camera_ray(y, x, &scene->v_port, scene->camera.pos);
-                t_vec3 p = vec3(ray.direction.x, ray.direction.y, scene->sphere.center[sel.sel_index].z);
-                float t = (p.z - ray.origin.z) / ray.direction.z; 
-                scene->sphere.center[sel.sel_index] = add_vector(ray.origin, scale_vector(ray.direction, t));
-        }
-        // else if (scene->selection.sel_type == CYLINDER)
-        // else if (scene->selection.sel_type == PLANE)
-        (void)y;
-}
-
 int     mouse_pressed(int button, int x, int y, t_miniRt *minirt)
 {
         if (button == LEFT_CLICK)

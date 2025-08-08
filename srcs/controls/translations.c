@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   transform.c                                        :+:      :+:    :+:   */
+/*   translations.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,22 +12,21 @@
 
 #include "../../includes/miniRT.h"
 
-void  update_v_port(t_scene *scene)
+void    click_move_object(int x, int y, t_scene *scene)
 {
-  t_camera  *camera;
-  t_v_port  *viewport;
-  float     vec_w;
-  float     vec_h;
+        t_selection     sel;
 
-  viewport = &scene->v_port;
- 	camera = &scene->camera;
-  viewport->v_port_height = 2.0f * tan(to_radian(camera->fov) / 2.0f) * v_port_DIST;
-  viewport->v_port_width = WIN_WIDTH * viewport->v_port_height / WIN_HEIGHT;
-  viewport->v_port_center = add_vector(camera->pos, scale_vec(camera->forward, v_port_DIST));
-  vec_w = viewport->v_port_width / WIN_WIDTH;
-	vec_h = viewport->v_port_height/ WIN_HEIGHT;
-	viewport->right_vec = scale_vec(camera->right, vec_w);
-	viewport->up_vec = scale_vec(camera->up, vec_h);
+        sel = scene->selection;
+        if (sel.sel_type == SPHERE)
+        {
+                t_ray ray = get_camera_ray(y, x, &scene->v_port, scene->camera.pos);
+                t_vec3 p = vec3(ray.direction.x, ray.direction.y, scene->sphere.center[sel.sel_index].z);
+                float t = (p.z - ray.origin.z) / ray.direction.z; 
+                scene->sphere.center[sel.sel_index] = add_vector(ray.origin, scale_vector(ray.direction, t));
+        }
+        // else if (scene->selection.sel_type == CYLINDER)
+        // else if (scene->selection.sel_type == PLANE)
+        (void)y;
 }
 
 void  key_move_entity(t_scene *scene, t_vec3 dest, float step)
@@ -64,46 +63,6 @@ void  side_movement(int keycode, t_scene *scene)
     key_move_entity(scene, camera->forward, step);
   else if (keycode == SPACE || keycode == SHIFT)
     key_move_entity(scene, camera->up, step);
-}
-
-void apply_rotation_to_all_vectors(t_camera *camera, float r_matrix[3][3])
-{
-    t_vec3 new_up;
-    t_vec3 new_right;
-    float up_length;
-    float right_length;
-    
-    camera->forward = normalize(apply_rotation(camera->forward, r_matrix));
-    new_up = apply_rotation(camera->up, r_matrix);
-    new_right = apply_rotation(camera->right, r_matrix);
-    up_length = vector_length(new_up);
-    right_length = vector_length(new_right);
-    if (up_length > 0.001f)
-        camera->up = scale_vector(new_up, 1.0f / up_length);
-    if (right_length > 0.001f)
-        camera->right = scale_vector(new_right, 1.0f / right_length);
-}
-
-// Cool effect if we take of the camera->forward line
-void rotation(int keycode, t_scene *scene)
-{
-    t_vec3    axis;
-    float     r_matrix[3][3];
-    float     angle;
-    
-    angle = -STEP;
-    if (keycode == UP_K || keycode == LEFT_K || keycode == E_KEY)
-      angle = STEP;
-    if (keycode == UP_K || keycode == DOWN_K)
-      axis = scene->camera.right;
-    else if (keycode == RIGHT_K || keycode == LEFT_K)
-      axis = scene->camera.world_up;
-    else if (keycode == Q_KEY || keycode == E_KEY)
-      axis = scene->camera.forward;
-    set_axis_angle_matrix(r_matrix, axis, angle);
-    if (scene->selection.sel_type == CAMERA)
-      apply_rotation_to_all_vectors(&scene->camera, r_matrix);
-    // if (scene->selection.sel_type == PLANE)
 }
 
 void    scale_entity(t_scene *scene, int button)
