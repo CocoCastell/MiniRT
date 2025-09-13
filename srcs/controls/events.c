@@ -12,7 +12,7 @@
 
 #include "../../includes/miniRT.h"
 
-int     my_close(t_miniRt *minirt)
+int     my_close(t_minirt *minirt)
 {
         put_data_in_file(minirt->scene);
         free_mlx(minirt);
@@ -28,7 +28,7 @@ void    settings(int keycode, t_scene *scene)
         if (keycode == K_3)
                 set_opposite_bool(&scene->settings.plane_on);
         if (keycode == K_4)
-                set_opposite_bool(&scene->settings.sphere_on);
+                set_opposite_bool(&scene->settings.antialias_on);
 }
 
 void    mirror_control(int keycode, t_scene *scene)
@@ -72,7 +72,7 @@ void    select_light(int light_count, t_selection *selection)
         }
 }
 
-int	key_pressed(int keycode, t_miniRt *minirt)
+int	key_pressed(int keycode, t_minirt *minirt)
 {
         // printf("Key: %d\n", keycode);
 	if (keycode == ESC)
@@ -120,7 +120,7 @@ int     get_viewport_coord(t_vec3 position, t_scene *scene)
         return ((int)((x / (z * to_radian(scene->camera.fov))) * (WIN_WIDTH / 2) + WIN_WIDTH / 2));
 }
 
-int     mouse_pressed(int button, int x, int y, t_miniRt *minirt)
+int     mouse_pressed(int button, int x, int y, t_minirt *minirt)
 {
         if (button == LEFT_CLICK)
                 select_object(x, y, &minirt->scene->selection);
@@ -132,7 +132,7 @@ int     mouse_pressed(int button, int x, int y, t_miniRt *minirt)
         return (0);
 }
 
-void	event_manager(t_miniRt *minirt)
+void	event_manager(t_minirt *minirt)
 {
 	mlx_hook(minirt->win, ClientMessage, StructureNotifyMask, my_close, minirt);
         mlx_hook(minirt->win, KeyPress, KeyPressMask, key_pressed, minirt);

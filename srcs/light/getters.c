@@ -49,6 +49,6 @@ t_vec3 get_reflected_vec(t_vec3 incident_vec, t_vec3 normal)
 {
     t_vec3 scaled_normal;
 
-    scaled_normal = scale_vec(normal, 2.0f * dot(normal, incident_vec));
+    scaled_normal = scale_vector(normal, 2.0f * dot(normal, incident_vec));
     return (vector_from_to(scaled_normal, incident_vec));
 }

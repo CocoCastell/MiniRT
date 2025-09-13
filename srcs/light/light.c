@@ -97,11 +97,12 @@ void  mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
   if (depth == 0)
     return ;
   reflect_dir = normalize(get_reflected_vec(hit->incident_ray, hit->normal));
-	bias_pos = add_vector(hit->point, scale_vec(hit->normal, 1e-4f));
+	bias_pos = add_vector(hit->point, scale_vector(hit->normal, 1e-4f));
   reflect_ray = make_ray(bias_pos, reflect_dir);
-  scene_intersect(&reflect_hit, reflect_ray, scene, vec3(100, 100, 100)); // cont
+	init_ray(&reflect_hit, vec3(999, 999, 999), false); // const
+  scene_intersect(&reflect_hit, reflect_ray, scene);
   reflect_hit.incident_ray = reflect_ray.direction; 
-  reflect_hit.point = add_vector(reflect_ray.origin, scale_vec(reflect_ray.direction, reflect_hit.distance));
+  reflect_hit.point = add_vector(reflect_ray.origin, scale_vector(reflect_ray.direction, reflect_hit.distance));
   if (reflect_hit.has_hit == false)
     reflect_hit.color = scene->background;
   else
@@ -125,8 +126,7 @@ void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
   int  i;
 
   set_hit_color(hit, scene);
-  // if (((int)hit->point.y + (int)hit->point.x) % 2 == 0 && hit->type == SPHERE)
-  //   hit->color = create_color(0.8f, 0.8f, 0.8f);
+  checkered_pattern(hit, scene);
 	ambient_reflection(scene, hit);
 	if (scene->light.count == 0)
     return ;

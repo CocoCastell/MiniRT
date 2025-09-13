@@ -12,7 +12,7 @@
 
 #include "../../includes/miniRT.h"
 
-int	get_fd_file(char *file, t_miniRt *minirt)
+int	get_fd_file(char *file, t_minirt *minirt)
 {
 	int	fd;
 

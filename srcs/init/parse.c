@@ -12,7 +12,7 @@
 
 #include "../../includes/miniRT.h"
 
-void parse_ambient(t_miniRt *minirt, char **data)
+void parse_ambient(t_minirt *minirt, char **data)
 {
   t_color color;
   float   ratio;
@@ -27,7 +27,7 @@ void parse_ambient(t_miniRt *minirt, char **data)
   minirt->scene->amb_color = color;
 }
 
-void parse_camera(t_miniRt *minirt, char **data)
+void parse_camera(t_minirt *minirt, char **data)
 {
   t_vec3    forward;
   t_vec3    position;
@@ -51,7 +51,7 @@ void parse_camera(t_miniRt *minirt, char **data)
   minirt->scene->camera = camera;
 }
 
-void  parse_light(t_miniRt *minirt, char **data)
+void  parse_light(t_minirt *minirt, char **data)
 {
   static int    light_index;
   t_vec3        pos;
@@ -71,7 +71,7 @@ void  parse_light(t_miniRt *minirt, char **data)
   light_index++;
 }
 
-int  put_object_in_structure(char *line, t_miniRt *minirt)
+int  put_object_in_structure(char *line, t_minirt *minirt)
 {
     char          **obj_data;
 

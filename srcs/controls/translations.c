@@ -27,6 +27,8 @@ void    click_move_object(int x, int y, t_scene *scene)
         // else if (scene->selection.sel_type == CYLINDER)
         // else if (scene->selection.sel_type == PLANE)
         (void)y;
+        (void)x;
+        (void)sel;
 }
 
 void  key_move_entity(t_scene *scene, t_vec3 dest, float step)
@@ -37,15 +39,15 @@ void  key_move_entity(t_scene *scene, t_vec3 dest, float step)
   sel_type = scene->selection.sel_type;
   i = scene->selection.sel_index;
   if (sel_type == CAMERA)
-    scene->camera.pos = add_vector(scene->camera.pos, scale_vec(dest, step + step));
+    scene->camera.pos = add_vector(scene->camera.pos, scale_vector(dest, step + step));
   if (sel_type == LIGHT)
-    scene->light.pos[i] = add_vector(scene->light.pos[i], scale_vec(dest, step + step));
+    scene->light.pos[i] = add_vector(scene->light.pos[i], scale_vector(dest, step + step));
   else if (sel_type == SPHERE)
-    scene->sphere.center[i] = add_vector(scene->sphere.center[i], scale_vec(dest, step));
+    scene->sphere.center[i] = add_vector(scene->sphere.center[i], scale_vector(dest, step));
   else if (sel_type == PLANE)
-    scene->plane.point[i] = add_vector(scene->plane.point[i], scale_vec(dest, step));
+    scene->plane.point[i] = add_vector(scene->plane.point[i], scale_vector(dest, step));
   // else if (sel_type == CYLINDER)
-  //   scene->cylinder.center[i] = add_vector(scene->cylinder.center[i], scale_vec(dest, step));
+  //   scene->cylinder.center[i] = add_vector(scene->cylinder.center[i], scale_vector(dest, step));
 }
 
 void  side_movement(int keycode, t_scene *scene)

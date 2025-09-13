@@ -12,7 +12,7 @@
 
 #include "../../includes/miniRT.h"
 
-void  parse_sphere(t_miniRt *minirt, char **data)
+void  parse_sphere(t_minirt *minirt, char **data)
 {
   int           nb_of_data;
   t_parse_data  values;
@@ -34,7 +34,7 @@ void  parse_sphere(t_miniRt *minirt, char **data)
   sphere_index++;
 }
 
-void  parse_plane(t_miniRt *minirt, char **data)
+void  parse_plane(t_minirt *minirt, char **data)
 {
   int           nb_of_data;
   t_parse_data  values;
@@ -54,7 +54,7 @@ void  parse_plane(t_miniRt *minirt, char **data)
   plane_index++;
 }
 
-void  parse_cylinder(t_miniRt *minirt, char **data)
+void  parse_cylinder(t_minirt *minirt, char **data)
 {
   int           nb_of_data;
   t_parse_data  values;
@@ -78,7 +78,7 @@ void  parse_cylinder(t_miniRt *minirt, char **data)
   cylinder_index++;
 }
 
-void  parse_triangle(t_miniRt *minirt, char **data)
+void  parse_triangle(t_minirt *minirt, char **data)
 {
   int           nb_of_data;
   t_parse_data  values;

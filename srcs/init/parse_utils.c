@@ -12,7 +12,7 @@
 
 #include "../../includes/miniRT.h"
 
-t_color parse_color(char *str, t_miniRt *minirt)
+t_color parse_color(char *str, t_minirt *minirt)
 {
   int     c[3];
   char    **components;
@@ -34,7 +34,7 @@ t_color parse_color(char *str, t_miniRt *minirt)
   return (create_color(c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f));
 }
 
-t_vec3  parse_coordinates(char *str, t_miniRt *minirt)
+t_vec3  parse_coordinates(char *str, t_minirt *minirt)
 {
   t_vec3  coord;
   char    **components;
@@ -54,7 +54,7 @@ t_vec3  parse_coordinates(char *str, t_miniRt *minirt)
   return (coord);
 }
 
-t_vec3  parse_normal_vec(char *str, t_miniRt *minirt)
+t_vec3  parse_normal_vec(char *str, t_minirt *minirt)
 {
   char    **components;
   float   c[3];
@@ -76,7 +76,7 @@ t_vec3  parse_normal_vec(char *str, t_miniRt *minirt)
   return (vec3(c[0], c[1], c[2]));
 }
 
-void  parse_material_properties(int nb_of_data, t_parse_data *values, char **data, t_miniRt *minirt)
+void  parse_material_properties(int nb_of_data, t_parse_data *values, char **data, t_minirt *minirt)
 {
   int i;
 

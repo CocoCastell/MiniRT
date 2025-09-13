@@ -12,16 +12,6 @@
 
 #include "../../includes/miniRT.h"
 
-t_vec3  apply_rotation(t_vec3 vector, float  R[3][3])
-{
-    t_vec3  new_vector;
-
-    new_vector.x = R[0][0] * vector.x + R[0][1] * vector.y + R[0][2] * vector.z;
-    new_vector.y = R[1][0] * vector.x + R[1][1] * vector.y + R[1][2] * vector.z;
-    new_vector.z = R[2][0] * vector.x + R[2][1] * vector.y + R[2][2] * vector.z;
-    return (new_vector);
-}
-
 static void apply_cam_rotation(t_camera *camera, float r_matrix[3][3])
 {
     t_vec3 new_up;

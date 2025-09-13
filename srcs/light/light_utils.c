@@ -86,6 +86,80 @@ bool	pre_shadow_calcul(t_hit_info *hit, t_ray ray)
 	return (false);
 }
 
+int	ft_floor(float value)
+{
+	// if (value >= 0)
+		return (value);
+	// value = 1 - value + 1;
+}
+
+void	tiled_pattern(t_hit_info *hit, t_plane *plane)
+{
+	t_vec3	local_hit;
+	float		tile_size;
+	float		joint_size;
+
+	tile_size = 1.0f;
+	joint_size = 0.1f;
+	if(hit->ent_index != 0)
+		return ;
+  local_hit = vector_from_to(hit->point, plane->point[hit->ent_index]);
+	if (local_hit.x < 0)
+		local_hit.x = fabsf(local_hit.x - joint_size / 2);
+	if (local_hit.z < 0)
+		local_hit.z = fabsf(local_hit.z - joint_size / 2);
+	local_hit.x = fmodf(local_hit.x, tile_size + joint_size);
+	local_hit.z = fmodf(local_hit.z, tile_size + joint_size);
+	if (local_hit.x < joint_size || local_hit.z < joint_size)
+    hit->material_color = create_color(1.0f, 1.0f, 1.0f);
+}
+
+/**
+ * @brief Render a checkered pattern on the surface of spheres.
+ *
+ * Transforms the intersection point coordinates into the sphere's local space
+ * relative to its center, then converts these Cartesian coordinates to spherical
+ * coordinates:
+ * - ro: the radius, distance from the sphere center to the intersection point.
+ * - theta [0, 2π]: the azimuthal angle (longitude), horizontal xz-plane.
+ * - phi [0, π]: the polar angle (latitude), vertical y-axis.
+ *
+ * The angles are scaled according to the number of desired stripes (STRIPE_NB)
+ * to assign the colors. An n modulo can be applied on the sum of the integer 
+ * parts of the scaled angles to select between n colors.
+ *
+ * The resulting color is assigned to hit->material_color.
+ *
+ * @param hit Pointer to the hit information of the intersection point.
+ * @param scene Pointer to the scene data containing spheres and settings.
+ */
+void  checkered_pattern(t_hit_info *hit, t_scene *scene)
+{
+  t_vec3  local_hit;
+  float   ro;
+  float   theta;
+  float   phi;
+
+  if (hit->type == PLANE && scene->settings.checkered_on && !hit->in_shadow)
+		tiled_pattern(hit, &scene->plane);
+  if (hit->type != SPHERE || !scene->settings.checkered_on)
+    return ;
+  local_hit = vector_from_to(hit->point, scene->sphere.center[hit->ent_index]);
+  // float   project_point;
+  // project_point = sqrt(local_intersec.x * local_intersec.x + local_intersec.z * local_intersec.z);
+  // ro = sqrt(project_point * project_point + local_intersec.y * local_intersec.y);
+  // theta = acos(local_intersec.x / project_point);
+  ro = sqrt(local_hit.x * local_hit.x + local_hit.y * local_hit.y + local_hit.z * local_hit.z);
+  theta = atan2(local_hit.z, local_hit.x) / (2 * M_PI / STRIPE_NB); // const
+  phi = acos(local_hit.y / ro) / (M_PI / STRIPE_NB); // const
+  if (((int)theta + (int)phi) % 3 == 0)
+    hit->material_color = create_color(1.0f, 1.0f, 1.0f);
+  else if (((int)theta + (int)phi) % 3 == 1)
+    hit->material_color = create_color(0.2f, 0.6f, 1.0f);
+  else
+    hit->material_color = create_color(0.6f, 0.2f, 0.5f);
+}
+
 /**
  * @brief Computes distance attenuation factor based on vector length.
  *

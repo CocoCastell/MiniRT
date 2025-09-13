@@ -38,7 +38,7 @@ void  init_counter(t_obj_counter *counter)
  * @param counter Pointer to the object counters.
  * @param minirt Pointer to the main program structure for error handling.
  */
-void  compute_count(char *token, t_obj_counter *counter, t_miniRt *minirt)
+void  compute_count(char *token, t_obj_counter *counter, t_minirt *minirt)
 {
   if (ft_strncmp(token, "sp", 3) == 0)
     counter->sphere++;
@@ -69,7 +69,7 @@ void  compute_count(char *token, t_obj_counter *counter, t_miniRt *minirt)
  * @param minirt Pointer to the main program structure for error handling.
  * @return t_obj_counter Struct containing counts of each object type found.
  */
-t_obj_counter count_objects(int fd, t_miniRt *minirt)
+t_obj_counter count_objects(int fd, t_minirt *minirt)
 {
     t_obj_counter counter;
     char          *line;

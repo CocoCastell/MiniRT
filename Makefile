@@ -18,6 +18,9 @@ LIBS	=	$(LIBFT) -L$(MLX_DIR) -lmlx -L/usr/lib -lXext -lX11 -lm -lz
 
 # Includes
 INC		=	includes/miniRT.h \
+				includes/structures.h \
+				includes/defines.h \
+				includes/prototypes.h \
 			$(MLX_DIR)mlx.h \
 			$(MLX_DIR)mlx_int.h \
 			$(LIBFT_DIR)includes/get_next_line_bonus.h \
@@ -31,7 +34,10 @@ SRCS	=	srcs/main.c \
 			srcs/raytracer.c \
 			srcs/raytracer_utils.c \
 			srcs/utils.c \
-			srcs/math/vector_operation.c \
+			srcs/math/vector_operations.c \
+			srcs/math/create_vectors.c \
+			srcs/math/angle.c \
+			srcs/math/simple_operations.c \
 			srcs/init/init_minirt.c \
 			srcs/init/init_utils.c \
 			srcs/init/parse.c \

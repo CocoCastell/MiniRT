@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*  simple_operations.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,36 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/miniRT.h"
+#include "../../includes/miniRT.h"
 
-void	exit_error(char *msg, int error)
+float max(float a, float b)
 {
-	if (msg != NULL)
-		ft_printf(RED"ERROR\n"DEF "%s", msg);
-	exit(error);
+  if (a > b)
+    return a;
+  return b;
 }
 
-void	free_mlx(t_minirt *minirt)
+float   to_radian(float degree)
 {
-	if (minirt->array1 != NULL)
-		ft_free_string_array(minirt->array1);
-	if (minirt->fd != -1)
-		close(minirt->fd);	
-	if (minirt->img.img != NULL)
-		mlx_destroy_image(minirt->mlx, minirt->img.img);
-	if (minirt->win != NULL)
-		mlx_destroy_window(minirt->mlx, minirt->win);
-	if (minirt->mlx != NULL)
-	{
-		mlx_destroy_display(minirt->mlx);
-		free(minirt->mlx);
-	}
+    return (degree * M_PIF / 180.0f);
 }
 
-void	free_error(t_minirt *minirt, char *msg, int error)
+float vector_length(t_vec3 vect)
 {
-	free_mlx(minirt);
-	exit_error(msg, error);
+    return (sqrt(vect.x * vect.x + vect.y * vect.y + vect.z * vect.z));
 }
 
-
+float vector_sq_length(t_vec3 vect)
+{
+    return (vect.x * vect.x + vect.y * vect.y + vect.z * vect.z);
+}

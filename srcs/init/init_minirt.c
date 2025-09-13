@@ -12,7 +12,7 @@
 
 #include "../../includes/miniRT.h"
 
-void	init_mlx(t_miniRt *minirt)
+void	init_mlx(t_minirt *minirt)
 {
 	minirt->mlx = mlx_init();
 	if (minirt->mlx == NULL)
@@ -39,7 +39,7 @@ void	init_obj_struct(t_scene *scene, t_obj_counter counter)
 	init_light(scene, counter.light);
 }
 
-void	init_all_objects(int fd, t_miniRt *minirt, char *file)
+void	init_all_objects(int fd, t_minirt *minirt, char *file)
 {
 	char					*line;
 	int						is_eof;
@@ -63,7 +63,17 @@ void	init_all_objects(int fd, t_miniRt *minirt, char *file)
 	minirt->fd = -1;
 }
 
-void	init_minirt(t_miniRt *minirt, char *file)
+void init_settings(t_settings *settings)
+{
+	settings->mirror_on = false;
+	settings->plane_on = true;
+	settings->gamma_on = false;
+	settings->sphere_on = true;
+	settings->antialias_on = false;
+	settings->checkered_on = true;
+}
+
+void	init_minirt(t_minirt *minirt, char *file)
 {
 	t_scene			*scene;
 	int					fd;
@@ -82,10 +92,7 @@ void	init_minirt(t_miniRt *minirt, char *file)
 	scene->background = create_color(0.3f, 0.5f, 0.7f);
 	scene->selection.sel_type = CAMERA;
 	scene->selection.sel_index = 0;
-	minirt->scene->settings.mirror_on = false;
-	minirt->scene->settings.plane_on = true;
-	minirt->scene->settings.gamma_on = false;
-	minirt->scene->settings.sphere_on = true;
+	init_settings(&scene->settings);
 }
 
 
