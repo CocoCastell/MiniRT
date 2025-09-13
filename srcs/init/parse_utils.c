@@ -1,0 +1,104 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
+/*   Updated: 2025/06/23 16:29:07 by cochatel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../includes/miniRT.h"
+
+t_color parse_color(char *str, t_minirt *minirt)
+{
+  int     c[3];
+  char    **components;
+
+  components = ft_split(str, ',');
+  if (ft_str_array_len(components) != 3)
+    free_error(minirt, "Color: invalid format.\n", 1);
+  // if (!ft_is_only_digit(components[0]) || !ft_is_only_digit(components[1]) || !ft_is_only_digit(components[3]))
+  // {
+    // ft_free_string_array(components);
+    // free_error(minirt, "Color: invalid format.\n", 1);
+  // }
+  c[0] = ft_atoi(components[0]);
+  c[1] = ft_atoi(components[1]);
+  c[2] = ft_atoi(components[2]);
+  ft_free_string_array(components);
+  if (c[0] < 0 || c[0] > 255 || c[1] < 0 || c[1] > 255 || c[2] < 0 || c[2] > 255)
+    free_error(minirt, "Color: value out of range [0, 255].\n", 1);
+  return (create_color(c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f));
+}
+
+t_vec3  parse_coordinates(char *str, t_minirt *minirt)
+{
+  t_vec3  coord;
+  char    **components;
+
+  components = ft_split(str, ',');
+  if (ft_str_array_len(components) != 3)
+    free_error(minirt, "Coordinates: invalid format.\n", 1);
+  // if (!ft_is_only_digit(components[0]) || !ft_is_only_digit(components[1]) || !ft_is_only_digit(components[3]))
+  // {
+    // ft_free_string_array(components);
+    // free_error(minirt, "Coordinates: invalid format.\n", 1);
+  // }
+  coord.x = ft_atoi(components[0]);
+  coord.y = ft_atoi(components[1]);
+  coord.z = ft_atoi(components[2]);
+  ft_free_string_array(components);
+  return (coord);
+}
+
+t_vec3  parse_normal_vec(char *str, t_minirt *minirt)
+{
+  char    **components;
+  float   c[3];
+
+  components = ft_split(str, ',');
+  if (ft_str_array_len(components) != 3)
+    free_error(minirt, "Normal: invalid format.\n", 1);
+  // if (!ft_is_only_digit(components[0]) || !ft_is_only_digit(components[1]) || !ft_is_only_digit(components[0]))
+  // {
+    // ft_free_string_array(components);
+    // free_error(minirt, "Normal: invalid format.\n", 1);
+  // }
+  c[0] = ft_atof(components[0]);
+  c[1] = ft_atof(components[1]);
+  c[2] = ft_atof(components[2]);
+  ft_free_string_array(components);
+  if (c[0] < -1.0f || c[0] > 1.0f || c[1] < -1.0f || c[1] > 1.0f || c[2] < -1.0f || c[2] > 1.0f)
+    free_error(minirt, "Normal vector: value out of range [-0.0, 1.0].\n", 1);
+  return (vec3(c[0], c[1], c[2]));
+}
+
+void  parse_material_properties(int nb_of_data, t_parse_data *values, char **data, t_minirt *minirt)
+{
+  int i;
+
+  i = nb_of_data - MATERIAL_PROPERTIES;
+  if (i == 0)
+    return ;
+  if (i >= 1)
+  {
+    values->shininess = ft_atof(data[nb_of_data - i + 1]);
+    if (values->shininess < 0.0f || values->shininess > 999.99f)
+       free_error(minirt, "Material: shininess out of range [0.0, 200.0].\n", 1);
+  }
+  if (i >= 2)
+  {
+    values->spec_force = ft_atof(data[nb_of_data - i + 2]);
+    if (values->spec_force < 0.0f || values->spec_force > 1.0f)
+      free_error(minirt, "Material: specular force out of range [0.0, 1.0].\n", 1);
+  }
+  if (i >= 3)
+  {
+    values->reflectivity = ft_atof(data[nb_of_data - i + 3]);
+    if (values->reflectivity < 0.0f || values->reflectivity > 1.0f)
+     free_error(minirt, "Material: reflectivity out of range [0.0, 1.0].\n", 1);
+  }
+}

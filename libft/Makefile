@@ -14,13 +14,18 @@ PRINTF_SRCS	=	printf/ft_manager_bonus.c \
 				printf/ft_types_bonus.c
 LIBFT_SRCS	=	lib/ft_free_matrix.c \
 				lib/ft_free_string_array.c \
+				lib/ft_str_array_len.c \
 				lib/ft_putnbr_fd.c \
+				lib/ft_float_to_str.c \
+				lib/ft_is_only_digit.c \
 				lib/ft_strmapi.c \
 				lib/ft_putstr_fd.c \
 				lib/ft_strncmp.c \
 				lib/ft_atoi.c \
+				lib/ft_atof.c \
 				lib/ft_itoa.c \
 				lib/ft_split.c \
+				lib/ft_split_whitespace.c \
 				lib/ft_strnstr.c \
 				lib/ft_bzero.c \
 				lib/ft_memchr.c \
