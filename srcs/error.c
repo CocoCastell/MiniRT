@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 14:02:29 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/09/29 19:10:38 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	exit_error(char *msg, int error)
 
 void	free_mlx(t_minirt *minirt)
 {
+	if (minirt->fd != -1)
+		close(minirt->fd);
 	if (minirt->array1 != NULL)
 		ft_free_string_array(minirt->array1);
 	if (minirt->fd != -1)

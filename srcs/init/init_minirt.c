@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 14:01:46 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/09/29 19:11:53 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	init_mlx(t_minirt *minirt)
 {
 	minirt->mlx = mlx_init();
+	minirt->fd = -1;
 	if (minirt->mlx == NULL)
 		exit_error("Mlx init error\n", 1);
 	minirt->win = mlx_new_window(minirt->mlx, WIN_WIDTH, WIN_HEIGHT, "MiniRT");
