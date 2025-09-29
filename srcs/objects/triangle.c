@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/06/23 16:29:07 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/09/20 11:40:51 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * @brief Adds a triangle at index i in a SoA structure.
  *
  * This function inserts the triangle data (position, color, radius, etc.)
- * into the corresponding arrays of the `t_triangle` structure at the given index.
+ * into the corresponding arrays of the `t_triangle` structure at the given idx.
  * 
  * @param data Parsed triangle data to insert (position, color, radius, etc.).
  * @param triangle Structure holding SoA arrays of all triangles.

@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/06/23 16:29:07 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/09/20 10:57:29 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,22 @@ int	get_fd_file(char *file, t_minirt *minirt)
 
 bool	has_rt_extension(const char *filename)
 {
-  size_t	len;
+	size_t	len;
 
 	len = strlen(filename);
-  if (len < 3)
-    return false;
-  return (strcmp(filename + len - 3, ".rt") == 0);
+	if (len < 3)
+		return (false);
+	return (strcmp(filename + len - 3, ".rt") == 0);
 }
 
 void	init_pixel_offsets(t_scene *scene)
 {
-    int i;
+	int	i;
 
-		i = -1;
-		while (++i < WIN_WIDTH)
-        scene->v_port.x_offsets[i] = i - WIN_WIDTH / 2.0f;
-		i = -1;
-		while (++i < WIN_HEIGHT)
-        scene->v_port.y_offsets[i] = WIN_HEIGHT / 2.0f - i;
+	i = -1;
+	while (++i < WIN_WIDTH)
+		scene->v_port.x_offsets[i] = i - WIN_WIDTH / 2.0f;
+	i = -1;
+	while (++i < WIN_HEIGHT)
+		scene->v_port.y_offsets[i] = WIN_HEIGHT / 2.0f - i;
 }

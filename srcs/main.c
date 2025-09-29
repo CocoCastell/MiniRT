@@ -6,13 +6,13 @@
 /*   By: cochatel <cochatel@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/06/23 16:29:07 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/09/20 12:14:58 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	t_minirt	minirt;
 

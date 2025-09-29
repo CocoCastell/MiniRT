@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/06/23 16:29:07 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/09/20 10:58:33 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	init_sphere(t_scene *scene, int sphere_nb)
 {
 	t_sphere		sphere;
-	
+
 	sphere.count = sphere_nb;
 	if (sphere_nb == 0)
 		return ;
@@ -31,7 +31,7 @@ void	init_sphere(t_scene *scene, int sphere_nb)
 void	init_plane(t_scene *scene, int plane_nb)
 {
 	t_plane		plane;
-	
+
 	plane.count = plane_nb;
 	if (plane_nb == 0)
 		return ;
@@ -47,7 +47,7 @@ void	init_plane(t_scene *scene, int plane_nb)
 void	init_cylinder(t_scene *scene, int cylinder_nb)
 {
 	t_cylinder		cylinder;
-	
+
 	cylinder.count = cylinder_nb;
 	if (cylinder_nb == 0)
 		return ;
@@ -63,7 +63,7 @@ void	init_cylinder(t_scene *scene, int cylinder_nb)
 void	init_triangle(t_scene *scene, int triangle_nb)
 {
 	t_triangle		triangle;
-	
+
 	triangle.count = triangle_nb;
 	if (triangle_nb == 0)
 		return ;
@@ -77,15 +77,15 @@ void	init_triangle(t_scene *scene, int triangle_nb)
 	scene->triangle = triangle;
 }
 
-void  init_light(t_scene *scene, int light_nb)
+void	init_light(t_scene *scene, int light_nb)
 {
-  t_light light;
+	t_light	light;
 
-  light.count = light_nb;
+	light.count = light_nb;
 	if (light_nb == 0)
 		return ;
 	light.color = malloc(sizeof(t_color) * light_nb);
 	light.pos = malloc(sizeof(t_vec3) * light_nb);
 	light.intensity = malloc(sizeof(float) * light_nb);
-  scene->light = light;
+	scene->light = light;
 }
