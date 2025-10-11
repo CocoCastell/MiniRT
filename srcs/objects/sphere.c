@@ -45,15 +45,15 @@ void	add_sphere(t_parse_data data, t_sphere sphere, int i)
  * @param sph Sphere to test against.
  * @return the quadratic coefficients (a, h, c) and discriminant (delta). 
  */
-t_quad_eq	compute_quadratic_data(t_ray ray, t_vec3 sph_center, float sph_rad)
+t_quad_eq	compute_quadratic_data(t_ray ray, t_vec3 center, float radius)
 {
 	t_quad_eq	q;
 	t_vec3		m;
 
-	m = vector_from_to(sph_center, ray.origin);
+	m = vector_from_to(center, ray.origin);
 	q.a = dot(ray.direction, ray.direction);
 	q.h = dot(m, ray.direction);
-	q.c = dot(m, m) - sph_rad * sph_rad;
+	q.c = dot(m, m) - radius * radius;
 	q.delta = q.h * q.h - q.a * q.c;
 	return (q);
 }

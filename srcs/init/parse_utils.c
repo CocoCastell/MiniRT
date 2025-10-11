@@ -78,29 +78,24 @@ t_vec3	parse_normal_vec(char *str, t_minirt *minirt)
 	return (vec3(c[0], c[1], c[2]));
 }
 
-void	parse_material_properties(int nb_of_data, t_parse_data *values, char **data, t_minirt *minirt)
+void	parse_material_properties(t_parse_data *values, char **data, t_minirt *minirt)
 {
-	int	i;
-
-	i = nb_of_data - MATERIAL_PROPERTIES;
-	if (i == 0)
+	values->shininess = 0.0f;
+	values->spec_force = 0.0f;
+	values->reflectivity = 0.0f;
+	if (*data == NULL)
 		return ;
-	if (i >= 1)
-	{
-		values->shininess = ft_atof(data[nb_of_data - i + 1]);
-		if (values->shininess < 0.0f || values->shininess > 999.99f)
-			free_error(minirt, "Material: shininess out of range [0.0, 200.0].\n", 1);
-	}
-	if (i >= 2)
-	{
-		values->spec_force = ft_atof(data[nb_of_data - i + 2]);
-		if (values->spec_force < 0.0f || values->spec_force > 1.0f)
-			free_error(minirt, "Material: specular force out of range [0.0, 1.0].\n", 1);
-	}
-	if (i >= 3)
-	{
-		values->reflectivity = ft_atof(data[nb_of_data - i + 3]);
-		if (values->reflectivity < 0.0f || values->reflectivity > 1.0f)
-			free_error(minirt, "Material: reflectivity out of range [0.0, 1.0].\n", 1);
-	}
+	values->shininess = ft_atof(*data);
+	if (values->shininess < 0.0f || values->shininess > 999.99f)
+		free_error(minirt, "Material: shininess out of range [0.0, 200.0].\n", 1);
+	if (*(++data) == NULL)
+		return ;
+	values->spec_force = ft_atof(*data);
+	if (values->spec_force < 0.0f || values->spec_force > 1.0f)
+		free_error(minirt, "Material: specular force out of range [0.0, 1.0].\n", 1);
+	if (*(++data) == NULL)
+		return ;
+	values->reflectivity = ft_atof(*data);
+	if (values->reflectivity < 0.0f || values->reflectivity > 1.0f)
+		free_error(minirt, "Material: reflectivity out of range [0.0, 1.0].\n", 1);
 }

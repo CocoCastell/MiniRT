@@ -63,17 +63,18 @@ void	checkered_pattern(t_hit_info *hit, t_scene *scene);
 
 // ==== OBJECTS ====
 // Sphere
-t_vec3	calculate_sphere_hit_point(float dir_scalar, t_ray ray, int i);
-void	add_sphere(t_parse_data data, t_sphere sphere, int i);
-void	sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere *sph, int i);
+t_quad_eq	compute_quadratic_data(t_ray ray, t_vec3 center, float radius);
+t_vec3	    calculate_sphere_hit_point(float dir_scalar, t_ray ray, int i);
+void    	add_sphere(t_parse_data data, t_sphere sphere, int i);
+void	    sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere *sph, int i);
 
 // Plane
 void	plane_intersect(t_hit_info *hit, t_ray ray, t_plane *plane, int i);
 void	add_plane(t_parse_data data, t_plane plane, int i);
 
 // Cylinder
-t_hit_info	cylinder_intersect(t_ray ray, t_cylinder cyl, int i);
-void	add_cylinder(t_parse_data data, t_cylinder cylinder, int i);
+void    cylinder_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cyl, int i);
+void    add_cylinder(t_parse_data data, t_cylinder cylinder, int i);
 
 // Triangle
 void	add_triangle(t_parse_data data, t_triangle triangle, int i);
@@ -112,7 +113,7 @@ void	parse_cylinder(t_minirt *minirt, char **data);
 t_color	parse_color(char *str, t_minirt *minirt);
 t_vec3	parse_coordinates(char *str, t_minirt *minirt);
 t_vec3	parse_normal_vec(char *str, t_minirt *minirt);
-void	parse_material_properties(int nb_of_data, t_parse_data *values, char **data, t_minirt *minirt);
+void	parse_material_properties(t_parse_data *values, char **data, t_minirt *minirt);
 
 // Count
 t_obj_counter	count_objects(int fd, t_minirt *minirt);

@@ -36,8 +36,8 @@ void	scene_intersect(t_hit_info *hit, t_ray ray, t_scene *scene)
 	while (++i < scene->plane.count && scene->settings.plane_on == true)
 		plane_intersect(hit, ray, &scene->plane, i);
 	i = -1;
-	/* while (++i < scene->cylinder.count) */
-	/* 	cylinder_intersect(hit, ray, scene->cylinder, i); */
+	while (++i < scene->cylinder.count)
+		cylinder_intersect(hit, ray, &scene->cylinder, i);
 	i = -1;
 	// while (++i < scene->triangle.count)
 	// 	triangle_intersect(hit, ray, scene->triangle, i);

@@ -24,7 +24,7 @@
 # define ZOOM					0.1
 # define SAMPLE_PER_PIX			16
 # define DEPTH					3
-# define MATERIAL_PROPERTIES	3
+# define NB_MANDATORY_DATA  	6
 # define STRIPE_NB				60
 
 // Control keys

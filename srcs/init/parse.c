@@ -91,10 +91,10 @@ int	put_object_in_structure(char *line, t_minirt *minirt)
 		parse_sphere(minirt, obj_data);
 	else if (ft_strncmp(obj_data[0], "pl", 3) == 0)
 		parse_plane(minirt, obj_data);
+    else if (ft_strncmp(obj_data[0], "cy", 3) == 0)
+		parse_cylinder(minirt, obj_data);
 	// else if (ft_strncmp(obj_data[0], "tr", 3) == 0)
     //     parse_triangle(minirt, obj_data);
-    // else if (ft_strncmp(obj_data[0], "cy", 3) == 0)
-    //     parse_cylinder(minirt, obj_data);
 	ft_free_string_array(obj_data);
 	minirt->array1 = NULL;
 	return (0);
