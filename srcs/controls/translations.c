@@ -52,9 +52,9 @@ void	key_move_entity(t_scene *scene, t_vec3 dest, float step)
 	else if (sel_type == PLANE)
 		scene->plane.point[i] = add_vector(scene->plane.point[i], \
 			scale_vector(dest, step));
-	// else if (sel_type == CYLINDER)
-	//   scene->cylinder.center[i] = add_vector(scene->cylinder.center[i], \
-	//		scale_vector(dest, step));
+	else if (sel_type == CYLINDER || sel_type == CYLINDER_CAP)
+	 	scene->cylinder.center[i] = add_vector(scene->cylinder.center[i], \
+			scale_vector(dest, step));
 }
 
 void	side_movement(int keycode, t_scene *scene)
@@ -93,12 +93,12 @@ void	scale_entity(t_scene *scene, int button)
 		scene->sphere.radius[i] -= ZOOM;
 	else if (button == SCROLL_DOWN && sel_type == SPHERE)
 		scene->sphere.radius[i] += ZOOM;
-	else if (button == SCROLL_UP && sel_type == CYLINDER)
+	else if (button == SCROLL_UP && (sel_type == CYLINDER || sel_type == CYLINDER_CAP))
 	{
 		// scene->cylinder.height[i] -= ZOOM;
 		// scene->cylinder.diameter[i] -= ZOOM;
 	}
-	else if (button == SCROLL_DOWN && sel_type == CYLINDER)
+	else if (button == SCROLL_DOWN && (sel_type == CYLINDER || sel_type == CYLINDER_CAP))
 	{
 		// scene->cylinder.height[i] += ZOOM;
 		// scene->cylinder.diameter[i] += ZOOM;

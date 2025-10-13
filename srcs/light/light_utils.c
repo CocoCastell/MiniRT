@@ -47,26 +47,26 @@ bool	is_in_shadow(t_ray ray, t_scene *scene, float max_dist)
 			return (true);
 	}
 	i = -1;
-	/* while (++i < scene->cylinder.count)
+	while (++i < scene->cylinder.count)
 	{
-    light_hit = cylinder_intersect(ray, scene->cylinder, i);
+    cylinder_intersect(&light_hit, ray, &scene->cylinder, i);
 		if (light_hit.has_hit == true && light_hit.distance * light_hit.distance <= max_dist)
 			return (true);
-	} */
+	}
 	return (false);
 }
 
 /**
- * @brief Determine if apoint is in shadow relative to a light source.
+ * @brief Determine if a point is in shadow relative to a light source.
  *        without performing additional intersection tests.
  * 
  * This function uses dot product properties to "early exit" in 
  * cases where the point cannot be illuminated:
  * - For a sphere, if the ray toward the light points inside the sphere,
  *   the point is considered to be in shadow.
- * - For a plane, if the light source is on the same side of the plane
- *   as the camera, the point is considered in shadow (light is blocked
- *   by the plane itself).
+ * - For a plane, if the light source is on the opposite side of the plane
+ *   compared with the camera, the point is considered in shadow (light is
+ * 	 blocked by the plane itself).
  * 
  * Normals are oriented towards the incident ray (from the camera) after 
  * the intersection tests.

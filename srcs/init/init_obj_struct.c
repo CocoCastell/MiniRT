@@ -25,6 +25,7 @@ void	init_sphere(t_scene *scene, int sphere_nb)
 	sphere.shininess = malloc(sizeof(float) * sphere_nb);
 	sphere.spec_force = malloc(sizeof(float) * sphere_nb);
 	sphere.reflectivity = malloc(sizeof(float) * sphere_nb);
+	// Mallocs not protected
 	scene->sphere = sphere;
 }
 
@@ -54,6 +55,8 @@ void	init_cylinder(t_scene *scene, int cylinder_nb)
 	cylinder.radius = malloc(sizeof(float) * cylinder_nb);
 	cylinder.color = malloc(sizeof(t_color) * cylinder_nb);
 	cylinder.center = malloc(sizeof(t_vec3) * cylinder_nb);
+	cylinder.axis = malloc(sizeof(t_vec3) * cylinder_nb);
+	cylinder.height = malloc(sizeof(float) * cylinder_nb);
 	cylinder.shininess = malloc(sizeof(float) * cylinder_nb);
 	cylinder.spec_force = malloc(sizeof(float) * cylinder_nb);
 	cylinder.reflectivity = malloc(sizeof(float) * cylinder_nb);

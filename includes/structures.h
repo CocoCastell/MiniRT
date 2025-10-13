@@ -83,6 +83,7 @@ typedef enum e_ent_type
 	PLANE,
 	SPHERE,
 	CYLINDER,
+	CYLINDER_CAP,
 	TRIANGLE
 }	t_ent_type;
 

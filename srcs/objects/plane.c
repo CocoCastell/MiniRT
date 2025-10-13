@@ -22,14 +22,14 @@
  * @param sphere Structure holding SoA arrays of all planes.
  * @param i Index at which to insert the sphere data in the `plane` structure.
  */
-void	add_plane(t_parse_data data, t_plane plane, int i)
+void	add_plane(t_parse_data data, t_plane *plane, int i)
 {
-	plane.point[i] = data.point;
-	plane.normal[i] = data.normal;
-	plane.color[i] = data.color;
-	plane.shininess[i] = data.shininess;
-	plane.spec_force[i] = data.spec_force;
-	plane.reflectivity[i] = data.reflectivity;
+	plane->point[i] = data.point;
+	plane->normal[i] = data.normal;
+	plane->color[i] = data.color;
+	plane->shininess[i] = data.shininess;
+	plane->spec_force[i] = data.spec_force;
+	plane->reflectivity[i] = data.reflectivity;
 }
 
 /**

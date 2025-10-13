@@ -62,6 +62,6 @@ void	rotation(int keycode, t_scene *scene)
 		apply_cam_rotation(&scene->camera, r_matrix);
 	if (scene->selection.sel_type == PLANE)
 		apply_plane_rotation(&scene->plane.normal[scene->selection.sel_index], r_matrix);
-	// if (scene->selection.sel_type == CYLINDER)
+	// if (scene->selection.sel_type == CYLINDER || scene->selection.sel_type == CYLINDER_CAP)
 	//   apply_cylinder_rotation(&scene->cylinder, r_matrix);
 }

@@ -44,7 +44,7 @@ void	parse_plane(t_minirt *minirt, char **data)
 	values.normal = parse_normal_vec(data[2], minirt);
 	values.color = parse_color(data[3], minirt);
 	parse_material_properties(&values, &data[4], minirt);
-	add_plane(values, minirt->scene->plane, plane_index);
+	add_plane(values, &minirt->scene->plane, plane_index);
 	plane_index++;
 }
 

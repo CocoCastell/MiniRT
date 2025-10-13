@@ -19,9 +19,44 @@ void	set_hit_normal(t_hit_info *hit, t_scene *scene)
 					scene->sphere.center[hit->ent_index], hit->point));
 	if (hit->type == PLANE)
 		hit->normal = scene->plane.normal[hit->ent_index];
-	// if (hit->type == CYLINDER)
-	// hit->normal = normalize();
+	if (hit->type == CYLINDER)
+	{
+    t_vec3 axis = normalize(scene->cylinder.axis[hit->ent_index]);
+    t_vec3 center = scene->cylinder.center[hit->ent_index];
+		t_vec3 center_to_hit = vector_from_to(center, hit->point);
+    t_vec3 projection = scale_vector(axis, dot(center_to_hit, axis));
+    t_vec3 point_on_axis = add_vector(center, projection);
+    t_vec3 normal = vector_from_to(point_on_axis, hit->point);
+    hit->normal = normalize(normal);
+  }
+	if (hit->type == CYLINDER_CAP)
+	{
+
+	}
 }
+
+/* 	if (hit->type == CYLINDER)
+	{
+		t_vec3 axis = normalize(scene->cylinder.axis[hit->ent_index]);
+		t_vec3 center = scene->cylinder.center[hit->ent_index];
+		t_vec3 pc = vector_from_to(center, hit->point);
+		t_vec3 proj_vec = scale_vector(axis, dot(pc, axis)); // projection de pc sur l'axe
+		t_vec3 normal = vector_from_to(proj_vec, pc);      // soustraction pour obtenir la composante perpendiculaire
+		hit->normal = normalize(normal);
+	}*/
+
+		// t_vec3 center_on_plane = vec3(scene->cylinder.center[hit->ent_index].x, hit->point.y, scene->cylinder.center[hit->ent_index].z);
+		// hit->normal = normalize(vector_from_to(center_on_plane, hit->point));
+	// if (hit->type == CYLINDER)
+	// {
+    // t_vec3 axis = normalize(scene->cylinder.axis[hit->ent_index]);
+    // t_vec3 center_to_hit = vector_from_to(scene->cylinder.center[hit->ent_index], hit->point);
+    // float proj_length = dot(center_to_hit, axis);
+    // t_vec3 projection = scale_vector(axis, proj_length);
+    // t_vec3 point_on_axis = add_vector(scene->cylinder.center[hit->ent_index], projection);
+    // hit->normal = normalize(vector_from_to(point_on_axis, hit->point));
+  //   printf("Normal cylindre: (%f, %f, %f)\n", hit->normal.x, hit->normal.y, hit->normal.z);
+	// }	
 
 void	set_hit_color(t_hit_info *hit, t_scene *scene)
 {
@@ -30,7 +65,7 @@ void	set_hit_color(t_hit_info *hit, t_scene *scene)
 		hit->material_color = scene->sphere.color[hit->ent_index];
 	if (hit->type == PLANE)
 		hit->material_color = scene->plane.color[hit->ent_index];
-	if (hit->type == CYLINDER)
+	if (hit->type == CYLINDER || hit->type == CYLINDER_CAP)
 		hit->material_color = scene->cylinder.color[hit->ent_index];
 }
 

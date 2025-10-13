@@ -45,10 +45,16 @@ float	get_reflectivity(t_hit_info *hit, t_scene *scene)
 	return (0.0f);
 }
 
+/* t_vec3 get_reflected_vec(t_vec3 incident_vec, t_vec3 normal)
+{
+    float dot_prod = dot(incident_vec, normal);
+    t_vec3 scaled_normal = scale_vector(normal, 2.0f * dot_prod);
+    return (vector_from_to(scaled_normal, incident_vec));
+} */
 t_vec3	get_reflected_vec(t_vec3 incident_vec, t_vec3 normal)
 {
 	t_vec3	scaled_normal;
 
-	scaled_normal = scale_vector(normal, 2.0f * dot(normal, incident_vec));
-	return (vector_from_to(scaled_normal, incident_vec));
+	scaled_normal = scale_vector(normal, 2.0f * dot(incident_vec, normal));
+	return (vector_from_to(incident_vec, scaled_normal));
 }

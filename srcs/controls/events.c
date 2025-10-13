@@ -39,7 +39,7 @@ void	mirror_control(int keycode, t_scene *scene)
 		reflectivity = &scene->sphere.reflectivity[scene->selection.sel_index];
 	else if (scene->selection.sel_type == PLANE)
 		reflectivity = &scene->plane.reflectivity[scene->selection.sel_index];
-	else if (scene->selection.sel_type == CYLINDER)
+	else if (scene->selection.sel_type == CYLINDER || scene->selection.sel_type == CYLINDER_CAP)
 		reflectivity = &scene->cylinder.reflectivity[scene->selection.sel_index];
 	else
 		return ;

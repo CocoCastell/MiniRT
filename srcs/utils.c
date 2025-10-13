@@ -49,3 +49,13 @@ void	print_selection(t_ent_type selected)
 		printf("cylinder");
 	printf("\n");
 }
+
+void	print_col(t_color col)
+{
+	printf("r: %f, g: %f, b: %f\n", col.r, col.g, col.b);
+}
+
+void	print_vec(t_vec3 v)
+{
+	printf("x: %f, y: %f, z: %f\n", v.x, v.y, v.z);
+}

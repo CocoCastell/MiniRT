@@ -68,10 +68,10 @@ void	specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *s)
 	t_vec3	ray_dir;
 	float	spec_factor;
 
-	ray_dir = normalize(vector_from_to(hit->point, s->camera.pos));
-	reflect_ray = normalize(vector_from_to(light.pos[i], hit->point));
+	ray_dir = normalize(hit->point);
+	reflect_ray = normalize(vector_from_to(light.pos[i], hit->point)); 
 	reflect_ray = normalize(get_reflected_vec(reflect_ray, hit->normal));
-	spec_factor = pow(max(0, dot(reflect_ray, ray_dir)), get_shininess(s, hit));
+	spec_factor = powf(max(0, dot(ray_dir, reflect_ray)), get_shininess(s, hit));
 	spec_color = scale_color(light.color[i], light.intensity[i]);
 	spec_color = scale_color(spec_color, spec_factor * get_spec_force(s, hit));
 	spec_color = scale_color(spec_color, hit->dist_attenuation);

@@ -70,7 +70,7 @@ void	    sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere *sph, int i);
 
 // Plane
 void	plane_intersect(t_hit_info *hit, t_ray ray, t_plane *plane, int i);
-void	add_plane(t_parse_data data, t_plane plane, int i);
+void	add_plane(t_parse_data data, t_plane *plane, int i);
 
 // Cylinder
 void    cylinder_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cyl, int i);
@@ -173,6 +173,8 @@ void	free_error(t_minirt *minirt, char *msg, int error);
 // Utils
 void	put_pixel(int x, int y, t_data_img *img, int color);
 void	print_selection(t_ent_type selected);
+void	print_col(t_color col);
+void	print_vec(t_vec3 v);
 
 // Create scene file
 void	put_data_in_file(t_scene *scene);
