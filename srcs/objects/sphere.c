@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
+/*   By: cochatel cochatel@student.42barcelona      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
 /*   Updated: 2025/09/20 11:43:16 by cochatel         ###   ########.fr       */
@@ -52,9 +52,9 @@ t_quad_eq	compute_quadratic_data(t_ray ray, t_vec3 center, float radius)
 
 	m = vector_from_to(center, ray.origin);
 	q.a = dot(ray.direction, ray.direction);
-	q.h = dot(m, ray.direction);
+	q.b = dot(m, ray.direction);
 	q.c = dot(m, m) - radius * radius;
-	q.delta = q.h * q.h - q.a * q.c;
+	q.delta = q.b * q.b - q.a * q.c;
 	return (q);
 }
 
@@ -79,8 +79,8 @@ void	sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere *sphere, int i)
 	if (q.delta < 0)
 		return ;
 	sq_delta = sqrt(q.delta);
-	t[1] = (-q.h - sq_delta) / q.a;
-	t[2] = (-q.h + sq_delta) / q.a;
+	t[1] = (-q.b - sq_delta) / q.a;
+	t[2] = (-q.b + sq_delta) / q.a;
 	if (t[1] > 0)
 		t[0] = t[1];
 	else if (t[2] > 0)

@@ -41,8 +41,8 @@ typedef struct s_plane_eq
 
 typedef struct s_quad_eq
 {
-	float	h;
 	float	a;
+	float	b;
 	float	c;
 	float	delta;
 }	t_quad_eq;
@@ -169,6 +169,14 @@ typedef struct s_selection
 	int			index_grid[WIN_HEIGHT][WIN_WIDTH];
 }	t_selection;
 
+
+typedef struct s_cylinder_hit
+{
+    float   t;
+    int     is_cap;
+    t_vec3  normal;
+}   t_cyl_hit;
+
 typedef struct s_hit_info
 {
 	bool		has_hit;
@@ -203,9 +211,9 @@ typedef struct s_settings
 	bool	mirror_on;
 	bool	gamma_on;
 	bool	plane_on;
-	bool	sphere_on;
 	bool	antialias_on;
 	bool	checkered_on;
+	bool	scene_creation_on;
 }	t_settings;
 
 typedef struct s_scene

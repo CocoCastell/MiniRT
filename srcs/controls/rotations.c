@@ -30,14 +30,10 @@ static void	apply_cam_rotation(t_camera *camera, float r_matrix[3][3])
 		camera->right = scale_vector(new_right, 1.0f / right_length);
 }
 
-static void	apply_plane_rotation(t_vec3 *normal, float r_matrix[3][3])
+static void	apply_axis_rotation(t_vec3 *normal, float r_matrix[3][3])
 {
 	*normal = normalize(apply_rotation(*normal, r_matrix));
 }
-
-// static void apply_cylinder_rotation()
-// {
-// }
 
 // Cool effect if we take of the camera->forward line
 void	rotation(int keycode, t_scene *scene)
@@ -61,7 +57,7 @@ void	rotation(int keycode, t_scene *scene)
 	if (scene->selection.sel_type == CAMERA)
 		apply_cam_rotation(&scene->camera, r_matrix);
 	if (scene->selection.sel_type == PLANE)
-		apply_plane_rotation(&scene->plane.normal[scene->selection.sel_index], r_matrix);
-	// if (scene->selection.sel_type == CYLINDER || scene->selection.sel_type == CYLINDER_CAP)
-	//   apply_cylinder_rotation(&scene->cylinder, r_matrix);
+		apply_axis_rotation(&scene->plane.normal[scene->selection.sel_index], r_matrix);
+	if (scene->selection.sel_type == CYLINDER)
+		apply_axis_rotation(&scene->cylinder.axis[scene->selection.sel_index], r_matrix);
 }

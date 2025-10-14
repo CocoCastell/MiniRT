@@ -57,6 +57,7 @@ SRCS	=	srcs/main.c \
 			srcs/objects/plane.c \
 			srcs/objects/triangle.c \
 			srcs/objects/cylinder.c  \
+			srcs/objects/cylinder_utils.c  \
 			srcs/print_scene.c
 
 OBJS	=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))

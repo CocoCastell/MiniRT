@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cochatel <cochatel@student.42barcelon      +#+  +:+       +#+        */
+/*   By: cochatel  cochatel@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
 /*   Updated: 2025/09/20 11:21:04 by cochatel         ###   ########.fr       */

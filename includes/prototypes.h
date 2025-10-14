@@ -35,6 +35,7 @@ void	set_opposite_bool(bool *bool_to_set);
 bool	is_movement_key(int keycode);
 bool	is_rotation_key(int keycode);
 bool	is_setting_key(int keycode);
+void	print_menu(t_settings settings);
 
 // ==== LIGHT ====
 // Light
@@ -73,8 +74,15 @@ void	plane_intersect(t_hit_info *hit, t_ray ray, t_plane *plane, int i);
 void	add_plane(t_parse_data data, t_plane *plane, int i);
 
 // Cylinder
-void    cylinder_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cyl, int i);
-void    add_cylinder(t_parse_data data, t_cylinder cylinder, int i);
+void cylinder_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cyl, int i);
+void	add_cylinder(t_parse_data data, t_cylinder cylinder, int i);
+
+// Cylinder utils
+void get_caps_center(t_cylinder *cyl, int i, t_vec3 centers[2]);
+t_cyl_hit* find_closest(t_cyl_hit hits[3]);
+t_quad_eq init_quadratic(t_vec3 proj_dir, t_vec3 proj_oc, float radius);
+float solve_quadratic(t_quad_eq q);
+int in_height(t_vec3 center, t_vec3 axis, t_vec3 pt, float height);
 
 // Triangle
 void	add_triangle(t_parse_data data, t_triangle triangle, int i);

@@ -31,32 +31,12 @@ void	set_hit_normal(t_hit_info *hit, t_scene *scene)
   }
 	if (hit->type == CYLINDER_CAP)
 	{
-
+		t_vec3 to_camera = normalize(vector_from_to(hit->point, scene->camera.pos));
+		hit->normal = scene->cylinder.axis[hit->ent_index];
+		if (dot(hit->normal, to_camera) < 0)
+    	hit->normal = negate_vec(hit->normal);
 	}
 }
-
-/* 	if (hit->type == CYLINDER)
-	{
-		t_vec3 axis = normalize(scene->cylinder.axis[hit->ent_index]);
-		t_vec3 center = scene->cylinder.center[hit->ent_index];
-		t_vec3 pc = vector_from_to(center, hit->point);
-		t_vec3 proj_vec = scale_vector(axis, dot(pc, axis)); // projection de pc sur l'axe
-		t_vec3 normal = vector_from_to(proj_vec, pc);      // soustraction pour obtenir la composante perpendiculaire
-		hit->normal = normalize(normal);
-	}*/
-
-		// t_vec3 center_on_plane = vec3(scene->cylinder.center[hit->ent_index].x, hit->point.y, scene->cylinder.center[hit->ent_index].z);
-		// hit->normal = normalize(vector_from_to(center_on_plane, hit->point));
-	// if (hit->type == CYLINDER)
-	// {
-    // t_vec3 axis = normalize(scene->cylinder.axis[hit->ent_index]);
-    // t_vec3 center_to_hit = vector_from_to(scene->cylinder.center[hit->ent_index], hit->point);
-    // float proj_length = dot(center_to_hit, axis);
-    // t_vec3 projection = scale_vector(axis, proj_length);
-    // t_vec3 point_on_axis = add_vector(scene->cylinder.center[hit->ent_index], projection);
-    // hit->normal = normalize(vector_from_to(point_on_axis, hit->point));
-  //   printf("Normal cylindre: (%f, %f, %f)\n", hit->normal.x, hit->normal.y, hit->normal.z);
-	// }	
 
 void	set_hit_color(t_hit_info *hit, t_scene *scene)
 {

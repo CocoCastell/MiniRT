@@ -22,13 +22,19 @@ int	my_close(t_minirt *minirt)
 void	settings(int keycode, t_scene *scene)
 {
 	if (keycode == K_1)
-		set_opposite_bool(&scene->settings.mirror_on);
+		set_opposite_bool(&scene->settings.scene_creation_on);
 	if (keycode == K_2)
-		set_opposite_bool(&scene->settings.gamma_on);
+		set_opposite_bool(&scene->settings.checkered_on);
 	if (keycode == K_3)
-		set_opposite_bool(&scene->settings.plane_on);
+		set_opposite_bool(&scene->settings.gamma_on);
 	if (keycode == K_4)
+		set_opposite_bool(&scene->settings.mirror_on);
+	if (keycode == K_5)
+		set_opposite_bool(&scene->settings.plane_on);
+	if (keycode == K_6)
 		set_opposite_bool(&scene->settings.antialias_on);
+	if (keycode == I_KEY)
+		print_menu(scene->settings);
 }
 
 void	mirror_control(int keycode, t_scene *scene)
@@ -100,8 +106,11 @@ void	select_object(int x, int y, t_selection *selection)
 	index = selection->index_grid[y][x];
 	if (type != selection->sel_type || index != selection->sel_index)
 	{
-		selection->sel_type = type;
 		selection->sel_index = index;
+		if (selection->sel_type == CYLINDER_CAP)
+			selection->sel_type = CYLINDER;
+		else
+			selection->sel_type = type;
 	}
 	else
 	{
@@ -141,6 +150,4 @@ void	event_manager(t_minirt *minirt)
 	mlx_hook(minirt->win, ClientMessage, StructureNotifyMask, my_close, minirt);
 	mlx_hook(minirt->win, KeyPress, KeyPressMask, key_pressed, minirt);
 	mlx_hook(minirt->win, ButtonPress, ButtonPressMask, mouse_pressed, minirt);
-	// mlx_hook(minirt->win, ButtonRelease, ButtonReleaseMask, mouse_released, minirt);
-	// mlx_hook(minirt->win, MotionNotify, PointerMotionMask, mouse_move, minirt);
 }

@@ -30,7 +30,7 @@ void	scene_intersect(t_hit_info *hit, t_ray ray, t_scene *scene)
 	int	i;
 
 	i = -1;
-	while (++i < scene->sphere.count && scene->settings.sphere_on == true)
+	while (++i < scene->sphere.count)
 		sphere_intersect(hit, ray, &scene->sphere, i);
 	i = -1;
 	while (++i < scene->plane.count && scene->settings.plane_on == true)

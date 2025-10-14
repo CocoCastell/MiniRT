@@ -33,7 +33,7 @@ bool	is_in_shadow(t_ray ray, t_scene *scene, float max_dist)
 	i = -1;
 	light_hit.has_hit = false;
 	light_hit.distance = max_dist;
-	while (++i < scene->sphere.count && scene->settings.sphere_on == true)
+	while (++i < scene->sphere.count)
 	{
 		sphere_intersect(&light_hit, ray, &scene->sphere, i);
 		if (light_hit.has_hit == true && light_hit.distance * light_hit.distance <= max_dist)

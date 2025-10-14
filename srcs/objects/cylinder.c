@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   cylinder.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
+/*   By: cochatel  cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
 /*   Updated: 2025/09/20 12:12:33 by cochatel         ###   ########.fr       */
@@ -34,80 +34,76 @@ void	add_cylinder(t_parse_data data, t_cylinder cylinder, int i)
 	cylinder.reflectivity[i] = data.reflectivity;
 }
 
-// void rotate_cylinder()
-// {
-
-// }
-t_quad_eq tmp(t_ray ray, t_cylinder *cylinder, int i)
+static float  body_intersect(t_ray ray, t_cylinder *cyl, int i)
 {
-  t_ray p0_ray;
-  t_quad_eq q;
-  t_vec3 center;
+  t_vec3  axis;
+  t_vec3  oc;
+  t_vec3  proj_d;
+  t_vec3  proj_oc;
 
-  p0_ray.origin = vec3(ray.origin.x, 0, ray.origin.z);
-  p0_ray.direction = vec3(ray.direction.x, 0, ray.direction.z);
-  center = vec3(cylinder->center[i].x, 0, cylinder->center[i].z);
-  q = compute_quadratic_data(p0_ray, center, cylinder->radius[i]);
-  return (q);
+  axis = cyl->axis[i];
+  oc = vector_from_to(cyl->center[i], ray.origin);
+  proj_d = vector_from_to(scale_vector(axis, dot(ray.direction, axis)), ray.direction);
+  proj_oc = vector_from_to(scale_vector(axis, dot(oc, axis)), oc);
+  return (solve_quadratic(init_quadratic(proj_d, proj_oc, cyl->radius[i])));
 }
 
-void  disk_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cylinder, int i)
+static void set_body_hit(t_ray ray, t_cylinder *cyl, int i, t_cyl_hit *hit)
 {
-  t_hit_info plane_hit;
-  t_plane plane;
+  float t;
+  t_vec3  pt;
 
-  plane.point = malloc(sizeof(t_vec3));
-  if (plane.point == NULL)
+  t = body_intersect(ray, cyl, i);
+  hit->t = -1.0f;
+  if (t < 0)
     return ;
-  plane.normal = malloc(sizeof(t_vec3));
-  if (plane.normal == NULL)
-  {
-    free(plane.point);
+  pt = add_vector(ray.origin, scale_vector(ray.direction, t));
+  if (!in_height(cyl->center[i], cyl->axis[i], pt, cyl->height[i]))
     return ;
-  }
-  plane.point[0] = vec3(cylinder->center[i].x, cylinder->center[i].y + cylinder->height[i] / 2, cylinder->center[i].z);
-  plane.normal[0] = cylinder->axis[i];
-	init_ray(&plane_hit, vec3(999, 999, 999), false);
-  plane_intersect(&plane_hit, ray, &plane, 0);
-
-  t_vec3 inter = vec3((ray.origin.x + plane_hit.distance * ray.direction.x), (ray.origin.y + plane_hit.distance * ray.direction.y), (ray.origin.z + plane_hit.distance * ray.direction.z)); 
-  t_vec3 tmp = vector_from_to(plane.point[0], inter);
-  free(plane.point);
-  free(plane.normal);
-  if (vector_length(tmp) > cylinder->radius[i] || plane_hit.distance > hit->distance)
-    return ;
-  hit->distance = plane_hit.distance;
-  hit->has_hit = true;
-  hit->ent_index = i;
-  hit->type = CYLINDER_CAP;
+  hit->t = t;
+  hit->is_cap = 0;
 }
 
-void  cylinder_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cylinder, int i)
+static float  cap_intersect_dist(t_ray ray, t_vec3 center, t_vec3 normal, float rad)
 {
-  t_quad_eq   q;
-  float       sq_delta;
-  float       intersection_height;
-  float       t[3];
+  float denom;
+  float t;
+  t_vec3  hit_pt;
+  float  dist;
 
-  q = tmp(ray, cylinder, i);
-  if (q.delta < 0)
+  denom = dot(normal, ray.direction);
+  if (fabs(denom) < 1e-6)
+    return (-1.0f);
+  t = dot(vector_from_to(ray.origin, center), normal) / denom;
+  if (t < 1e-4)
+    return (-1.0f);
+  hit_pt = add_vector(ray.origin, scale_vector(ray.direction, t));
+  dist = vector_length(vector_from_to(center, hit_pt));
+  if (dist > rad)
+    return (-1.0f);
+  return (t);
+}
+
+void  cylinder_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cyl, int i)
+{
+  t_cyl_hit hits[3];
+  t_cyl_hit *closest;
+  t_vec3  caps[2];
+
+  set_body_hit(ray, cyl, i, &hits[0]);
+  get_caps_center(cyl, i, caps);
+  hits[1].t = cap_intersect_dist(ray, caps[0], cyl->axis[i], cyl->radius[i]);
+  hits[1].is_cap = 1;
+  hits[2].t = cap_intersect_dist(ray, caps[1], cyl->axis[i], cyl->radius[i]);
+  hits[2].is_cap = 1;
+  closest = find_closest(hits);
+  if (!closest || closest->t >= hit->distance)
     return ;
-  sq_delta = sqrt(q.delta);
-	t[1] = (-q.h - sq_delta) / q.a;
-	t[2] = (-q.h + sq_delta) / q.a;
-	if (t[1] > 0)
-		t[0] = t[1];
-	else if (t[2] > 0)
-		t[0] = t[2];
-	else
-		return ;
-	if (t[0] > hit->distance)
-    return ;
-  intersection_height = fabsf((ray.origin.y + t[0] * ray.direction.y) - cylinder->center[i].y);
-  if (intersection_height > cylinder->height[i] / 2)
-    return (disk_intersect(hit, ray, cylinder, i));
   hit->has_hit = true;
-  hit->distance = t[0];
+  hit->distance = closest->t;
   hit->ent_index = i;
-  hit->type = CYLINDER;
+  if (closest->is_cap)
+    hit->type = CYLINDER_CAP;
+  else
+    hit->type = CYLINDER;
 }

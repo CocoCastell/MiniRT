@@ -22,6 +22,7 @@ int	main(int argc, char *argv[])
 	init_minirt(&minirt, argv[1]);
 	event_manager(&minirt);
 	printf("Starting raytracing ...\n");
+	print_menu(minirt.scene->settings);
 	raytracing(&minirt);
 	mlx_loop(minirt.mlx);
 	return (0);

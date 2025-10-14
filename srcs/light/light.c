@@ -17,7 +17,10 @@ void	ambient_reflection(t_scene *scene, t_hit_info *hit)
 	t_color	tmp_color;
 
 	tmp_color = color_mult(hit->material_color, scene->amb_color);
-	tmp_color = scale_color(tmp_color, scene->amb_ratio);
+	// if (scene->settings.scene_creation_on)
+	// 	tmp_color = scale_color(tmp_color, 0.8f);
+	// else
+		tmp_color = scale_color(tmp_color, scene->amb_ratio);
 	hit->color = add_color(hit->color, tmp_color);
 }
 
@@ -127,12 +130,41 @@ void	mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
  * @param hit Pointer to hit information structure (position, normal, color,etc)
  * @param depth Recursion depth allowed for mirror reflections.
  */
+/* void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
+{
+	int	i;
+
+	set_hit_color(hit, scene);
+	if (scene->settings.checkered_on)
+		checkered_pattern(hit, scene);
+	ambient_reflection(scene, hit);
+	if (scene->light.count == 0 || scene->settings.scene_creation_on)
+		return ;
+	i = -1;
+	set_hit_normal(hit, scene);
+	while (++i < scene->light.count)
+	{
+		set_light_data(hit, scene, i);
+		if (hit->in_shadow)
+			continue ;
+		lambert_diffuse_reflection(hit, scene->light, i);
+		specular_reflection(hit, scene->light, i, scene);
+	}
+	printf("bef\n");
+	print_col(hit->color);
+	if (scene->settings.mirror_on)
+		mirror_reflection(hit, scene, depth);
+	printf("aft\n");
+	print_col(hit->color);
+	(void)depth;
+} */
+
 void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
 {
 	int	i;
 
 	set_hit_color(hit, scene);
-	checkered_pattern(hit, scene);
+	// checkered_pattern(hit, scene);
 	ambient_reflection(scene, hit);
 	if (scene->light.count == 0)
 		return ;
@@ -146,6 +178,11 @@ void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
 		lambert_diffuse_reflection(hit, scene->light, i);
 		specular_reflection(hit, scene->light, i, scene);
 	}
-	if (scene->settings.mirror_on == true)
-		mirror_reflection(hit, scene, depth);
+	// printf("bef\n");
+	// print_col(hit->color);
+	mirror_reflection(hit, scene, depth);
+	// printf("aft\n");
+	// print_col(hit->color);
+	(void)depth;
+
 }

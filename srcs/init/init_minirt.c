@@ -69,9 +69,9 @@ void	init_settings(t_settings *settings)
 	settings->mirror_on = false;
 	settings->plane_on = true;
 	settings->gamma_on = false;
-	settings->sphere_on = true;
 	settings->antialias_on = false;
-	settings->checkered_on = true;
+	settings->checkered_on = false;
+	settings->scene_creation_on = true;
 }
 
 void	init_minirt(t_minirt *minirt, char *file)
