@@ -49,9 +49,9 @@ t_vec3	parse_coordinates(char *str, t_minirt *minirt)
 	/* 	ft_free_string_array(components); */
 	/* 	free_error(minirt, "Coordinates: invalid format.\n", 1); */
 	/* } */
-	coord.x = ft_atoi(components[0]);
-	coord.y = ft_atoi(components[1]);
-	coord.z = ft_atoi(components[2]);
+	coord.x = ft_atof(components[0]);
+	coord.y = ft_atof(components[1]);
+	coord.z = ft_atof(components[2]);
 	ft_free_string_array(components);
 	return (coord);
 }

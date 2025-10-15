@@ -14,23 +14,25 @@
 
 void	click_move_object(int x, int y, t_scene *scene)
 {
-	t_selection	sel;
 	t_ray		ray;
 	t_vec3		p;
 	float		t;
 
-	sel = scene->selection;
-	if (sel.sel_type == SPHERE)
+	ray = get_camera_ray(y, x, &scene->v_port, scene->camera.pos);
+	if (scene->selection.sel_type == SPHERE)
 	{
-		ray = get_camera_ray(y, x, &scene->v_port, scene->camera.pos);
 		p = vec3(ray.direction.x, ray.direction.y, \
-			scene->sphere.center[sel.sel_index].z);
+			scene->sphere.center[scene->selection.sel_index].z);
 		t = (p.z - ray.origin.z) / ray.direction.z;
-		scene->sphere.center[sel.sel_index] = add_vector(\
-			ray.origin, scale_vector(ray.direction, t));
+		scene->sphere.center[scene->selection.sel_index] = ray_at(ray.origin, ray.direction, t);
 	}
-	// else if (scene->selection.sel_type == CYLINDER)
-	// else if (scene->selection.sel_type == PLANE)
+	else if (scene->selection.sel_type == CYLINDER)
+	{
+		p = vec3(ray.direction.x, ray.direction.y, \
+			scene->cylinder.center[scene->selection.sel_index].z);
+		t = (p.z - ray.origin.z) / ray.direction.z;
+		scene->cylinder.center[scene->selection.sel_index] = ray_at(ray.origin, ray.direction, t);
+	}
 }
 
 void	key_move_entity(t_scene *scene, t_vec3 dest, float step)
@@ -44,8 +46,11 @@ void	key_move_entity(t_scene *scene, t_vec3 dest, float step)
 		scene->camera.pos = add_vector(scene->camera.pos, \
 			scale_vector(dest, step + step));
 	if (sel_type == LIGHT)
+	{
 		scene->light.pos[i] = add_vector(scene->light.pos[i], \
 			scale_vector(dest, step + step));
+		print_vec(scene->light.pos[i]);
+	}
 	else if (sel_type == SPHERE)
 		scene->sphere.center[i] = add_vector(scene->sphere.center[i], \
 			scale_vector(dest, step));
@@ -86,22 +91,22 @@ void	scale_entity(t_scene *scene, int button)
 	else if (button == SCROLL_DOWN && sel_type == CAMERA)
 		scene->camera.fov += 3;
 	else if (button == SCROLL_UP && sel_type == LIGHT)
-		scene->light.intensity[i] += ZOOM;
+		scene->light.intensity[i] *= ZOOM_IN;
 	else if (button == SCROLL_DOWN && sel_type == LIGHT)
-		scene->light.intensity[i] -= ZOOM;
+		scene->light.intensity[i] *= ZOOM_OUT;
 	else if (button == SCROLL_UP && sel_type == SPHERE)
-		scene->sphere.radius[i] -= ZOOM;
+		scene->sphere.radius[i] *= ZOOM_IN;
 	else if (button == SCROLL_DOWN && sel_type == SPHERE)
-		scene->sphere.radius[i] += ZOOM;
+		scene->sphere.radius[i] *= ZOOM_OUT;
 	else if (button == SCROLL_UP && sel_type == CYLINDER)
 	{
 		//correct this
-		scene->cylinder.height[i] -= ZOOM;
-		scene->cylinder.radius[i] -= ZOOM;
+		scene->cylinder.height[i] *= ZOOM_IN;
+		scene->cylinder.radius[i] *= ZOOM_IN;
 	}
 	else if (button == SCROLL_DOWN && sel_type == CYLINDER)
 	{
-		scene->cylinder.height[i] += ZOOM;
-		scene->cylinder.radius[i] += ZOOM;
+		scene->cylinder.height[i] *= ZOOM_OUT;
+		scene->cylinder.radius[i] *= ZOOM_OUT;
 	}
 }

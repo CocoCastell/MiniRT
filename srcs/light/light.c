@@ -17,9 +17,9 @@ void	ambient_reflection(t_scene *scene, t_hit_info *hit)
 	t_color	tmp_color;
 
 	tmp_color = color_mult(hit->material_color, scene->amb_color);
-	// if (scene->settings.scene_creation_on)
-	// 	tmp_color = scale_color(tmp_color, 0.8f);
-	// else
+	if (scene->settings.scene_creation_on)
+		tmp_color = scale_color(tmp_color, 0.8f);
+	else
 		tmp_color = scale_color(tmp_color, scene->amb_ratio);
 	hit->color = add_color(hit->color, tmp_color);
 }
@@ -68,17 +68,18 @@ void	specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *s)
 {
 	t_color	spec_color;
 	t_vec3	reflect_ray;
-	t_vec3	ray_dir;
+	t_vec3	view_dir;
 	float	spec_factor;
 
-	ray_dir = normalize(hit->point);
-	reflect_ray = normalize(vector_from_to(light.pos[i], hit->point)); 
-	reflect_ray = normalize(get_reflected_vec(reflect_ray, hit->normal));
-	spec_factor = powf(max(0, dot(ray_dir, reflect_ray)), get_shininess(s, hit));
-	spec_color = scale_color(light.color[i], light.intensity[i]);
-	spec_color = scale_color(spec_color, spec_factor * get_spec_force(s, hit));
-	spec_color = scale_color(spec_color, hit->dist_attenuation);
-	hit->color = add_color(hit->color, spec_color);
+    view_dir = normalize(vector_from_to(hit->point, s->camera.pos));
+
+		// reflect_ray = normalize(get_reflected_vec(hit->light_dir, hit->normal));
+		reflect_ray = normalize(get_reflected_vec(hit->normal, hit->light_dir));
+    spec_factor = powf(max(0, dot(reflect_ray, view_dir)), get_shininess(s, hit));
+    spec_color = scale_color(light.color[i], light.intensity[i]);
+    spec_color = scale_color(spec_color, spec_factor * get_spec_force(s, hit));
+    spec_color = scale_color(spec_color, hit->dist_attenuation);
+    hit->color = add_color(hit->color, spec_color);
 }
 
 /**
@@ -130,7 +131,7 @@ void	mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
  * @param hit Pointer to hit information structure (position, normal, color,etc)
  * @param depth Recursion depth allowed for mirror reflections.
  */
-/* void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
+void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
 {
 	int	i;
 
@@ -150,39 +151,6 @@ void	mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
 		lambert_diffuse_reflection(hit, scene->light, i);
 		specular_reflection(hit, scene->light, i, scene);
 	}
-	printf("bef\n");
-	print_col(hit->color);
 	if (scene->settings.mirror_on)
 		mirror_reflection(hit, scene, depth);
-	printf("aft\n");
-	print_col(hit->color);
-	(void)depth;
-} */
-
-void	apply_reflections(t_scene *scene, t_hit_info *hit, unsigned int depth)
-{
-	int	i;
-
-	set_hit_color(hit, scene);
-	// checkered_pattern(hit, scene);
-	ambient_reflection(scene, hit);
-	if (scene->light.count == 0)
-		return ;
-	i = -1;
-	set_hit_normal(hit, scene);
-	while (++i < scene->light.count)
-	{
-		set_light_data(hit, scene, i);
-		if (hit->in_shadow)
-			continue ;
-		lambert_diffuse_reflection(hit, scene->light, i);
-		specular_reflection(hit, scene->light, i, scene);
-	}
-	// printf("bef\n");
-	// print_col(hit->color);
-	mirror_reflection(hit, scene, depth);
-	// printf("aft\n");
-	// print_col(hit->color);
-	(void)depth;
-
 }

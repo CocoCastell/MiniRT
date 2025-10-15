@@ -140,7 +140,7 @@ void	put_plane_data(int fd, t_parse_data data)
 	put_spaces(COL_1 - len, fd);
 	len = print_coordinates(data.point, fd);
 	put_spaces(COL_2 - len, fd);
-	len =print_coordinates(data.normal, fd);
+	len = print_coordinates(data.normal, fd);
 	put_spaces(COL_3 + COL_4 + COL_5 - len, fd);
 	len = print_color(data.color, fd);	
 	put_spaces(COL_6 - len, fd);

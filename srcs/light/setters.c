@@ -56,13 +56,14 @@ void	set_light_data(t_hit_info *hit, t_scene *scene, int i)
 	t_vec3	shadow_bias_pos;
 
 	light_vec = vector_from_to(hit->point, scene->light.pos[i]);
+	// light_vec = vector_from_to(scene->light.pos[i], hit->point);
 	hit->light_dir = normalize(light_vec);
 	shadow_bias_pos = add_vector(hit->point, scale_vector(hit->normal, 1e-4f));
 	light_ray = make_ray(shadow_bias_pos, hit->light_dir);
 	hit->in_shadow = true;
 	if (pre_shadow_calcul(hit, light_ray))
 		return ;
-	if (is_in_shadow(light_ray, scene, vector_sq_length(light_vec)))
+	if (is_in_shadow(light_ray, scene, vector_sq_length(light_vec), -1))
 		return ;
 	hit->in_shadow = false;
 	hit->dist_attenuation = distance_attenuation(light_vec);

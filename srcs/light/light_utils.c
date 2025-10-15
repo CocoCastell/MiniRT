@@ -25,12 +25,10 @@
  * @return true if the ray is occluded by any object before reaching the light.
  * @return false if the ray reaches the light without obstruction.
  */
-bool	is_in_shadow(t_ray ray, t_scene *scene, float max_dist)
+bool	is_in_shadow(t_ray ray, t_scene *scene, float max_dist, int i)
 {
 	t_hit_info	light_hit;
-	int			i;
 
-	i = -1;
 	light_hit.has_hit = false;
 	light_hit.distance = max_dist;
 	while (++i < scene->sphere.count)
@@ -142,7 +140,10 @@ void	checkered_pattern(t_hit_info *hit, t_scene *scene)
 	float	phi;
 
 	if (hit->type == PLANE && scene->settings.checkered_on && !hit->in_shadow)
+	{
 		tiled_pattern(hit, &scene->plane);
+		return ;
+	}
 	if (hit->type != SPHERE || !scene->settings.checkered_on)
 		return ;
 	local_hit = vector_from_to(hit->point, scene->sphere.center[hit->ent_index]);
@@ -153,12 +154,10 @@ void	checkered_pattern(t_hit_info *hit, t_scene *scene)
 	ro = sqrt(local_hit.x * local_hit.x + local_hit.y * local_hit.y + local_hit.z * local_hit.z);
 	theta = atan2(local_hit.z, local_hit.x) / (2 * M_PI / STRIPE_NB); // const
 	phi = acos(local_hit.y / ro) / (M_PI / STRIPE_NB); // const
-	if (((int)theta + (int)phi) % 3 == 0)
-		hit->material_color = create_color(1.0f, 1.0f, 1.0f);
-	else if (((int)theta + (int)phi) % 3 == 1)
-		hit->material_color = create_color(0.2f, 0.6f, 1.0f);
+	if (((int)theta + (int)phi) % 2 == 0)
+		hit->material_color = scene->sphere.color[hit->ent_index];
 	else
-		hit->material_color = create_color(0.6f, 0.2f, 0.5f);
+		hit->material_color = create_color(0.9f, 0.9f, 0.9f);
 }
 
 /**

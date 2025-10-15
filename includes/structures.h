@@ -61,13 +61,13 @@ typedef struct s_obj_counter
 
 typedef struct s_parse_data
 {
-	float	radius;
 	t_vec3	center;
 	t_color	color;
 	t_vec3	normal;
 	t_vec3	point;
 	t_vec3	point2;
 	t_vec3	point3;
+	float	radius;
 	float	height;
 	float	shininess;
 	float	spec_force;

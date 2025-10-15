@@ -14,18 +14,19 @@
 # define DEFINES_H
 
 // Variables
-# define WIN_WIDTH				950
-# define WIN_HEIGHT				550
+# define WIN_WIDTH				1080
+# define WIN_HEIGHT				720
 # define V_PORT_WIDTH			2.0f
 # define V_PORT_DIST			1 
 # define PIXEL_RATIO			(V_PORT_WIDTH / WIN_WIDTH)
 # define M_PIF					3.1415927f
 # define STEP					0.2
-# define ZOOM					0.1
-# define SAMPLE_PER_PIX			8
+# define ZOOM_IN      1.1
+# define ZOOM_OUT			0.9
+# define SAMPLE_PER_PIX			16
 # define DEPTH					3
 # define NB_MANDATORY_DATA  	6
-# define STRIPE_NB				60
+# define STRIPE_NB				30
 
 // Control keys
 # define ESC					65307

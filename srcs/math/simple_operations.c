@@ -33,3 +33,8 @@ float	vector_sq_length(t_vec3 vect)
 {
 	return (vect.x * vect.x + vect.y * vect.y + vect.z * vect.z);
 }
+
+t_vec3	ray_at(t_vec3 origin, t_vec3 direction, float scalar)
+{
+  return (add_vector(origin, scale_vector(direction, scalar)));
+}

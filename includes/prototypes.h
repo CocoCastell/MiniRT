@@ -35,7 +35,6 @@ void	set_opposite_bool(bool *bool_to_set);
 bool	is_movement_key(int keycode);
 bool	is_rotation_key(int keycode);
 bool	is_setting_key(int keycode);
-void	print_menu(t_settings settings);
 
 // ==== LIGHT ====
 // Light
@@ -57,7 +56,7 @@ float	get_shininess(t_scene *scene, t_hit_info *hit);
 float	get_reflectivity(t_hit_info *hit, t_scene *scene);
 
 // Light Utils
-bool	is_in_shadow(t_ray ray, t_scene *scene, float max_dist);
+bool	is_in_shadow(t_ray ray, t_scene *scene, float max_dist, int i);
 bool	pre_shadow_calcul(t_hit_info *hit, t_ray ray);
 float	distance_attenuation(t_vec3 vector);
 void	checkered_pattern(t_hit_info *hit, t_scene *scene);
@@ -140,6 +139,7 @@ float	max(float a, float b);
 float	vector_length(t_vec3 vect);
 float	vector_sq_length(t_vec3 vect);
 float	to_radian(float degree);
+t_vec3  ray_at(t_vec3 origin, t_vec3 direction, float scalar);
 
 // Angles
 t_vec3	apply_rotation(t_vec3 vector, float R[3][3]);
@@ -181,6 +181,7 @@ void	free_error(t_minirt *minirt, char *msg, int error);
 // Utils
 void	put_pixel(int x, int y, t_data_img *img, int color);
 void	print_selection(t_ent_type selected);
+void	print_menu(t_settings settings);
 void	print_col(t_color col);
 void	print_vec(t_vec3 v);
 

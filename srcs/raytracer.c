@@ -25,6 +25,32 @@ t_ray	get_camera_ray(float y, float x, t_v_port *v_port, t_vec3 cam_pos)
 	return (make_ray(cam_pos, direction));
 }
 
+void light_intersect(t_hit_info *hit, t_ray ray, t_light *light)
+{
+    int     i;
+    float   t;
+    t_vec3  point;
+    float   dist;
+    float   threshold;
+
+    i = -1;
+    threshold = 0.05f; // rayon virtuel du "point" lumière
+    while (++i < light->count)
+    {
+        t = dot(vector_from_to(ray.origin, light->pos[i]), ray.direction);
+        if (t <= 0)
+            continue;
+        point = add_vector(ray.origin, scale_vector(ray.direction, t));
+        dist = vector_length(vector_from_to(point, light->pos[i]));
+        if (dist < threshold)
+        {
+            hit->has_hit = true;
+            hit->type = LIGHT; // type "debug" pour lumière
+            hit->ent_index = i;
+        }
+    }
+}
+
 void	scene_intersect(t_hit_info *hit, t_ray ray, t_scene *scene)
 {
 	int	i;
@@ -39,6 +65,8 @@ void	scene_intersect(t_hit_info *hit, t_ray ray, t_scene *scene)
 	while (++i < scene->cylinder.count)
 		cylinder_intersect(hit, ray, &scene->cylinder, i);
 	i = -1;
+	// light_intersect(hit, ray, &scene->light);
+
 	// while (++i < scene->triangle.count)
 	// 	triangle_intersect(hit, ray, scene->triangle, i);
 }
@@ -82,7 +110,10 @@ t_color	trace(t_scene *scene, int pix[2])
 	scene_intersect(&hit, ray, scene);
 	if (hit.has_hit == true)
 	{
-		hit.incident_ray = ray.direction;
+			// if (hit.type == LIGHT) // DEBUG
+      //       hit.color = create_color(1.0f, 0.0f, 0.0f);
+			// else{
+				hit.incident_ray = ray.direction;
 		hit.point = add_vector(ray.origin, scale_vector(ray.direction, hit.distance));
 		apply_reflections(scene, &hit, DEPTH);
 	}

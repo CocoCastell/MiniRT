@@ -77,7 +77,8 @@ static float  cap_intersect_dist(t_ray ray, t_vec3 center, t_vec3 normal, float 
   t = dot(vector_from_to(ray.origin, center), normal) / denom;
   if (t < 1e-4)
     return (-1.0f);
-  hit_pt = add_vector(ray.origin, scale_vector(ray.direction, t));
+  hit_pt = ray_at(ray.origin, ray.direction, t);
+  // hit_pt = add_vector(ray.origin, scale_vector(ray.direction, t));
   dist = vector_length(vector_from_to(center, hit_pt));
   if (dist > rad)
     return (-1.0f);
