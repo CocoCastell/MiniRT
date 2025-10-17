@@ -23,6 +23,7 @@ t_ray	get_camera_ray(float y, float x, t_v_port *v_port, t_vec3 cam_pos)
 	direction = add_vector(v_port->v_port_center, offset);
 	direction = normalize(vector_from_to(cam_pos, direction));
 	return (make_ray(cam_pos, direction));
+	
 }
 
 void light_intersect(t_hit_info *hit, t_ray ray, t_light *light)
@@ -88,7 +89,7 @@ t_color	antialias_trace(t_scene *scene, int pix[2])
 		if (hit.has_hit == true)
 		{
 			hit.incident_ray = ray.direction;
-			hit.point = add_vector(ray.origin, scale_vector(ray.direction, hit.distance));
+			hit.point = ray_at(ray.origin, ray.direction, hit.distance);
 			apply_reflections(scene, &hit, DEPTH);
 		}
 		else
@@ -113,7 +114,7 @@ t_color	trace(t_scene *scene, int pix[2])
 			// if (hit.type == LIGHT) // DEBUG
       //       hit.color = create_color(1.0f, 0.0f, 0.0f);
 			// else{
-				hit.incident_ray = ray.direction;
+		hit.incident_ray = ray.direction;
 		hit.point = add_vector(ray.origin, scale_vector(ray.direction, hit.distance));
 		apply_reflections(scene, &hit, DEPTH);
 	}

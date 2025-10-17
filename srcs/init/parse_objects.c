@@ -27,7 +27,6 @@ void	parse_sphere(t_minirt *minirt, char **data)
 		free_error(minirt, "Sphere: diameter out of range [0.0, 1000.0].\n", 1);
 	values.color = parse_color(data[3], minirt);
 	parse_material_properties(&values, &data[4], minirt);
-	print_vec(values.center);
 	add_sphere(values, minirt->scene->sphere, sphere_index);
 	sphere_index++;
 }

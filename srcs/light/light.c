@@ -64,6 +64,17 @@ void	lambert_diffuse_reflection(t_hit_info *hit, t_light light, int i)
  * @param scene Pointer to the scene for accessing camera position and material
  * parameters.
  */
+
+t_vec3 sub_vector(t_vec3 a, t_vec3 b)
+{
+    t_vec3 result;
+
+    result.x = a.x - b.x;
+    result.y = a.y - b.y;
+    result.z = a.z - b.z;
+    return (result);
+}
+
 void	specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *s)
 {
 	t_color	spec_color;
@@ -71,10 +82,8 @@ void	specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *s)
 	t_vec3	view_dir;
 	float	spec_factor;
 
-    view_dir = normalize(vector_from_to(hit->point, s->camera.pos));
-
-		// reflect_ray = normalize(get_reflected_vec(hit->light_dir, hit->normal));
-		reflect_ray = normalize(get_reflected_vec(hit->normal, hit->light_dir));
+    view_dir = normalize(hit->point);
+		reflect_ray = normalize(get_reflected_vec(hit->light_dir, hit->normal));
     spec_factor = powf(max(0, dot(reflect_ray, view_dir)), get_shininess(s, hit));
     spec_color = scale_color(light.color[i], light.intensity[i]);
     spec_color = scale_color(spec_color, spec_factor * get_spec_force(s, hit));

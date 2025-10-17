@@ -132,6 +132,31 @@ void	put_sphere_data(int fd, t_parse_data data)
 	(void)len;
 }
 
+void	put_cylinder_data(int fd, t_parse_data data)
+{
+	int	len;
+
+	len = write(fd, "cy", 2);
+	put_spaces(COL_1 - len, fd);
+	len = print_coordinates(data.center, fd);
+	put_spaces(COL_2 - len, fd);
+	len = print_coordinates(data.normal, fd);
+	put_spaces(COL_3 - len, fd);
+	len = print_float(data.radius * 2, fd);
+	put_spaces(COL_4 - len, fd);
+	len = print_float(data.height, fd);
+	put_spaces(COL_5 - len, fd);
+	len = print_color(data.color, fd);	
+	put_spaces(COL_6 - len, fd);
+	len = print_float(data.shininess, fd);
+	put_spaces(COL_7 - len, fd);
+	len = print_float(data.spec_force, fd);
+	put_spaces(COL_8 - len, fd);
+	len = print_float(data.reflectivity, fd);
+	len = write(fd, "\n", 1);
+	(void)len;
+}
+
 void	put_plane_data(int fd, t_parse_data data)
 {
 	int	len;
@@ -220,13 +245,13 @@ void	put_data_in_file(t_scene *scene)
 	}
 	if (i > 0)
 		ft_putchar_fd('\n', fd);
-	// for (i = 0; i < scene->cylinder.count; i++)
-	// {
-		// get_sphere_data(scene->cylinder, &data, i);
-		// put_sphere_data(fd, data);
-	// }
-	// if (i > 0)
-		// ft_putchar_fd('\n', fd);
+	for (i = 0; i < scene->cylinder.count; i++)
+	{
+		get_cylinder_data(scene->cylinder, &data, i);
+		put_cylinder_data(fd, data);
+	}
+	if (i > 0)
+		ft_putchar_fd('\n', fd);
 	for (i = 0; i < scene->sphere.count; i++)
 	{
 		get_sphere_data(scene->sphere, &data, i);

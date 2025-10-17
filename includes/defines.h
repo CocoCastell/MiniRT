@@ -23,8 +23,8 @@
 # define STEP					0.2
 # define ZOOM_IN      1.1
 # define ZOOM_OUT			0.9
-# define SAMPLE_PER_PIX			16
-# define DEPTH					3
+# define SAMPLE_PER_PIX			12
+# define DEPTH					2
 # define NB_MANDATORY_DATA  	6
 # define STRIPE_NB				30
 

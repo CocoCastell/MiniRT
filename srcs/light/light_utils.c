@@ -85,13 +85,6 @@ bool	pre_shadow_calcul(t_hit_info *hit, t_ray ray)
 	return (false);
 }
 
-int	ft_floor(float value)
-{
-	// if (value >= 0)
-	return (value);
-	// value = 1 - value + 1;
-}
-
 void	tiled_pattern(t_hit_info *hit, t_plane *plane)
 {
 	t_vec3	local_hit;
@@ -147,10 +140,6 @@ void	checkered_pattern(t_hit_info *hit, t_scene *scene)
 	if (hit->type != SPHERE || !scene->settings.checkered_on)
 		return ;
 	local_hit = vector_from_to(hit->point, scene->sphere.center[hit->ent_index]);
-	// float   project_point;
-	// project_point = sqrt(local_intersec.x * local_intersec.x + local_intersec.z * local_intersec.z);
-	// ro = sqrt(project_point * project_point + local_intersec.y * local_intersec.y);
-	// theta = acos(local_intersec.x / project_point);
 	ro = sqrt(local_hit.x * local_hit.x + local_hit.y * local_hit.y + local_hit.z * local_hit.z);
 	theta = atan2(local_hit.z, local_hit.x) / (2 * M_PI / STRIPE_NB); // const
 	phi = acos(local_hit.y / ro) / (M_PI / STRIPE_NB); // const
