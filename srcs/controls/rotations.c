@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:47:07 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/10/25 11:29:19 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	apply_cam_rotation(t_camera *camera, float r_matrix[3][3])
 		camera->right = scale_vector(new_right, 1.0f / right_length);
 }
 
-static void	apply_axis_rotation(t_vec3 *normal, float r_matrix[3][3])
+static void	axis_rot(t_vec3 *normal, float r_matrix[3][3])
 {
 	*normal = normalize(apply_rotation(*normal, r_matrix));
 }
@@ -57,7 +57,7 @@ void	rotation(int keycode, t_scene *scene)
 	if (scene->selection.sel_type == CAMERA)
 		apply_cam_rotation(&scene->camera, r_matrix);
 	if (scene->selection.sel_type == PLANE)
-		apply_axis_rotation(&scene->plane.normal[scene->selection.sel_index], r_matrix);
+		axis_rot(&scene->plane.normal[scene->selection.sel_index], r_matrix);
 	if (scene->selection.sel_type == CYLINDER)
-		apply_axis_rotation(&scene->cylinder.axis[scene->selection.sel_index], r_matrix);
+		axis_rot(&scene->cylinder.axis[scene->selection.sel_index], r_matrix);
 }

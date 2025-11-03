@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:54:27 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 19:03:59 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,30 +65,30 @@ void	lambert_diffuse_reflection(t_hit_info *hit, t_light light, int i)
  * parameters.
  */
 
-t_vec3 sub_vector(t_vec3 a, t_vec3 b)
-{
-    t_vec3 result;
+/* t_vec3	sub_vector(t_vec3 a, t_vec3 b) */
+/* { */
+/* 	t_vec3	result; */
 
-    result.x = a.x - b.x;
-    result.y = a.y - b.y;
-    result.z = a.z - b.z;
-    return (result);
-}
+/* 	result.x = a.x - b.x; */
+/* 	result.y = a.y - b.y; */
+/* 	result.z = a.z - b.z; */
+/* 	return (result); */
+/* } */
 
 void	specular_reflection(t_hit_info *hit, t_light light, int i, t_scene *s)
 {
 	t_color	spec_color;
 	t_vec3	reflect_ray;
 	t_vec3	view_dir;
-	float	spec_factor;
+	float	spec_fact;
 
-    view_dir = normalize(hit->point);
-		reflect_ray = normalize(get_reflected_vec(hit->light_dir, hit->normal));
-    spec_factor = powf(max(0, dot(reflect_ray, view_dir)), get_shininess(s, hit));
-    spec_color = scale_color(light.color[i], light.intensity[i]);
-    spec_color = scale_color(spec_color, spec_factor * get_spec_force(s, hit));
-    spec_color = scale_color(spec_color, hit->dist_attenuation);
-    hit->color = add_color(hit->color, spec_color);
+	view_dir = normalize(hit->point);
+	reflect_ray = normalize(get_reflected_vec(hit->light_dir, hit->normal));
+	spec_fact = powf(max(0, dot(reflect_ray, view_dir)), get_shininess(s, hit));
+	spec_color = scale_color(light.color[i], light.intensity[i]);
+	spec_color = scale_color(spec_color, spec_fact * get_spec_force(s, hit));
+	spec_color = scale_color(spec_color, hit->dist_attenuation);
+	hit->color = add_color(hit->color, spec_color);
 }
 
 /**
@@ -116,7 +116,7 @@ void	mirror_reflection(t_hit_info *hit, t_scene *scene, unsigned int depth)
 	reflect_dir = normalize(get_reflected_vec(hit->incident_ray, hit->normal));
 	bias_pos = add_vector(hit->point, scale_vector(hit->normal, 1e-4f));
 	reflect_ray = make_ray(bias_pos, reflect_dir);
-	init_ray(&reflect_hit, vec3(999, 999, 999), false); // const
+	init_ray(&reflect_hit, false);
 	scene_intersect(&reflect_hit, reflect_ray, scene);
 	reflect_hit.incident_ray = reflect_ray.direction;
 	reflect_hit.point = add_vector(reflect_ray.origin, \

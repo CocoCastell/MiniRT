@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:37:30 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/10/25 11:07:52 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,5 @@ float	vector_sq_length(t_vec3 vect)
 
 t_vec3	ray_at(t_vec3 origin, t_vec3 direction, float scalar)
 {
-  return (add_vector(origin, scale_vector(direction, scalar)));
+	return (add_vector(origin, scale_vector(direction, scalar)));
 }

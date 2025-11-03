@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 12:12:11 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:01:05 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,33 +23,6 @@ t_ray	get_camera_ray(float y, float x, t_v_port *v_port, t_vec3 cam_pos)
 	direction = add_vector(v_port->v_port_center, offset);
 	direction = normalize(vector_from_to(cam_pos, direction));
 	return (make_ray(cam_pos, direction));
-	
-}
-
-void light_intersect(t_hit_info *hit, t_ray ray, t_light *light)
-{
-    int     i;
-    float   t;
-    t_vec3  point;
-    float   dist;
-    float   threshold;
-
-    i = -1;
-    threshold = 0.05f; // rayon virtuel du "point" lumière
-    while (++i < light->count)
-    {
-        t = dot(vector_from_to(ray.origin, light->pos[i]), ray.direction);
-        if (t <= 0)
-            continue;
-        point = add_vector(ray.origin, scale_vector(ray.direction, t));
-        dist = vector_length(vector_from_to(point, light->pos[i]));
-        if (dist < threshold)
-        {
-            hit->has_hit = true;
-            hit->type = LIGHT; // type "debug" pour lumière
-            hit->ent_index = i;
-        }
-    }
 }
 
 void	scene_intersect(t_hit_info *hit, t_ray ray, t_scene *scene)
@@ -66,25 +39,22 @@ void	scene_intersect(t_hit_info *hit, t_ray ray, t_scene *scene)
 	while (++i < scene->cylinder.count)
 		cylinder_intersect(hit, ray, &scene->cylinder, i);
 	i = -1;
-	// light_intersect(hit, ray, &scene->light);
-
-	// while (++i < scene->triangle.count)
-	// 	triangle_intersect(hit, ray, scene->triangle, i);
+	while (++i < scene->triangle.count)
+		triangle_intersect(hit, ray, scene->triangle, i);
 }
 
-t_color	antialias_trace(t_scene *scene, int pix[2])
+t_color	antialias_trace(t_scene *scene, int pix[2], int i)
 {
 	t_hit_info	hit;
 	t_color		color;
 	t_ray		ray;
-	int			i;
 
-	i = -1;
 	color = create_color(0.0f, 0.0f, 0.0f);
 	while (++i < SAMPLE_PER_PIX)
 	{
-		ray = get_camera_ray(rand_offset(pix[0]), rand_offset(pix[1]), &scene->v_port, scene->camera.pos);
-		init_ray(&hit, vec3(999, 999, 999), false);
+		ray = get_camera_ray(rand_offset(pix[0]), rand_offset(pix[1]), \
+				&scene->v_port, scene->camera.pos);
+		init_ray(&hit, false);
 		scene_intersect(&hit, ray, scene);
 		if (hit.has_hit == true)
 		{
@@ -107,15 +77,13 @@ t_color	trace(t_scene *scene, int pix[2])
 	t_ray		ray;
 
 	ray = get_camera_ray(pix[0], pix[1], &scene->v_port, scene->camera.pos);
-	init_ray(&hit, vec3(999, 999, 999), false);
+	init_ray(&hit, false);
 	scene_intersect(&hit, ray, scene);
 	if (hit.has_hit == true)
 	{
-			// if (hit.type == LIGHT) // DEBUG
-      //       hit.color = create_color(1.0f, 0.0f, 0.0f);
-			// else{
 		hit.incident_ray = ray.direction;
-		hit.point = add_vector(ray.origin, scale_vector(ray.direction, hit.distance));
+		hit.point = add_vector(
+				ray.origin, scale_vector(ray.direction, hit.distance));
 		apply_reflections(scene, &hit, DEPTH);
 	}
 	else
@@ -139,14 +107,15 @@ void	raytracing(t_minirt *minirt)
 		{
 			if (minirt->scene->settings.antialias_on)
 			{
-				pix_color = antialias_trace(minirt->scene, pix);
+				pix_color = antialias_trace(minirt->scene, pix, -1);
 				mean_color(&pix_color, SAMPLE_PER_PIX);
 			}
 			else
 				pix_color = trace(minirt->scene, pix);
 			if (minirt->scene->settings.gamma_on == true)
 				pix_color = gamma_correct(pix_color);
-			put_pixel(pix[1], pix[0], &minirt->img, float_color_to_int(pix_color));
+			put_pixel(pix[1], pix[0], &minirt->img, \
+					float_color_to_int(pix_color));
 		}
 	}
 	mlx_put_image_to_window(minirt->mlx, minirt->win, minirt->img.img, 0, 0);

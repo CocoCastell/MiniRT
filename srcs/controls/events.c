@@ -6,77 +6,17 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:39:22 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:32:59 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/miniRT.h"
 
+//put_data_in_file(minirt->scene);
 int	my_close(t_minirt *minirt)
 {
-	put_data_in_file(minirt->scene);
 	free_mlx(minirt);
 	exit(0);
-}
-
-void	settings(int keycode, t_scene *scene)
-{
-	if (keycode == K_1)
-		set_opposite_bool(&scene->settings.scene_creation_on);
-	if (keycode == K_2)
-		set_opposite_bool(&scene->settings.checkered_on);
-	if (keycode == K_3)
-		set_opposite_bool(&scene->settings.gamma_on);
-	if (keycode == K_4)
-		set_opposite_bool(&scene->settings.mirror_on);
-	if (keycode == K_5)
-		set_opposite_bool(&scene->settings.plane_on);
-	if (keycode == K_6)
-		set_opposite_bool(&scene->settings.antialias_on);
-	if (keycode == I_KEY)
-		print_menu(scene->settings);
-}
-
-void	mirror_control(int keycode, t_scene *scene)
-{
-	float	*reflectivity;
-
-	if (scene->selection.sel_type == SPHERE)
-		reflectivity = &scene->sphere.reflectivity[scene->selection.sel_index];
-	else if (scene->selection.sel_type == PLANE)
-		reflectivity = &scene->plane.reflectivity[scene->selection.sel_index];
-	else if (scene->selection.sel_type == CYLINDER || scene->selection.sel_type == CYLINDER_CAP)
-		reflectivity = &scene->cylinder.reflectivity[scene->selection.sel_index];
-	else
-		return ;
-	if (keycode == MINUS_KEY)
-		*reflectivity -= 0.05;
-	else
-		*reflectivity += 0.05;
-	if (*reflectivity > 1.0f)
-		*reflectivity = 1.0f;
-	else if (*reflectivity < 0.0f)
-		*reflectivity = 0.0f;
-}
-
-void	select_light(int light_count, t_selection *selection)
-{
-	static int	prev_index;
-
-	if (selection->sel_type == LIGHT)
-	{
-		if (selection->sel_index < light_count - 1)
-			selection->sel_index++;
-		else
-			selection->sel_index = 0;
-		prev_index = selection->sel_index;
-	}
-	else
-	{
-		selection->sel_index = prev_index;
-		selection->sel_type = LIGHT;
-	}
-	print_selection(LIGHT);
 }
 
 int	key_pressed(int keycode, t_minirt *minirt)
@@ -95,42 +35,6 @@ int	key_pressed(int keycode, t_minirt *minirt)
 		select_light(minirt->scene->light.count, &minirt->scene->selection);
 	raytracing(minirt);
 	return (0);
-}
-
-void	select_object(int x, int y, t_selection *selection)
-{
-	t_ent_type  type;
-	int			index;
-
-	type = selection->type_grid[y][x];
-	index = selection->index_grid[y][x];
-	if (type != selection->sel_type || index != selection->sel_index)
-	{
-		selection->sel_index = index;
-		if (selection->sel_type == CYLINDER_CAP)
-			selection->sel_type = CYLINDER;
-		else
-			selection->sel_type = type;
-	}
-	else
-	{
-		selection->sel_type = CAMERA;
-		selection->sel_index = 0;
-	}
-	print_selection(selection->sel_type);
-}
-
-int	get_viewport_coord(t_vec3 position, t_scene *scene)
-{
-	t_vec3	cam_to_obj;
-	float	x;
-	float	z;
-
-	cam_to_obj = vector_from_to(scene->camera.pos, position);
-	x = dot(cam_to_obj, scene->camera.right);
-	z = dot(cam_to_obj, scene->camera.forward);
-	return ((int)((x / (z * to_radian(scene->camera.fov))) * (WIN_WIDTH / 2) \
-				+ WIN_WIDTH / 2));
 }
 
 int	mouse_pressed(int button, int x, int y, t_minirt *minirt)

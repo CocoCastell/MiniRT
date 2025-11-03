@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:45:35 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/10/25 11:27:50 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ bool	is_rotation_key(int keycode)
 
 bool	is_setting_key(int keycode)
 {
-	return (keycode == K_1 || keycode == K_2 || keycode == K_3 || \
-			keycode == K_4 || keycode == K_5 || keycode == K_6 || keycode == I_KEY);
+	return (keycode == K_1 || keycode == K_2 || keycode == K_3 || keycode \
+			== K_4 || keycode == K_5 || keycode == K_6 || keycode == I_KEY);
 }
 
 void	set_opposite_bool(bool *bool_to_set)

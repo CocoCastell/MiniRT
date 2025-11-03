@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 17:44:24 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/13 17:52:55 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:50:57 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ void	scale_entity(t_scene *scene, int button);
 void	event_manager(t_minirt *minirt);
 int		key_pressed(int keycode, t_minirt *minirt);
 int		my_close(t_minirt *minirt);
+int		get_viewport_coord(t_vec3 position, t_scene *scene);
+void	select_object(int x, int y, t_selection *selection);
+void	mirror_control(int keycode, t_scene *scene);
+void	settings(int keycode, t_scene *scene);
+void	select_light(int light_count, t_selection *selection);
 
 // Control Utils
 void	set_opposite_bool(bool *bool_to_set);
@@ -63,35 +68,36 @@ void	checkered_pattern(t_hit_info *hit, t_scene *scene);
 
 // ==== OBJECTS ====
 // Sphere
+t_vec3	calculate_sphere_hit_point(float dir_scalar, t_ray ray, int i);
+void	add_sphere(t_parse_data data, t_sphere sphere, int i);
+void	sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere *sph, int i);
 t_quad_eq	compute_quadratic_data(t_ray ray, t_vec3 center, float radius);
-t_vec3	    calculate_sphere_hit_point(float dir_scalar, t_ray ray, int i);
-void    	add_sphere(t_parse_data data, t_sphere sphere, int i);
-void	    sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere *sph, int i);
 
 // Plane
 void	plane_intersect(t_hit_info *hit, t_ray ray, t_plane *plane, int i);
 void	add_plane(t_parse_data data, t_plane *plane, int i);
 
 // Cylinder
-void cylinder_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cyl, int i);
+void	cylinder_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cyl, int i);
 void	add_cylinder(t_parse_data data, t_cylinder cylinder, int i);
 
 // Cylinder utils
-void get_caps_center(t_cylinder *cyl, int i, t_vec3 centers[2]);
-t_cyl_hit* find_closest(t_cyl_hit hits[3]);
-t_quad_eq init_quadratic(t_vec3 proj_dir, t_vec3 proj_oc, float radius);
-float solve_quadratic(t_quad_eq q);
-int in_height(t_vec3 center, t_vec3 axis, t_vec3 pt, float height);
+t_cyl_hit	*find_closest(t_cyl_hit hits[3]);
+t_quad_eq	init_quadratic(t_vec3 proj_dir, t_vec3 proj_oc, float radius);
+float		solve_quadratic(t_quad_eq q);
+void		get_caps_center(t_cylinder *cyl, int i, t_vec3 centers[2]);
+int			in_height(t_vec3 center, t_vec3 axis, t_vec3 pt, float height);
 
 // Triangle
 void	add_triangle(t_parse_data data, t_triangle triangle, int i);
+void	triangle_intersect(t_hit_info *hit, t_ray ray, t_triangle t, int i);
 
 // ==== INIT ====
 // Init
 void	init_mlx(t_minirt *minirt);
-void	init_obj_struct(t_scene *scene, t_obj_counter counter);
 void	init_all_objects(int fd, t_minirt *minirt, char *file);
 void	init_minirt(t_minirt *minirt, char *file);
+int		init_obj_struct(t_scene *scene, t_obj_counter counter);
 
 // Init Utils
 bool	has_rt_extension(const char *filename);
@@ -99,11 +105,11 @@ void	init_pixel_offsets(t_scene *scene);
 int		get_fd_file(char *file, t_minirt *minirt);
 
 // Init object structure
-void	init_light(t_scene *scene, int light_nb);
-void	init_cylinder(t_scene *scene, int cylinder_nb);
-void	init_plane(t_scene *scene, int plane_nb);
-void	init_sphere(t_scene *scene, int sphere_nb);
-void	init_triangle(t_scene *scene, int triangle_nb);
+int	init_light(t_scene *scene, int light_nb);
+int	init_cylinder(t_scene *scene, int cylinder_nb);
+int	init_plane(t_scene *scene, int plane_nb);
+int	init_sphere(t_scene *scene, int sphere_nb);
+int	init_triangle(t_scene *scene, int triangle_nb);
 
 // Parse
 void	parse_ambient(t_minirt *minirt, char **data);
@@ -120,12 +126,12 @@ void	parse_cylinder(t_minirt *minirt, char **data);
 t_color	parse_color(char *str, t_minirt *minirt);
 t_vec3	parse_coordinates(char *str, t_minirt *minirt);
 t_vec3	parse_normal_vec(char *str, t_minirt *minirt);
-void	parse_material_properties(t_parse_data *values, char **data, t_minirt *minirt);
+void	parse_properties(t_parse_data *values, char **data, t_minirt *minirt);
 
 // Count
 t_obj_counter	count_objects(int fd, t_minirt *minirt);
-void	compute_count(char *token, t_obj_counter *counter, t_minirt *minirt);
-void	init_counter(t_obj_counter *counter);
+void			compute_count(char *token, t_obj_counter *counter, t_minirt *minirt);
+void			init_counter(t_obj_counter *counter);
 
 // ==== MATHS ====
 // Vector operations
@@ -139,7 +145,7 @@ float	max(float a, float b);
 float	vector_length(t_vec3 vect);
 float	vector_sq_length(t_vec3 vect);
 float	to_radian(float degree);
-t_vec3  ray_at(t_vec3 origin, t_vec3 direction, float scalar);
+t_vec3	ray_at(t_vec3 origin, t_vec3 direction, float scalar);
 
 // Angles
 t_vec3	apply_rotation(t_vec3 vector, float R[3][3]);
@@ -161,7 +167,7 @@ void	raytracing(t_minirt *minirt);
 t_color	gamma_correct(t_color color);
 t_ray	make_ray(t_vec3 origin, t_vec3 direction);
 float	rand_offset(float value);
-void	init_ray(t_hit_info *hit, t_vec3 max_distance, bool in_shadow);
+void	init_ray(t_hit_info *hit, bool in_shadow);
 void	update_v_port(t_scene *scene);
 
 // Colors

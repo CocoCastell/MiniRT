@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:06:06 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/10/25 11:25:45 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,4 @@ t_vec3	get_reflected_vec(t_vec3 incident_vec, t_vec3 normal)
 
 	scaled_normal = scale_vector(normal, 2.0f * dot(incident_vec, normal));
 	return (vector_from_to(scaled_normal, incident_vec));
-	// return (vector_from_to(incident_vec, scaled_normal));
 }
-
-

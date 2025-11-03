@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:40:15 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:51:38 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	parse_sphere(t_minirt *minirt, char **data)
 	if (values.radius < 0.0f || values.radius > 500.0f)
 		free_error(minirt, "Sphere: diameter out of range [0.0, 1000.0].\n", 1);
 	values.color = parse_color(data[3], minirt);
-	parse_material_properties(&values, &data[4], minirt);
+	parse_properties(&values, &data[4], minirt);
 	add_sphere(values, minirt->scene->sphere, sphere_index);
 	sphere_index++;
 }
@@ -43,7 +43,7 @@ void	parse_plane(t_minirt *minirt, char **data)
 	values.point = parse_coordinates(data[1], minirt);
 	values.normal = parse_normal_vec(data[2], minirt);
 	values.color = parse_color(data[3], minirt);
-	parse_material_properties(&values, &data[4], minirt);
+	parse_properties(&values, &data[4], minirt);
 	add_plane(values, &minirt->scene->plane, plane_index);
 	plane_index++;
 }
@@ -64,7 +64,7 @@ void	parse_cylinder(t_minirt *minirt, char **data)
 		free_error(minirt, "Cylinder: diameter out of range [0, 1000].\n", 1);
 	values.height = ft_atof(data[4]);
 	values.color = parse_color(data[5], minirt);
-	parse_material_properties(&values, &data[6], minirt);
+	parse_properties(&values, &data[6], minirt);
 	add_cylinder(values, minirt->scene->cylinder, cylinder_index);
 	cylinder_index++;
 }
@@ -82,7 +82,7 @@ void	parse_triangle(t_minirt *minirt, char **data)
 	values.point2 = parse_coordinates(data[1], minirt);
 	values.point3 = parse_coordinates(data[1], minirt);
 	values.color = parse_color(data[5], minirt);
-	parse_material_properties(&values, &data[6], minirt);
+	parse_properties(&values, &data[6], minirt);
 	add_triangle(values, minirt->scene->triangle, triangle_index);
 	triangle_index++;
 }

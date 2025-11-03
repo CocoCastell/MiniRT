@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:55:39 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 19:38:46 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,28 +27,28 @@
  */
 bool	is_in_shadow(t_ray ray, t_scene *scene, float max_dist, int i)
 {
-	t_hit_info	light_hit;
+	t_hit_info	hit;
 
-	light_hit.has_hit = false;
-	light_hit.distance = max_dist;
+	hit.has_hit = false;
+	hit.distance = max_dist;
 	while (++i < scene->sphere.count)
 	{
-		sphere_intersect(&light_hit, ray, &scene->sphere, i);
-		if (light_hit.has_hit == true && light_hit.distance * light_hit.distance <= max_dist)
+		sphere_intersect(&hit, ray, &scene->sphere, i);
+		if (hit.has_hit == true && hit.distance * hit.distance <= max_dist)
 			return (true);
 	}
 	i = -1;
 	while (++i < scene->plane.count && scene->settings.plane_on == true)
 	{
-		plane_intersect(&light_hit, ray, &scene->plane, i);
-		if (light_hit.has_hit == true && light_hit.distance * light_hit.distance <= max_dist)
+		plane_intersect(&hit, ray, &scene->plane, i);
+		if (hit.has_hit == true && hit.distance * hit.distance <= max_dist)
 			return (true);
 	}
 	i = -1;
 	while (++i < scene->cylinder.count)
 	{
-    cylinder_intersect(&light_hit, ray, &scene->cylinder, i);
-		if (light_hit.has_hit == true && light_hit.distance * light_hit.distance <= max_dist)
+		cylinder_intersect(&hit, ray, &scene->cylinder, i);
+		if (hit.has_hit == true && hit.distance * hit.distance <= max_dist)
 			return (true);
 	}
 	return (false);
@@ -125,26 +125,27 @@ void	tiled_pattern(t_hit_info *hit, t_plane *plane)
  * @param hit Pointer to the hit information of the intersection point.
  * @param scene Pointer to the scene data containing spheres and settings.
  */
-void	checkered_pattern(t_hit_info *hit, t_scene *scene)
+void	checkered_pattern(t_hit_info *hit, t_scene *scn)
 {
 	t_vec3	local_hit;
 	float	ro;
 	float	theta;
 	float	phi;
 
-	if (hit->type == PLANE && scene->settings.checkered_on && !hit->in_shadow)
+	if (hit->type == PLANE && scn->settings.checkered_on && !hit->in_shadow)
 	{
-		tiled_pattern(hit, &scene->plane);
+		tiled_pattern(hit, &scn->plane);
 		return ;
 	}
-	if (hit->type != SPHERE || !scene->settings.checkered_on)
+	if (hit->type != SPHERE || !scn->settings.checkered_on)
 		return ;
-	local_hit = vector_from_to(hit->point, scene->sphere.center[hit->ent_index]);
-	ro = sqrt(local_hit.x * local_hit.x + local_hit.y * local_hit.y + local_hit.z * local_hit.z);
-	theta = atan2(local_hit.z, local_hit.x) / (2 * M_PI / STRIPE_NB); // const
-	phi = acos(local_hit.y / ro) / (M_PI / STRIPE_NB); // const
+	local_hit = vector_from_to(hit->point, scn->sphere.center[hit->ent_index]);
+	ro = sqrt(local_hit.x * local_hit.x + local_hit.y * local_hit.y + \
+			local_hit.z * local_hit.z);
+	theta = atan2(local_hit.z, local_hit.x) / (2 * M_PI / STRIPE_NB);
+	phi = acos(local_hit.y / ro) / (M_PI / STRIPE_NB);
 	if (((int)theta + (int)phi) % 2 == 0)
-		hit->material_color = scene->sphere.color[hit->ent_index];
+		hit->material_color = scn->sphere.color[hit->ent_index];
 	else
 		hit->material_color = create_color(0.9f, 0.9f, 0.9f);
 }

@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/29 19:11:53 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:46:20 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,19 @@ void	init_mlx(t_minirt *minirt)
 		free_error(minirt, "Img addr init error\n", 1);
 }
 
-void	init_obj_struct(t_scene *scene, t_obj_counter counter)
+int	init_obj_struct(t_scene *scene, t_obj_counter counter)
 {
-	init_sphere(scene, counter.sphere);
-	init_plane(scene, counter.plane);
-	init_cylinder(scene, counter.cylinder);
-	init_triangle(scene, counter.triangle);
-	init_light(scene, counter.light);
+	if (init_sphere(scene, counter.sphere) == 1)
+		return (1);
+	if (init_plane(scene, counter.plane) == 1)
+		return (1);
+	if (init_cylinder(scene, counter.cylinder) == 1)
+		return (1);
+	if (init_triangle(scene, counter.triangle) == 1)
+		return (1);
+	if (init_light(scene, counter.light) == 1)
+		return (1);
+	return (0);
 }
 
 void	init_all_objects(int fd, t_minirt *minirt, char *file)
@@ -89,7 +95,6 @@ void	init_minirt(t_minirt *minirt, char *file)
 		free_error(minirt, "Error malloc in init scene\n", 1);
 	minirt->scene = scene;
 	init_all_objects(fd, minirt, file);
-	// init_pixel_offsets(scene);
 	scene->background = create_color(0.3f, 0.5f, 0.7f);
 	scene->selection.sel_type = CAMERA;
 	scene->selection.sel_index = 0;

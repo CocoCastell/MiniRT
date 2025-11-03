@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:40:51 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:08:24 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,27 +24,29 @@
  */
 void	add_triangle(t_parse_data data, t_triangle triangle, int i)
 {
-	triangle.pointA[i] = data.point;
-	triangle.pointB[i] = data.point2;
-	triangle.pointC[i] = data.point3;
+	triangle.point_a[i] = data.point;
+	triangle.point_b[i] = data.point2;
+	triangle.point_c[i] = data.point3;
 	triangle.color[i] = data.color;
 	triangle.shininess[i] = data.shininess;
 	triangle.spec_force[i] = data.spec_force;
 	triangle.reflectivity[i] = data.reflectivity;
 }
 
-/* t_hit_info triangle_intersect(t_ray ray, t_triangle triangle, int i)
+void	triangle_intersect(t_hit_info *hit, t_ray ray, t_triangle trgl, int i)
 {
-	t_hit_info	hit;
-	float				t;
+	t_vec3		sides[3];
+	float		t;
 
-	hit.has_hit = false;
-	t_vec3 AB = vector_from_to(triangle.pointA[i], triangle.pointB[i]);	
-	t_vec3 BC = vector_from_to(triangle.pointB[i], triangle.pointC[i]);	
-	t_vec3 CA = vector_from_to(triangle.pointC[i], triangle.pointA[i]);	
-	hit.has_hit = true;
-	hit.type = TRIANGLE;
-	hit.ent_index = i;
-	hit.distance = t;
-	return (hit);
-} */
+	t = 0;
+	hit->has_hit = false;
+	sides[0] = vector_from_to(trgl.point_a[i], trgl.point_b[i]);
+	sides[1] = vector_from_to(trgl.point_b[i], trgl.point_c[i]);
+	sides[2] = vector_from_to(trgl.point_c[i], trgl.point_a[i]);
+	hit->has_hit = true;
+	hit->type = TRIANGLE;
+	hit->ent_index = i;
+	hit->distance = t;
+	(void)sides;
+	(void)ray;
+}

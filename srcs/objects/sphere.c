@@ -6,7 +6,7 @@
 /*   By: cochatel cochatel@student.42barcelona      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:43:16 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:52:13 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere *sphere, int i)
 		t[0] = t[2];
 	else
 		return ;
-	if (t[0] > hit->distance)
+	if (hit->has_hit && t[0] > hit->distance)
 		return ;
 	hit->has_hit = true;
 	hit->distance = t[0];

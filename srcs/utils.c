@@ -6,7 +6,7 @@
 /*   By: cochatel  cochatel@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:21:04 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:26:09 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	print_selection(t_ent_type selected)
 	printf("\n");
 }
 
-const char* print_setting_state(bool setting)
+const char	*print_setting_state(bool setting)
 {
 	if (setting)
 		return (GREEN"on"DEF);
@@ -62,12 +62,18 @@ void	print_menu(t_settings settings)
 {
 	printf("\n");
 	printf("--- MENU ---\n");
-	printf("Key 1  -   Scene creation mode  %s\n", print_setting_state(settings.scene_creation_on));
-	printf("Key 2  -   Checkered            %s\n", print_setting_state(settings.checkered_on));
-	printf("Key 3  -   Gamma                %s\n", print_setting_state(settings.gamma_on));
-	printf("Key 4  -   Mirror               %s\n", print_setting_state(settings.mirror_on));
-	printf("Key 5  -   Plane                %s\n", print_setting_state(settings.plane_on));
-	printf("Key 6  -   Anti-aliasing        %s\n", print_setting_state(settings.antialias_on));
+	printf("Key 1  -   Scene creation mode  %s\n",
+		print_setting_state(settings.scene_creation_on));
+	printf("Key 2  -   Checkered            %s\n",
+		print_setting_state(settings.checkered_on));
+	printf("Key 3  -   Gamma                %s\n",
+		print_setting_state(settings.gamma_on));
+	printf("Key 4  -   Mirror               %s\n",
+		print_setting_state(settings.mirror_on));
+	printf("Key 5  -   Plane                %s\n",
+		print_setting_state(settings.plane_on));
+	printf("Key 6  -   Anti-aliasing        %s\n",
+		print_setting_state(settings.antialias_on));
 	printf("\n");
 	printf("WSDA   -   Movement\n");
 	printf("Arrows -   Rotation\n");
@@ -77,12 +83,12 @@ void	print_menu(t_settings settings)
 	printf("\n");
 }
 
-void	print_col(t_color col)
-{
-	printf("r: %f, g: %f, b: %f\n", col.r, col.g, col.b);
-}
-
 void	print_vec(t_vec3 v)
 {
 	printf("x: %f, y: %f, z: %f\n", v.x, v.y, v.z);
 }
+
+/* void	print_col(t_color col) */
+/* { */
+/* 	printf("r: %f, g: %f, b: %f\n", col.r, col.g, col.b); */
+/* } */

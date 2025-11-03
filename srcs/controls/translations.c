@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:59:55 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/10/25 11:30:02 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,16 @@ void	click_move_object(int x, int y, t_scene *scene)
 		p = vec3(ray.direction.x, ray.direction.y, \
 			scene->sphere.center[scene->selection.sel_index].z);
 		t = (p.z - ray.origin.z) / ray.direction.z;
-		scene->sphere.center[scene->selection.sel_index] = ray_at(ray.origin, ray.direction, t);
+		scene->sphere.center[scene->selection.sel_index] = \
+			ray_at(ray.origin, ray.direction, t);
 	}
 	else if (scene->selection.sel_type == CYLINDER)
 	{
 		p = vec3(ray.direction.x, ray.direction.y, \
 			scene->cylinder.center[scene->selection.sel_index].z);
 		t = (p.z - ray.origin.z) / ray.direction.z;
-		scene->cylinder.center[scene->selection.sel_index] = ray_at(ray.origin, ray.direction, t);
+		scene->cylinder.center[scene->selection.sel_index] = \
+			ray_at(ray.origin, ray.direction, t);
 	}
 }
 
@@ -58,7 +60,7 @@ void	key_move_entity(t_scene *scene, t_vec3 dest, float step)
 		scene->plane.point[i] = add_vector(scene->plane.point[i], \
 			scale_vector(dest, step));
 	else if (sel_type == CYLINDER)
-	 	scene->cylinder.center[i] = add_vector(scene->cylinder.center[i], \
+		scene->cylinder.center[i] = add_vector(scene->cylinder.center[i], \
 			scale_vector(dest, step));
 }
 

@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 17:38:53 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/13 17:53:18 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 19:23:25 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ typedef struct s_color
 
 typedef struct s_plane_eq
 {
-	t_vec3	O;
-	t_vec3	D;
-	t_vec3	n;
+	t_vec3	ori;
+	t_vec3	dir;
+	t_vec3	norm;
 	float	d;
 }	t_plane_eq;
 
@@ -135,9 +135,9 @@ typedef struct s_camera
 typedef struct s_triangle
 {
 	int		count;
-	t_vec3	*pointA;
-	t_vec3	*pointB;
-	t_vec3	*pointC;
+	t_vec3	*point_a;
+	t_vec3	*point_b;
+	t_vec3	*point_c;
 	t_color	*color;
 	float	*shininess;
 	float	*spec_force;
@@ -146,10 +146,10 @@ typedef struct s_triangle
 
 typedef struct s_light
 {
+	int		count;
 	t_vec3	*pos;
 	t_color	*color;
 	float	*intensity;
-	int		count;
 }	t_light;
 
 typedef struct s_ray
@@ -161,30 +161,30 @@ typedef struct s_ray
 // ==== RAYTRACING ====
 typedef struct s_selection
 {
-	t_ent_type	sel_type;
 	int			sel_index;
 	int			x_mouse;
 	int			y_mouse;
-	t_ent_type	type_grid[WIN_HEIGHT][WIN_WIDTH];
 	int			index_grid[WIN_HEIGHT][WIN_WIDTH];
+	t_ent_type	sel_type;
+	t_ent_type	type_grid[WIN_HEIGHT][WIN_WIDTH];
 }	t_selection;
-
 
 typedef struct s_cylinder_hit
 {
-    float   t;
-    int     is_cap;
-    t_vec3  normal;
-}   t_cyl_hit;
+	int		is_cap;
+	float	t;
+	t_vec3	normal;
+}	t_cyl_hit;
 
 typedef struct s_hit_info
 {
 	bool		has_hit;
 	bool		in_shadow;
-	t_ray		*ray;
 	int			ent_index;
-	t_ent_type	type;
+	float		dist_attenuation;
 	float		distance;
+	t_ray		*ray;
+	t_ent_type	type;
 	t_vec3		point;
 	t_vec3		normal;
 	t_vec3		light_dir;
@@ -192,18 +192,17 @@ typedef struct s_hit_info
 	t_vec3		incident_ray;
 	t_color		color;
 	t_color		material_color;
-	float		dist_attenuation;
 }	t_hit_info;
 
 typedef struct s_v_port
 {
-	t_vec3	up_vec;
-	t_vec3	right_vec;
-	t_vec3	v_port_center;
 	float	v_port_width;
 	float	v_port_height;
 	float	x_offsets[WIN_WIDTH];
 	float	y_offsets[WIN_HEIGHT];
+	t_vec3	up_vec;
+	t_vec3	right_vec;
+	t_vec3	v_port_center;
 }	t_v_port;
 
 typedef struct s_settings
@@ -236,22 +235,22 @@ typedef struct s_scene
 // ==== MLX ====
 typedef struct s_data_img
 {
-	void	*img;
-	char	*addr;
 	int		bpp;
 	int		line_length;
 	int		endian;
 	int		frame_count;
+	void	*img;
+	char	*addr;
 }	t_data_img;
 
 typedef struct s_miniRt
 {
+	int			fd;
 	void		*mlx;
 	void		*win;
-	t_data_img	img;
 	t_scene		*scene;
 	char		**array1;
-	int			fd;
+	t_data_img	img;
 }	t_minirt;
 
 #endif

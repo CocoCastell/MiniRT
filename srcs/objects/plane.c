@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/13 17:58:18 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:07:36 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@ void	plane_intersect(t_hit_info *hit, t_ray ray, t_plane *plane, int i)
 	float		denom;
 	float		t;
 
-	var.O = ray.origin;
-	var.D = ray.direction;
-	var.n = plane->normal[i];
+	var.ori = ray.origin;
+	var.dir = ray.direction;
+	var.norm = plane->normal[i];
 	var.d = -dot(plane->normal[i], plane->point[i]);
-	denom = dot(var.n, var.D);
+	denom = dot(var.norm, var.dir);
 	if (fabs(denom) < 1e-6)
 		return ;
-	t = -(dot(var.n, var.O) + var.d) / denom;
+	t = -(dot(var.norm, var.ori) + var.d) / denom;
 	if (t < 1e-4 || hit->distance < t)
 		return ;
 	hit->has_hit = true;

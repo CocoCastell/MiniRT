@@ -6,35 +6,77 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 11:44:29 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:42:48 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/miniRT.h"
 
+/* void	set_hit_normal(t_hit_info *hit, t_scene *scene) */
+/* { */
+/* 	t_vec3	axis; */
+/* 	t_vec3	center; */
+/* 	t_vec3	center_to_hit; */
+/* 	t_vec3	projection; */
+/* 	t_vec3	point_on_axis; */
+/* 	t_vec3	normal; */
+/* 	t_vec3	to_camera; */
+
+/* 	if (hit->type == SPHERE) */
+/* 		hit->normal = normalize(vector_from_to(\ */
+/* 					scene->sphere.center[hit->ent_index], hit->point)); */
+/* 	if (hit->type == PLANE) */
+/* 		hit->normal = scene->plane.normal[hit->ent_index]; */
+/* 	if (hit->type == CYLINDER) */
+/* 	{ */
+/* 		axis = normalize(scene->cylinder.axis[hit->ent_index]); */
+/* 		center = scene->cylinder.center[hit->ent_index]; */
+/* 		center_to_hit = vector_from_to(center, hit->point); */
+/* 		projection = scale_vector(axis, dot(center_to_hit, axis)); */
+/* 		point_on_axis = add_vector(center, projection); */
+/* 		normal = vector_from_to(point_on_axis, hit->point); */
+/* 		hit->normal = normalize(normal); */
+/* 	} */
+/* 	if (hit->type == CYLINDER_CAP) */
+/* 	{ */
+/* 		to_camera = normalize(vector_from_to(hit->point, scene->camera.pos)); */
+/* 		hit->normal = scene->cylinder.axis[hit->ent_index]; */
+/* 		if (dot(hit->normal, to_camera) < 0) */
+/* 			hit->normal = negate_vec(hit->normal); */
+/* 	} */
+/* } */
+
+t_vec3	calc_cylinder_normal(t_vec3 axis, t_vec3 center, t_vec3 hit_point)
+{
+	t_vec3	center_to_hit;
+	t_vec3	projection;
+	t_vec3	point_on_axis;
+
+	center_to_hit = vector_from_to(center, hit_point);
+	projection = scale_vector(axis, dot(center_to_hit, axis));
+	point_on_axis = add_vector(center, projection);
+	return (normalize(vector_from_to(point_on_axis, hit_point)));
+}
+
 void	set_hit_normal(t_hit_info *hit, t_scene *scene)
 {
+	t_vec3	to_camera;
+
 	if (hit->type == SPHERE)
 		hit->normal = normalize(vector_from_to(\
 					scene->sphere.center[hit->ent_index], hit->point));
-	if (hit->type == PLANE)
+	else if (hit->type == PLANE)
 		hit->normal = scene->plane.normal[hit->ent_index];
-	if (hit->type == CYLINDER)
+	else if (hit->type == CYLINDER)
+		hit->normal = calc_cylinder_normal(\
+			normalize(scene->cylinder.axis[hit->ent_index]), \
+			scene->cylinder.center[hit->ent_index], hit->point);
+	else if (hit->type == CYLINDER_CAP)
 	{
-    t_vec3 axis = normalize(scene->cylinder.axis[hit->ent_index]);
-    t_vec3 center = scene->cylinder.center[hit->ent_index];
-		t_vec3 center_to_hit = vector_from_to(center, hit->point);
-    t_vec3 projection = scale_vector(axis, dot(center_to_hit, axis));
-    t_vec3 point_on_axis = add_vector(center, projection);
-    t_vec3 normal = vector_from_to(point_on_axis, hit->point);
-    hit->normal = normalize(normal);
-  }
-	if (hit->type == CYLINDER_CAP)
-	{
-		t_vec3 to_camera = normalize(vector_from_to(hit->point, scene->camera.pos));
+		to_camera = normalize(vector_from_to(hit->point, scene->camera.pos));
 		hit->normal = scene->cylinder.axis[hit->ent_index];
 		if (dot(hit->normal, to_camera) < 0)
-    	hit->normal = negate_vec(hit->normal);
+			hit->normal = negate_vec(hit->normal);
 	}
 }
 
@@ -56,7 +98,6 @@ void	set_light_data(t_hit_info *hit, t_scene *scene, int i)
 	t_vec3	shadow_bias_pos;
 
 	light_vec = vector_from_to(hit->point, scene->light.pos[i]);
-	// light_vec = vector_from_to(scene->light.pos[i], hit->point);
 	hit->light_dir = normalize(light_vec);
 	shadow_bias_pos = add_vector(hit->point, scale_vector(hit->normal, 1e-4f));
 	light_ray = make_ray(shadow_bias_pos, hit->light_dir);

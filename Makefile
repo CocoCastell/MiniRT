@@ -18,9 +18,9 @@ LIBS	=	$(LIBFT) -L$(MLX_DIR) -lmlx -L/usr/lib -lXext -lX11 -lm -lz
 
 # Includes
 INC		=	includes/miniRT.h \
-				includes/structures.h \
-				includes/defines.h \
-				includes/prototypes.h \
+			includes/structures.h \
+			includes/defines.h \
+			includes/prototypes.h \
 			$(MLX_DIR)mlx.h \
 			$(MLX_DIR)mlx_int.h \
 			$(LIBFT_DIR)includes/get_next_line_bonus.h \
@@ -30,10 +30,11 @@ INC		=	includes/miniRT.h \
 # Files
 SRCS	=	srcs/main.c \
 			srcs/error.c \
-			srcs/colors.c \
 			srcs/raytracer.c \
 			srcs/raytracer_utils.c \
 			srcs/utils.c \
+			srcs/colors/colors.c \
+			srcs/colors/colors2.c \
 			srcs/math/vector_operations.c \
 			srcs/math/create_vectors.c \
 			srcs/math/angle.c \
@@ -46,6 +47,7 @@ SRCS	=	srcs/main.c \
 			srcs/init/count.c \
 			srcs/init/init_obj_struct.c \
 			srcs/controls/events.c \
+			srcs/controls/events2.c \
 			srcs/controls/translations.c \
 			srcs/controls/rotations.c \
 			srcs/controls/control_utils.c \
@@ -150,4 +152,4 @@ fclean: clean
 	make fclean --no-print-directory -C $(MLX_DIR)
 	make fclean --no-print-directory -C $(LIBFT_DIR)
 
-re: fclean all
+re: clean all
