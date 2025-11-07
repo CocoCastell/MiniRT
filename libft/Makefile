@@ -4,7 +4,7 @@
 # Variables
 
 NAME		=	libft.a
-CFLAGS		=	-Werror -Wextra -Wall
+CFLAGS		=	-Werror -Wextra -Wall 
 INC			= 	includes/
 
 GNL_SRCS	=	gnl/get_next_line_bonus.c \

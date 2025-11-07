@@ -3,7 +3,7 @@
 
 NAME	=	miniRT
 CC		=	cc
-FLAGS	=	-Wall -Werror -Wextra -MMD -MP -O3
+FLAGS	=	-Wall -Werror -Wextra -MMD -MP -O3 
 
 # Repositories
 SRCS_DIR	=	srcs/
@@ -151,8 +151,7 @@ clean:
 	make clean --no-print-directory -C $(LIBFT_DIR) 
 
 fclean: clean
-	rm -rf $(NAME)
-	make fclean --no-print-directory -C $(MLX_DIR)
 	make fclean --no-print-directory -C $(LIBFT_DIR)
+	rm -rf $(NAME)
 
 re: clean all

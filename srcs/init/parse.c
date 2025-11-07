@@ -44,9 +44,14 @@ void	parse_camera(t_minirt *minirt, char **data)
 	camera = minirt->scene->camera;
 	camera.pos = position;
 	camera.forward = forward;
-	camera.world_up = vec3(0, 1, 0);
-	camera.right = normalize(cross(camera.forward, camera.world_up));
-	camera.up = normalize(cross(camera.right, camera.forward));
+	camera.world_up = vec3(0.0f, 1.0f, 0.0f);
+	t_vec3 world_up = camera.world_up;
+
+	if (fabs(dot(camera.forward, world_up)) > 0.999f)
+		world_up = vec3(1.0f, 0.0f, 0.0f);  // Juste pour CE calcul
+
+	camera.right = normalize(cross(camera.forward, world_up));
+	camera.up = cross(camera.right, camera.forward); //j'ai enleve le normalize
 	camera.fov = fov;
 	minirt->scene->camera = camera;
 }
