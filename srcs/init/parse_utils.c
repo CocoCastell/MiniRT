@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/07 17:41:39 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 19:53:55 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,13 @@ t_color	parse_color(char *str, t_minirt *minirt)
 	components = ft_split(str, ',');
 	if (ft_str_array_len(components) != 3)
 		free_error(minirt, "Color: invalid format.\n", 1);
-	printf("goingthere\n");
-	ft_is_only_digit(components[0]);
-	/* if (!ft_is_only_digit(components[0]) || !ft_is_only_digit(components[1]) || !ft_is_only_digit(components[3])) */
-	/* { */
-		/* printf("%s, %s, %s \n", components[0], components[1], components[2]); */
-		/* ft_free_string_array(components); */
-		/* free_error(minirt, "Color: invalid format.\n", 1); */
-	/* } */
-	printf("color: \n");
-	printf("%s\n", components[0]);
-	printf("%s\n", components[1]);
-	printf("%s\n", components[2]);
-	printf("\n");
+	if (!ft_is_str_int(components[0]) || !ft_is_str_int(components[1]) \
+			|| !ft_is_str_int(components[2]))
+	{
+		printf("%s, %s, %s \n", components[0], components[1], components[2]);
+		ft_free_string_array(components);
+		free_error(minirt, "Color: invalid format.\n", 1);
+	}
 	c[0] = ft_atoi(components[0]);
 	c[1] = ft_atoi(components[1]);
 	c[2] = ft_atoi(components[2]);
@@ -51,6 +45,13 @@ t_vec3	parse_coordinates(char *str, t_minirt *minirt)
 	components = ft_split(str, ',');
 	if (ft_str_array_len(components) != 3)
 		free_error(minirt, "Coordinates: invalid format.\n", 1);
+	if (!ft_is_str_float(components[0]) || !ft_is_str_float(components[1]) || \
+			!ft_is_str_float(components[2]))
+	{
+		printf("%s, %s, %s \n", components[0], components[1], components[2]);
+		ft_free_string_array(components);
+		free_error(minirt, "Coordinates: invalid format.\n", 1);
+	}
 	coord.x = ft_atof(components[0]);
 	coord.y = ft_atof(components[1]);
 	coord.z = ft_atof(components[2]);
@@ -66,6 +67,13 @@ t_vec3	parse_normal_vec(char *str, t_minirt *minirt)
 	components = ft_split(str, ',');
 	if (ft_str_array_len(components) != 3)
 		free_error(minirt, "Normal: invalid format.\n", 1);
+	if (!ft_is_str_float(components[0]) || !ft_is_str_float(components[1]) || \
+			!ft_is_str_float(components[2]))
+	{
+		printf("%s, %s, %s \n", components[0], components[1], components[2]);
+		ft_free_string_array(components);
+		free_error(minirt, "Normal: invalid format.\n", 1);
+	}
 	c[0] = ft_atof(components[0]);
 	c[1] = ft_atof(components[1]);
 	c[2] = ft_atof(components[2]);

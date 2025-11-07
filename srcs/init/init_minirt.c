@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/03 18:46:20 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:15:33 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	init_mlx(t_minirt *minirt)
 		free_error(minirt, "Img addr init error\n", 1);
 }
 
-int	init_obj_struct(t_scene *scene, t_obj_counter counter)
+int	init_obj_struct(t_scene *scene, t_o_cnt counter)
 {
 	if (init_sphere(scene, counter.sphere) == 1)
 		return (1);
@@ -48,9 +48,9 @@ int	init_obj_struct(t_scene *scene, t_obj_counter counter)
 
 void	init_all_objects(int fd, t_minirt *minirt, char *file)
 {
-	char			*line;
-	int				is_eof;
-	t_obj_counter	counter;
+	char	*line;
+	int		is_eof;
+	t_o_cnt	counter;
 
 	is_eof = 0;
 	counter = count_objects(fd, minirt);
@@ -65,6 +65,7 @@ void	init_all_objects(int fd, t_minirt *minirt, char *file)
 		if (line == NULL)
 			break ;
 		put_object_in_structure(line, minirt);
+		free(line);
 	}
 	close(fd);
 	minirt->fd = -1;

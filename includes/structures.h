@@ -45,7 +45,7 @@ typedef struct s_quad_eq
 	float	b;
 	float	c;
 	float	delta;
-}	t_quad_eq;
+}	t_q_eq;
 
 // ==== PARSING ====
 typedef struct s_obj_counter
@@ -57,7 +57,7 @@ typedef struct s_obj_counter
 	int	light;
 	int	camera;
 	int	ambient;
-}	t_obj_counter;
+}	t_o_cnt;
 
 typedef struct s_parse_data
 {
@@ -174,7 +174,7 @@ typedef struct s_cylinder_hit
 	int		is_cap;
 	float	t;
 	t_vec3	normal;
-}	t_cyl_hit;
+}	t_cyl_h;
 
 typedef struct s_hit_info
 {

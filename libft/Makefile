@@ -1,4 +1,4 @@
-.SILENT:
+# .SILENT:
 .PHONY: all clean fclean re
 
 # Variables
@@ -17,7 +17,8 @@ LIBFT_SRCS	=	lib/ft_free_matrix.c \
 				lib/ft_str_array_len.c \
 				lib/ft_putnbr_fd.c \
 				lib/ft_float_to_str.c \
-				lib/ft_is_only_digit.c \
+				lib/ft_is_str_int.c \
+				lib/ft_is_str_float.c \
 				lib/ft_strmapi.c \
 				lib/ft_putstr_fd.c \
 				lib/ft_strncmp.c \
@@ -85,7 +86,7 @@ WHITE		= 	\033[0;97m
 
 all:		$(NAME)
 
-$(NAME):	$(OBJ)
+$(NAME):	$(OBJ) $(LIBFT_SRCS)
 	ar -rcs $@ $^
 
 $(OBJS_DIR)%.o:%.c	$(INC) Makefile

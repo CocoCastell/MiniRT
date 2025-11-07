@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 12:14:41 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 19:01:38 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  * 
  * @param counter Pointer to the object counter structure to initialize.
  */
-void	init_counter(t_obj_counter *counter)
+void	init_counter(t_o_cnt *counter)
 {
 	counter->sphere = 0;
 	counter->plane = 0;
@@ -38,7 +38,7 @@ void	init_counter(t_obj_counter *counter)
  * @param counter Pointer to the object counters.
  * @param minirt Pointer to the main program structure for error handling.
  */
-void	compute_count(char *token, t_obj_counter *counter, t_minirt *minirt)
+void	compute_count(char *token, t_o_cnt *counter, t_minirt *minirt)
 {
 	if (ft_strncmp(token, "sp", 3) == 0)
 		counter->sphere++;
@@ -67,14 +67,14 @@ void	compute_count(char *token, t_obj_counter *counter, t_minirt *minirt)
  * 
  * @param fd File descriptor of the open scene file.
  * @param minirt Pointer to the main program structure for error handling.
- * @return t_obj_counter Struct containing counts of each object type found.
+ * @return t_o_cnt Struct containing counts of each object type found.
  */
-t_obj_counter	count_objects(int fd, t_minirt *minirt)
+t_o_cnt	count_objects(int fd, t_minirt *minirt)
 {
-	t_obj_counter	counter;
-	char			*line;
-	char			**tokens;
-	int				is_eof;
+	t_o_cnt	counter;
+	char	*line;
+	char	**tokens;
+	int		is_eof;
 
 	init_counter(&counter);
 	while (1)

@@ -6,7 +6,7 @@
 /*   By: cochatel  cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/10/25 11:37:03 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 19:01:03 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ void	get_caps_center(t_cylinder *cyl, int i, t_vec3 centers[2])
 	centers[1] = add_vector(cyl->center[i], scale_vector(axis, -half_h));
 }
 
-t_cyl_hit	*find_closest(t_cyl_hit hits[3])
+t_cyl_h	*find_closest(t_cyl_h hits[3])
 {
-	t_cyl_hit	*closest;
-	int			i;
+	t_cyl_h	*closest;
+	int		i;
 
 	closest = NULL;
 	i = -1;
@@ -38,9 +38,9 @@ t_cyl_hit	*find_closest(t_cyl_hit hits[3])
 	return (closest);
 }
 
-t_quad_eq	init_quadratic(t_vec3 proj_dir, t_vec3 proj_oc, float radius)
+t_q_eq	init_quadratic(t_vec3 proj_dir, t_vec3 proj_oc, float radius)
 {
-	t_quad_eq	q;
+	t_q_eq	q;
 
 	q.a = dot(proj_dir, proj_dir);
 	q.b = 2.0f * dot(proj_dir, proj_oc);
@@ -49,7 +49,7 @@ t_quad_eq	init_quadratic(t_vec3 proj_dir, t_vec3 proj_oc, float radius)
 	return (q);
 }
 
-float	solve_quadratic(t_quad_eq q)
+float	solve_quadratic(t_q_eq q)
 {
 	float	sq_d;
 	float	t1;

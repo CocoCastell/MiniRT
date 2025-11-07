@@ -64,6 +64,8 @@ SRCS	=	srcs/main.c \
 
 OBJS	=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 
+LIB_MAKEFILE=	libft/Makefile
+
 LIBFT_F	=	gnl/get_next_line_bonus.c \
 			gnl/get_next_line_utils_bonus.c \
 			printf/ft_manager_bonus.c \
@@ -73,8 +75,8 @@ LIBFT_F	=	gnl/get_next_line_bonus.c \
 			lib/ft_free_string_array.c \
 			lib/ft_free_matrix.c \
 			lib/ft_str_array_len.c \
-			lib/ft_is_only_digit.c \
-			lib/ft_isdigit.c \
+			lib/ft_is_str_float.c \
+			lib/ft_is_str_int.c \
 			lib/ft_putnbr_fd.c \
 			lib/ft_strmapi.c \
 			lib/ft_putstr_fd.c \
@@ -127,7 +129,7 @@ LIBFT_SRCS = $(addprefix $(LIBFT_DIR), $(LIBFT_F))
 # Compilation
 all: $(NAME)
 
-$(NAME): $(MLX) $(LIBFT) $(LIBFT_SRCS) $(OBJS) $(INC) Makefile
+$(NAME): $(MLX) $(LIBFT) $(LIB_MAKEFILE) $(OBJS) $(INC) Makefile
 	$(CC) $(FLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
 $(OBJS_DIR)srcs/%.o: $(SRCS_DIR)%.c $(INC) | $(OBJS_DIR)
@@ -140,7 +142,7 @@ $(OBJS_DIR):
 $(MLX):
 	make --no-print-directory -C $(MLX_DIR)
 
-$(LIBFT):
+$(LIBFT): $(LIBFT_SRCS)
 	make --no-print-directory -C $(LIBFT_DIR)
 
 clean:

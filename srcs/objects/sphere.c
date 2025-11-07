@@ -6,7 +6,7 @@
 /*   By: cochatel cochatel@student.42barcelona      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/03 18:52:13 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 19:01:20 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ void	add_sphere(t_parse_data data, t_sphere sphere, int i)
  * @param sph Sphere to test against.
  * @return the quadratic coefficients (a, h, c) and discriminant (delta). 
  */
-t_quad_eq	compute_quadratic_data(t_ray ray, t_vec3 center, float radius)
+t_q_eq	compute_quadratic_data(t_ray ray, t_vec3 center, float radius)
 {
-	t_quad_eq	q;
-	t_vec3		m;
+	t_q_eq	q;
+	t_vec3	m;
 
 	m = vector_from_to(center, ray.origin);
 	q.a = dot(ray.direction, ray.direction);
@@ -71,9 +71,9 @@ t_quad_eq	compute_quadratic_data(t_ray ray, t_vec3 center, float radius)
  */
 void	sphere_intersect(t_hit_info *hit, t_ray ray, t_sphere *sphere, int i)
 {
-	t_quad_eq	q;
-	float		sq_delta;
-	float		t[3];
+	t_q_eq	q;
+	float	sq_delta;
+	float	t[3];
 
 	q = compute_quadratic_data(ray, sphere->center[i], sphere->radius[i]);
 	if (q.delta < 0)

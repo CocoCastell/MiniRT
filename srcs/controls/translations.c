@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/07 17:19:18 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:37:07 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	key_move_entity(t_scene *scene, t_vec3 dest, float step)
 	{
 		scene->light.pos[i] = add_vector(scene->light.pos[i], \
 			scale_vector(dest, step + step));
-		print_vec(scene->light.pos[i]);
 	}
 	else if (sel_type == SPHERE)
 		scene->sphere.center[i] = add_vector(scene->sphere.center[i], \

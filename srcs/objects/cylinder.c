@@ -6,7 +6,7 @@
 /*   By: cochatel  cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/10/25 11:24:05 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 19:00:54 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static float	body_intersect(t_ray ray, t_cylinder *cyl, int i)
 	return (solve_quadratic(init_quadratic(proj_d, proj_oc, cyl->radius[i])));
 }
 
-static void	set_body_hit(t_ray ray, t_cylinder *cyl, int i, t_cyl_hit *hit)
+static void	set_body_hit(t_ray ray, t_cylinder *cyl, int i, t_cyl_h *hit)
 {
 	float	t;
 	t_vec3	pt;
@@ -87,9 +87,9 @@ float	cap_intersect_dist(t_ray ray, t_vec3 center, t_vec3 normal, float rad)
 
 void	cylinder_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cyl, int i)
 {
-	t_cyl_hit	hits[3];
-	t_cyl_hit	*closest;
-	t_vec3		caps[2];
+	t_cyl_h	hits[3];
+	t_cyl_h	*closest;
+	t_vec3	caps[2];
 
 	set_body_hit(ray, cyl, i, &hits[0]);
 	get_caps_center(cyl, i, caps);

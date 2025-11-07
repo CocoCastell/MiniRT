@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/03 20:01:05 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:04:08 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	scene_intersect(t_hit_info *hit, t_ray ray, t_scene *scene)
 	while (++i < scene->cylinder.count)
 		cylinder_intersect(hit, ray, &scene->cylinder, i);
 	i = -1;
-	while (++i < scene->triangle.count)
-		triangle_intersect(hit, ray, scene->triangle, i);
+	/* while (++i < scene->triangle.count) */
+	/* 	triangle_intersect(hit, ray, scene->triangle, i); */
 }
 
 t_color	antialias_trace(t_scene *scene, int pix[2], int i)

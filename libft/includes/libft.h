@@ -6,7 +6,7 @@
 /*   By: cochatel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 17:13:45 by cochatel          #+#    #+#             */
-/*   Updated: 2025/02/12 17:22:12 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 18:58:20 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int			ft_isdigit(int c);
 int			ft_isalnum(int c);
 int			ft_isalpha(int c);
 int			ft_isascii(int c);
-bool		ft_is_only_digit(const char *str);
+bool		ft_is_str_int(const char *str);
+bool		ft_is_str_float(const char *str);
 int			ft_isprint(int c);
 int			ft_toupper(int c);
 int			ft_tolower(int c);
