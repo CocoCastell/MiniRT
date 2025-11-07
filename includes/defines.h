@@ -18,7 +18,6 @@
 # define WIN_HEIGHT				720
 # define V_PORT_WIDTH			2.0f
 # define V_PORT_DIST			1 
-# define PIXEL_RATIO			(V_PORT_WIDTH / WIN_WIDTH)
 # define M_PIF					3.1415927f
 # define STEP					0.2
 # define ZOOM_IN      1.1

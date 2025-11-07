@@ -98,7 +98,7 @@ void	cylinder_intersect(t_hit_info *hit, t_ray ray, t_cylinder *cyl, int i)
 	hits[2].t = cap_intersect_dist(ray, caps[1], cyl->axis[i], cyl->radius[i]);
 	hits[2].is_cap = 1;
 	closest = find_closest(hits);
-	if (!closest || closest->t >= hit->distance)
+	if (!closest || (hit->has_hit && closest->t >= hit->distance))
 		return ;
 	hit->has_hit = true;
 	hit->distance = closest->t;

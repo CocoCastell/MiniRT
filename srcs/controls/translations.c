@@ -81,6 +81,22 @@ void	side_movement(int keycode, t_scene *scene)
 		key_move_entity(scene, camera->up, step);
 }
 
+void	scale_cylinder(t_cylinder *cylinder, int button, int i)
+{
+	if (button == SCROLL_UP)
+	{
+		//correct this
+		cylinder->height[i] *= ZOOM_IN;
+		cylinder->radius[i] *= ZOOM_IN;
+	}
+	else
+	{
+		cylinder->height[i] *= ZOOM_OUT;
+		cylinder->radius[i] *= ZOOM_OUT;
+	}
+
+}
+
 void	scale_entity(t_scene *scene, int button)
 {
 	t_ent_type	sel_type;
@@ -100,15 +116,6 @@ void	scale_entity(t_scene *scene, int button)
 		scene->sphere.radius[i] *= ZOOM_IN;
 	else if (button == SCROLL_DOWN && sel_type == SPHERE)
 		scene->sphere.radius[i] *= ZOOM_OUT;
-	else if (button == SCROLL_UP && sel_type == CYLINDER)
-	{
-		//correct this
-		scene->cylinder.height[i] *= ZOOM_IN;
-		scene->cylinder.radius[i] *= ZOOM_IN;
-	}
-	else if (button == SCROLL_DOWN && sel_type == CYLINDER)
-	{
-		scene->cylinder.height[i] *= ZOOM_OUT;
-		scene->cylinder.radius[i] *= ZOOM_OUT;
-	}
+	else if (sel_type == CYLINDER)
+		scale_cylinder(&scene->cylinder, button, i);
 }

@@ -57,7 +57,7 @@ void	plane_intersect(t_hit_info *hit, t_ray ray, t_plane *plane, int i)
 	if (fabs(denom) < 1e-6)
 		return ;
 	t = -(dot(var.norm, var.ori) + var.d) / denom;
-	if (t < 1e-4 || hit->distance < t)
+	if (t < 1e-4 || (hit->has_hit && hit->distance < t))
 		return ;
 	hit->has_hit = true;
 	hit->distance = t;
