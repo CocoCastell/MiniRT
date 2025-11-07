@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/10/25 11:30:02 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:19:18 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ void	scale_cylinder(t_cylinder *cylinder, int button, int i)
 {
 	if (button == SCROLL_UP)
 	{
-		//correct this
 		cylinder->height[i] *= ZOOM_IN;
 		cylinder->radius[i] *= ZOOM_IN;
 	}
@@ -94,7 +93,6 @@ void	scale_cylinder(t_cylinder *cylinder, int button, int i)
 		cylinder->height[i] *= ZOOM_OUT;
 		cylinder->radius[i] *= ZOOM_OUT;
 	}
-
 }
 
 void	scale_entity(t_scene *scene, int button)

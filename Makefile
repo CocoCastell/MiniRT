@@ -60,7 +60,7 @@ SRCS	=	srcs/main.c \
 			srcs/objects/triangle.c \
 			srcs/objects/cylinder.c  \
 			srcs/objects/cylinder_utils.c  \
-			srcs/print_scene.c
+			# srcs/print_scene.c
 
 OBJS	=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 
@@ -74,6 +74,7 @@ LIBFT_F	=	gnl/get_next_line_bonus.c \
 			lib/ft_free_matrix.c \
 			lib/ft_str_array_len.c \
 			lib/ft_is_only_digit.c \
+			lib/ft_isdigit.c \
 			lib/ft_putnbr_fd.c \
 			lib/ft_strmapi.c \
 			lib/ft_putstr_fd.c \

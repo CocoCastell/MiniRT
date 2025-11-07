@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 17:44:24 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/03 20:50:57 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:17:21 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,8 @@ void	parse_properties(t_parse_data *values, char **data, t_minirt *minirt);
 
 // Count
 t_obj_counter	count_objects(int fd, t_minirt *minirt);
-void			compute_count(char *token, t_obj_counter *counter, t_minirt *minirt);
-void			init_counter(t_obj_counter *counter);
+void	compute_count(char *token, t_obj_counter *counter, t_minirt *minirt);
+void	init_counter(t_obj_counter *counter);
 
 // ==== MATHS ====
 // Vector operations

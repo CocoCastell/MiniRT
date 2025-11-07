@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/03 20:52:53 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:41:39 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,22 @@ t_color	parse_color(char *str, t_minirt *minirt)
 	int		c[3];
 	char	**components;
 
-	/* components = ft_split_without_separator(str, ','); // Make a new version ! */
 	components = ft_split(str, ',');
 	if (ft_str_array_len(components) != 3)
 		free_error(minirt, "Color: invalid format.\n", 1);
+	printf("goingthere\n");
+	ft_is_only_digit(components[0]);
 	/* if (!ft_is_only_digit(components[0]) || !ft_is_only_digit(components[1]) || !ft_is_only_digit(components[3])) */
 	/* { */
-	/* 	printf("%s, %s, %s \n", components[0], components[1], components[2]); */
-	/* 	ft_free_string_array(components); */
-	/* 	free_error(minirt, "Color: invalid format.\n", 1); */
+		/* printf("%s, %s, %s \n", components[0], components[1], components[2]); */
+		/* ft_free_string_array(components); */
+		/* free_error(minirt, "Color: invalid format.\n", 1); */
 	/* } */
+	printf("color: \n");
+	printf("%s\n", components[0]);
+	printf("%s\n", components[1]);
+	printf("%s\n", components[2]);
+	printf("\n");
 	c[0] = ft_atoi(components[0]);
 	c[1] = ft_atoi(components[1]);
 	c[2] = ft_atoi(components[2]);
