@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 17:38:53 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/03 19:23:25 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/08 13:31:30 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,7 +229,6 @@ typedef struct s_scene
 	t_v_port	v_port;
 	t_selection	selection;
 	t_settings	settings;
-	// float				pixel_grid[WIN_HEIGHT][WIN_WIDTH];
 }	t_scene;
 
 // ==== MLX ====
@@ -250,6 +249,7 @@ typedef struct s_miniRt
 	void		*win;
 	t_scene		*scene;
 	char		**array1;
+	char		*line;
 	t_data_img	img;
 }	t_minirt;
 

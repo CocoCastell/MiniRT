@@ -6,11 +6,18 @@
 /*   By: cochatel <cochatel@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/09/20 12:14:58 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/08 14:14:27 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
+
+void	exit_error(char *msg, int error)
+{
+	if (msg != NULL)
+		ft_printf(RED"ERROR: "DEF "%s", msg);
+	exit(error);
+}
 
 int	main(int argc, char *argv[])
 {

@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/03 20:15:09 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/08 11:53:09 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ int	init_sphere(t_scene *scene, int sphere_nb)
 	t_sphere		sphere;
 
 	sphere.count = sphere_nb;
-	if (sphere_nb == 0)
-		return (0);
 	sphere.radius = malloc(sizeof(float) * sphere_nb);
 	sphere.color = malloc(sizeof(t_color) * sphere_nb);
 	sphere.center = malloc(sizeof(t_vec3) * sphere_nb);
@@ -41,8 +39,6 @@ int	init_plane(t_scene *scene, int plane_nb)
 	t_plane		plane;
 
 	plane.count = plane_nb;
-	if (plane_nb == 0)
-		return (0);
 	plane.color = malloc(sizeof(t_color) * plane_nb);
 	plane.point = malloc(sizeof(t_vec3) * plane_nb);
 	plane.normal = malloc(sizeof(t_vec3) * plane_nb);
@@ -65,8 +61,6 @@ int	init_cylinder(t_scene *scene, int cylinder_nb)
 	t_cylinder		cylinder;
 
 	cylinder.count = cylinder_nb;
-	if (cylinder_nb == 0)
-		return (0);
 	cylinder.radius = malloc(sizeof(float) * cylinder_nb);
 	cylinder.color = malloc(sizeof(t_color) * cylinder_nb);
 	cylinder.center = malloc(sizeof(t_vec3) * cylinder_nb);
@@ -93,8 +87,6 @@ int	init_triangle(t_scene *scene, int triangle_nb)
 	t_triangle		triangle;
 
 	triangle.count = triangle_nb;
-	if (triangle_nb == 0)
-		return (0);
 	triangle.point_a = malloc(sizeof(t_vec3) * triangle_nb);
 	triangle.point_b = malloc(sizeof(t_vec3) * triangle_nb);
 	triangle.point_c = malloc(sizeof(t_vec3) * triangle_nb);

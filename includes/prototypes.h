@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 17:44:24 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/07 18:41:13 by datienza         ###   ########.fr       */
+/*   Updated: 2025/11/08 14:05:04 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int		init_triangle(t_scene *scene, int triangle_nb);
 
 // Parse
 void	parse_ambient(t_minirt *minirt, char **data);
-void	parse_camera(t_minirt *minirt, char **data);
+void	parse_camera(t_minirt *minirt, char **data, int fov);
 void	parse_light(t_minirt *minirt, char **data);
 int		put_object_in_structure(char *line, t_minirt *minirt);
 
@@ -180,9 +180,9 @@ void	mean_color(t_color *color, int ratio);
 int		float_color_to_int(t_color color);
 
 // Error
-void	exit_error(char *msg, int error);
 void	free_mlx(t_minirt *minirt);
 void	free_error(t_minirt *minirt, char *msg, int error);
+void	free_scene(t_scene *scene);
 
 // Utils
 void	put_pixel(int x, int y, t_data_img *img, int color);
@@ -190,6 +190,9 @@ void	print_selection(t_ent_type selected);
 void	print_menu(t_settings settings);
 void	print_col(t_color col);
 void	print_vec(t_vec3 v);
+
+//main
+void	exit_error(char *msg, int error);
 
 // Create scene file
 void	put_data_in_file(t_scene *scene);

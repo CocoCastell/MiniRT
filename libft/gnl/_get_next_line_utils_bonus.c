@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:47:37 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/08 12:53:27 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/08 13:15:19 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_list_gnl	*find_last_node(t_list_gnl *list, int fd, int flag, int node_nb)
 
 bool	check_newline(t_list_gnl **list, int fd)
 {
-	int			i;
+	int		i;
 	t_list_gnl	*last_node;
 
 	i = 0;
@@ -104,8 +104,8 @@ static char	*make_line(t_list_gnl *temp, int length, int fd, int i)
 char	*extract_line(t_list_gnl *head, int fd, int i)
 {
 	t_list_gnl	*temp;
-	char		*str;
-	int			length;
+	char	*str;
+	int		length;
 
 	temp = head;
 	length = 0;

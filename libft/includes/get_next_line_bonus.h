@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona.com>+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:47:37 by cochatel          #+#    #+#             */
-/*   Updated: 2025/03/08 15:39:57 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/08 13:21:54 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ int			add_node(t_list_gnl **list, char *str, int fd, int i);
 bool		check_newline(t_list_gnl **list, int fd);
 void		free_list(t_list_gnl **lst, int fd, int nd_nb, t_list_gnl *next_nd);
 char		*extract_line(t_list_gnl *head, int fd, int i);
-char		*get_next_line(int fd, int *error);
+char		*get_next_line(int fd, int *is_eof);
 
 #endif

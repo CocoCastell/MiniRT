@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/07 20:15:33 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/08 14:09:02 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	init_mlx(t_minirt *minirt)
 		exit_error("Mlx init error\n", 1);
 	minirt->win = mlx_new_window(minirt->mlx, WIN_WIDTH, WIN_HEIGHT, "MiniRT");
 	minirt->array1 = NULL;
+	minirt->line = NULL;
 	if (minirt->win == NULL)
 		free_error(minirt, "Win init error\n", 1);
 	minirt->img.img = mlx_new_image(minirt->mlx, WIN_WIDTH, WIN_HEIGHT);
@@ -54,7 +55,8 @@ void	init_all_objects(int fd, t_minirt *minirt, char *file)
 
 	is_eof = 0;
 	counter = count_objects(fd, minirt);
-	init_obj_struct(minirt->scene, counter);
+	if (init_obj_struct(minirt->scene, counter) == 1)
+		free_error(minirt, "Init error", 1);
 	fd = get_fd_file(file, minirt);
 	minirt->fd = fd;
 	while (true)
@@ -101,21 +103,3 @@ void	init_minirt(t_minirt *minirt, char *file)
 	scene->selection.sel_index = 0;
 	init_settings(&scene->settings);
 }
-
-/*
-void	init_lights(t_scene *scene)
-{
-	t_light	light;
-
-	light.count = 2;
-	light.pos = malloc(sizeof(t_vec3) * light.count);
-	light.color = malloc(sizeof(t_color) * light.count);
-	light.intensity = malloc(sizeof(float) * light.count);
-	light.pos[0] = vec3(0, 3, -1);
-	light.color[0] = create_color(0.9f, 0.9f, 0.9f);
-	light.intensity[0] = 0.5f;
-	light.pos[1] = vec3(0, -3, -1);
-	light.color[1] = create_color(0.0f, 0.0f, 0.0f);
-	light.intensity[1] = 0.8f;
-	scene->light = light;
-}*/

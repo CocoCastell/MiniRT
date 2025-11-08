@@ -6,7 +6,7 @@
 /*   By: cochatel <cochatel@student.42barcelona     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:38:25 by cochatel          #+#    #+#             */
-/*   Updated: 2025/11/07 19:53:55 by cochatel         ###   ########.fr       */
+/*   Updated: 2025/11/08 13:35:39 by cochatel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,16 +91,22 @@ void	parse_properties(t_parse_data *values, char **data, t_minirt *minirt)
 	values->reflectivity = 0.0f;
 	if (*data == NULL)
 		return ;
+	if (!ft_is_str_float(*data))
+		free_error(minirt, "Shininess: invalid format.\n", 1);
 	values->shininess = ft_atof(*data);
 	if (values->shininess < 0.0f || values->shininess > 999.99f)
 		free_error(minirt, "Shininess out of range [0.0, 200.0].\n", 1);
 	if (*(++data) == NULL)
 		return ;
+	if (!ft_is_str_float(*data))
+		free_error(minirt, "Specular : invalid format.\n", 1);
 	values->spec_force = ft_atof(*data);
 	if (values->spec_force < 0.0f || values->spec_force > 1.0f)
 		free_error(minirt, "Specular force out of range [0.0, 1.0].\n", 1);
 	if (*(++data) == NULL)
 		return ;
+	if (!ft_is_str_float(*data))
+		free_error(minirt, "Reflectivity: invalid format.\n", 1);
 	values->reflectivity = ft_atof(*data);
 	if (values->reflectivity < 0.0f || values->reflectivity > 1.0f)
 		free_error(minirt, "Reflectivity out of range [0.0, 1.0].\n", 1);
