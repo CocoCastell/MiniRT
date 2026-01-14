@@ -1,5 +1,7 @@
 # About MiniRT
 
+This project is an introduction to Raytracing
+
 # How to run
 
 First, compile in the directory with the following command
